@@ -1,4 +1,4 @@
-package com.salesianos.dam.primerejemplo;
+package com.salesianos.dam.primerejemplo.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
