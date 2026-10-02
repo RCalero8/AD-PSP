@@ -5,14 +5,13 @@ import com.salesianos.dam.primerejemplo.dto.GetProductDetail;
 import com.salesianos.dam.primerejemplo.dto.GetProductList;
 import com.salesianos.dam.primerejemplo.model.Product;
 import com.salesianos.dam.primerejemplo.repo.ProductRepository;
+import com.salesianos.dam.primerejemplo.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
-
 
 @RestController
 @RequiredArgsConstructor
@@ -20,33 +19,19 @@ import java.util.List;
 public class ProductController {
 
     private final ProductRepository productRepository;
+    private final ProductService productService;
 
     @PostMapping
-    //public ResponseEntity<Product> addProduct(@RequestBody Product product) {
     public ResponseEntity<GetProductDetail> addProduct(@RequestBody EditProductDto product) {
 
-        if (StringUtils.hasText(product.name())) {
-            return ResponseEntity.status(201)
-                    .body(
-                            GetProductDetail.of(
-                                    productRepository.save(product.to())
-                            )
-                    );
-        }
-
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.status(201).body(GetProductDetail.of(productService.addProduct(product)));
 
     }
 
     @GetMapping
     //public ResponseEntity<List<Product>> getAllProducts() {
     public ResponseEntity<List<GetProductList>> getAllProducts() {
-
-        List<Product> result = productRepository.findAll();
-        if (result.isEmpty()) {
-            // return ResponseEntity.status(404).build();
-            return ResponseEntity.notFound().build();
-        }
+        List<Product> result = productService.getAllProducts();
         return ResponseEntity.ok(
                 result
                         .stream()
@@ -55,13 +40,10 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    //public ResponseEntity<Product> getProductById(@PathVariable Long id) {
     public ResponseEntity<GetProductDetail> getProductById(@PathVariable Long id) {
 
-        return ResponseEntity.of(
-                productRepository.findById(id)
-                        .map(GetProductDetail::of)
-        );
+        return ResponseEntity.ok(GetProductDetail.of(productService.getProductById(id)));
+
     }
 
     @PutMapping("/{id}")
@@ -92,5 +74,6 @@ public class ProductController {
         productRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
 
 }

@@ -1,6 +1,6 @@
 package com.salesianos.dam.primerejemplo.dto;
 
-import com.salesianos.dam.primerjemplo.model.Product;
+import com.salesianos.dam.primerejemplo.model.Product;
 
 public record EditProductDto(
         String name,
