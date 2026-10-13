@@ -6,6 +6,10 @@ import com.salesianos.dam.primerejemplo.dto.GetProductList;
 import com.salesianos.dam.primerejemplo.model.Product;
 import com.salesianos.dam.primerejemplo.repo.ProductRepository;
 import com.salesianos.dam.primerejemplo.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -16,6 +20,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/product")
+@Tag(name="Product Controller", description="Un controlador de productos")
 public class ProductController {
 
     private final ProductRepository productRepository;
@@ -24,12 +29,24 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<GetProductDetail> addProduct(@RequestBody EditProductDto product) {
 
-        return ResponseEntity.status(201).body(GetProductDetail.of(productService.addProduct(product)));
+        return ResponseEntity.status(201)
+                .body(GetProductDetail.of(productService.addProduct(product)));
 
     }
+    @Operation(
+            summary = "Obtener todos los productos",
+            description = "Permite obtener todos los productos del catálogo"
+    )
+    @ApiResponses(
+            {
+                    @ApiResponse(description = "Listado de productos del catálogo",
+                            responseCode = "200"),
+                    @ApiResponse(description = "Error - no hay productos con los criterios de búsqueda",
+                            responseCode = "404")
+            }
+    )
 
     @GetMapping
-    //public ResponseEntity<List<Product>> getAllProducts() {
     public ResponseEntity<List<GetProductList>> getAllProducts() {
         List<Product> result = productService.getAllProducts();
         return ResponseEntity.ok(
@@ -52,20 +69,7 @@ public class ProductController {
             @RequestBody EditProductDto product) {
 
 
-        if (!StringUtils.hasText(product.name()) || product.price() < 0) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        return productRepository.findById(id)
-                .map(p -> {
-                    p.setName(product.name());
-                    p.setPrice(product.price());
-                    p.setDetails(product.details());
-                    return ResponseEntity.ok(
-                            GetProductDetail.of(productRepository.save(p))
-                    );
-                }).orElse(ResponseEntity.notFound().build());
-
+        return ResponseEntity.ok(GetProductDetail.of(productService.updateProduct(id, product)));
 
     }
 

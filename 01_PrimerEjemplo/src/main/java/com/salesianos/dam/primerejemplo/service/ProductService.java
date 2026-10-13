@@ -45,18 +45,8 @@ public class ProductService {
         return productRepository.save(editProductDto.to());
     }
 
-
-    private void validateProduct(EditProductDto editProductDto) {
-        if (!StringUtils.hasText(editProductDto.name())
-                || !StringUtils.hasText(editProductDto.details())) {
-            throw new InvalidProductException("Product name and details are required");
-        }
-        if (editProductDto.price() < 0) {
-            throw new InvalidProductException("Price is required");
-        }
-    }
-
     public Product updateProduct(Long id, EditProductDto editProductDto) {
+
         return productRepository.findById(id)
                 .map(p -> {
                     validateProduct(editProductDto);
@@ -68,13 +58,31 @@ public class ProductService {
                 .orElseThrow(() -> new ProductNotFoundException(id));
     }
 
-    public void deleteProduct(){
+
+    public void deleteProduct(Product product) {
         productRepository.delete(product);
     }
-    public void deleteProduct(Long id){
-        if(!productRepository.existsById(id))
-            throw new ProductNotFoundException(id);
+
+    public void deleteProduct(Long id) {
+        // Si queremos que sea NO IDEMPOTENTE
+        // hay que descomentar las dos siguientes líneas de código
+        //if (!productRepository.existsById(id))
+        //    throw new ProductNotFoundException(id);
         productRepository.deleteById(id);
     }
+
+
+    private void validateProduct(EditProductDto editProductDto) {
+        if (!StringUtils.hasText(editProductDto.name())
+                || !StringUtils.hasText(editProductDto.details())) {
+            throw new InvalidProductException("Product name and details are required");
+        }
+        if (editProductDto.price() < 0) {
+            throw new InvalidProductException("Price is required");
+        }
+    }
+
+
+
 
 }

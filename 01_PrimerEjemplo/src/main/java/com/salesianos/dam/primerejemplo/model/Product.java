@@ -1,9 +1,9 @@
 package com.salesianos.dam.primerejemplo.model;
 
-/*record Product(String name, String price){}*/
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,4 +27,6 @@ public class Product {
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @ManyToOne
+    private Category category;
 }
