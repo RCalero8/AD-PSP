@@ -1,0 +1,620 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Cuaderno Spring Data JPA</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: hoja de cuaderno pautada sobre fondo verde, pestañas fijas arriba, una sección por PDF */
+:root {
+  --bg: #dfece1;
+  --paper: #f4faf4;
+  --ink: #1b2d22;
+  --ink-soft: #4b6354;
+  --rule: #d3e5d7;
+  --margin: #8cc4a0;
+  --accent: #2c7a4b;
+  --accent-ink: #ffffff;
+  --tab: #c4dfcb;
+  --hl: #cdeebd;
+  --code-bg: #15302a;
+  --code-fg: #d7f1de;
+  --code-dim: #7fb598;
+  --warn-bg: #e6f3c9;
+  --warn-ink: #3b4a10;
+  --f-display: "Kalam", "Segoe Print", "Comic Sans MS", cursive;
+  --f-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b1711; --paper: #12231a; --ink: #dcebe0; --ink-soft: #9db8a6;
+    --rule: #1d3427; --margin: #2f6a49; --accent: #7fd0a0; --accent-ink: #0b1711;
+    --tab: #1b3526; --hl: #29502f; --code-bg: #0a1a14; --code-fg: #cdeed7; --code-dim: #6aa485;
+    --warn-bg: #2d3d14; --warn-ink: #e3efb8;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0b1711; --paper: #12231a; --ink: #dcebe0; --ink-soft: #9db8a6;
+  --rule: #1d3427; --margin: #2f6a49; --accent: #7fd0a0; --accent-ink: #0b1711;
+  --tab: #1b3526; --hl: #29502f; --code-bg: #0a1a14; --code-fg: #cdeed7; --code-dim: #6aa485;
+  --warn-bg: #2d3d14; --warn-ink: #e3efb8;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 16px; line-height: 1.75;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 48px;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  background: var(--bg); z-index: 20;
+}
+.wrap { max-width: 880px; margin: 0 auto; }
+
+/* Pestañas */
+.tabs {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  background: var(--bg); padding-block: 12px 0;
+}
+.tabs ul {
+  list-style: none; margin: 0; padding: 0; display: flex; gap: 6px;
+  overflow-x: auto; scrollbar-width: thin;
+}
+.tabs a {
+  display: block; white-space: nowrap; text-decoration: none; color: var(--ink-soft);
+  background: var(--tab); padding: 6px 16px 5px; border-radius: 10px 10px 0 0;
+  font-weight: 600; font-size: 14px; line-height: 1.6;
+}
+.tabs a:hover { color: var(--ink); }
+.tabs a:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tabs a.on { background: var(--paper); color: var(--accent); }
+
+/* Hoja */
+.sheet {
+  background-color: var(--paper);
+  background-image: linear-gradient(to bottom, transparent 27px, var(--rule) 27px, var(--rule) 28px);
+  background-size: 100% 28px;
+  border-radius: 0 6px 6px 6px;
+  box-shadow: 0 1px 0 var(--rule), 0 10px 30px -18px rgba(10, 40, 20, .45);
+  padding: 28px 24px 40px 64px; position: relative;
+}
+.sheet::before {
+  content: ""; position: absolute; left: 44px; top: 0; bottom: 0; width: 2px; background: var(--margin);
+}
+.sheet::after {
+  content: ""; position: absolute; left: 14px; top: 56px; bottom: 56px; width: 12px;
+  background: radial-gradient(circle at 6px 6px, var(--bg) 0 5px, transparent 5.5px) 0 0 / 12px 112px repeat-y;
+}
+.cover { padding-bottom: 8px; }
+.cover .kicker { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin: 0; }
+.cover h1 {
+  font-family: var(--f-display); font-size: clamp(34px, 7vw, 52px); line-height: 1.15; margin: 0;
+  text-wrap: balance; font-weight: 700;
+}
+.cover p { margin: 0; color: var(--ink-soft); max-width: 58ch; }
+
+section { scroll-margin-top: 72px; padding-top: 28px; }
+h2 {
+  font-family: var(--f-display); font-size: 30px; line-height: 28px; margin: 0 0 28px; font-weight: 700;
+  display: inline-block; background: linear-gradient(transparent 58%, var(--hl) 58%); padding: 0 6px; margin-left: -6px;
+  text-wrap: balance;
+}
+.from { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); margin: -16px 0 28px; }
+h3 { font-family: var(--f-display); font-size: 21px; line-height: 28px; margin: 28px 0 0; color: var(--accent); font-weight: 700; text-wrap: balance; }
+p { margin: 0 0 28px; max-width: 68ch; }
+ul, ol { margin: 0 0 28px; padding-left: 22px; max-width: 68ch; }
+li::marker { color: var(--accent); }
+ul ul { margin: 0; }
+b, strong { font-weight: 700; }
+a { color: var(--accent); text-underline-offset: 3px; overflow-wrap: anywhere; }
+code {
+  font-family: var(--f-mono); font-size: .86em; background: var(--hl); color: var(--ink);
+  padding: 1px 6px; border-radius: 4px; overflow-wrap: anywhere;
+}
+.code {
+  background: var(--code-bg); color: var(--code-fg); border-radius: 8px; margin: 0 0 28px;
+  font-family: var(--f-mono); font-size: 13.5px; line-height: 1.6; overflow-x: auto; max-width: 100%;
+}
+.code .cap {
+  display: block; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--code-dim);
+  padding: 8px 16px 0;
+}
+.code pre { margin: 0; padding: 8px 16px 14px; white-space: pre; }
+.note {
+  background: var(--warn-bg); color: var(--warn-ink); border-radius: 6px; padding: 14px 16px; margin: 0 0 28px;
+  max-width: 68ch; line-height: 1.6;
+}
+.note b { display: block; font-family: var(--f-display); font-size: 18px; line-height: 1.3; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin: 0 0 28px; }
+.grid > * { min-width: 0; }
+.tile { background: var(--paper); border: 1.5px solid var(--margin); border-radius: 8px; padding: 12px 16px 14px; line-height: 1.55; }
+.tile h4 { font-family: var(--f-display); font-size: 18px; margin: 0 0 4px; color: var(--accent); line-height: 1.3; }
+.tile p, .tile ul { margin: 0; font-size: 15px; }
+.tile ul { padding-left: 18px; }
+.vs { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 0 0 28px; }
+.vs > * { min-width: 0; }
+.stack { display: grid; gap: 0; margin: 0 0 28px; max-width: 460px; }
+.stack div { padding: 10px 16px; font-weight: 700; font-size: 14px; letter-spacing: .04em; text-transform: uppercase; line-height: 1.4; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.stack small { font-weight: 500; text-transform: none; letter-spacing: 0; opacity: .85; }
+.stack div:nth-child(1) { background: #1f6b43; color: #fff; }
+.stack div:nth-child(2) { background: #3a8a5c; color: #fff; }
+.stack div:nth-child(3) { background: #62a97d; color: #0f2a1a; }
+.stack div:nth-child(4) { background: #93c8a5; color: #0f2a1a; }
+.stack div:nth-child(5) { background: #c2e2cc; color: #0f2a1a; }
+.flow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 0 28px; }
+.flow span { background: var(--tab); border-radius: 6px; padding: 4px 14px; font-weight: 600; line-height: 1.6; }
+.flow span.orm { background: var(--accent); color: var(--accent-ink); }
+.flow i { font-style: normal; color: var(--accent); font-weight: 700; }
+dl { margin: 0 0 28px; display: grid; grid-template-columns: max-content 1fr; gap: 0 16px; max-width: 68ch; }
+dt { font-family: var(--f-mono); font-weight: 500; color: var(--accent); font-size: 15px; }
+dd { margin: 0; }
+footer { text-align: center; color: var(--ink-soft); font-size: 13px; line-height: 1.6; padding-top: 24px; }
+@media (max-width: 560px) {
+  .sheet { padding: 20px 14px 32px 40px; }
+  .sheet::before { left: 26px; }
+  .sheet::after { display: none; }
+  .vs { grid-template-columns: 1fr; }
+  dl { grid-template-columns: 1fr; }
+  dd { margin-bottom: 14px; }
+  h2 { font-size: 26px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+
+<div class="wrap">
+  <nav class="tabs" aria-label="Secciones del cuaderno">
+    <ul>
+      <li><a href="#presentacion" class="on">Curso</a></li>
+      <li><a href="#persistencia">Persistencia</a></li>
+      <li><a href="#entorno">Entorno</a></li>
+      <li><a href="#postgres">PostgreSQL</a></li>
+      <li><a href="#docker">Docker</a></li>
+      <li><a href="#entidades">Entidades</a></li>
+      <li><a href="#identificadores">Identificadores</a></li>
+      <li><a href="#basic-table">@Basic y @Table</a></li>
+      <li><a href="#column">@Column</a></li>
+      <li><a href="#equals">equals y hashCode</a></li>
+    </ul>
+  </nav>
+
+  <main class="sheet">
+    <header class="cover">
+      <p class="kicker">Apuntes · OpenWebinars</p>
+      <h1>Fundamentos de Spring Data JPA</h1>
+      <p>Resumen de diez documentos: presentación del curso, persistencia, entorno de trabajo, PostgreSQL con y sin Docker, entidades, identificadores, anotaciones y equals/hashCode.</p>
+    </header>
+
+    <!-- 1 -->
+    <section id="presentacion">
+      <h2>Presentación del curso</h2>
+      <p class="from">Presentación.pdf</p>
+
+      <h3>Quién imparte</h3>
+      <p>Profesor de ciclos formativos relacionados con el desarrollo de software. Trabaja con Java, Spring, Hibernate, bases de datos, DevOps, Android y más. LinkedIn: <a href="https://www.linkedin.com/in/luismi-lopez/" target="_blank" rel="noopener">linkedin.com/in/luismi-lopez</a></p>
+
+      <h3>Requisitos</h3>
+      <ul>
+        <li>Conocimientos de Java.</li>
+        <li>Conocimientos básicos de Spring Boot (sirve el curso de Fundamentos de Spring Boot).</li>
+      </ul>
+
+      <h3>Índice del curso</h3>
+      <div class="grid">
+        <div class="tile"><h4>Bloque 1</h4><ul><li>Introducción</li><li>Entidades</li><li>Repositorios y carga de datos</li><li>Asociaciones</li></ul></div>
+        <div class="tile"><h4>Bloque 2</h4><ul><li>Herencia</li><li>Consultas derivadas</li><li>Consultas JPQL</li><li>Paginación y ordenación</li><li>Proyecto práctico</li></ul></div>
+      </div>
+
+      <h3>Objetivos</h3>
+      <ul>
+        <li>Reconocer la importancia de la persistencia de información.</li>
+        <li>Conocer las diferencias entre Hibernate, JPA y Spring Data JPA.</li>
+        <li>Instalar el entorno de trabajo necesario para trabajar con Spring Data JPA.</li>
+        <li>Implementar modelos de datos orientados a objetos para almacenarlos en una base de datos relacional.</li>
+        <li>Definir consultas con alguno de los mecanismos que ofrece Spring Data JPA.</li>
+      </ul>
+    </section>
+
+    <!-- 2 -->
+    <section id="persistencia">
+      <h2>Persistencia de la información</h2>
+      <p class="from">Persistencia de la información.pdf</p>
+
+      <h3>Persistencia de datos</h3>
+      <p>Hay que almacenar datos por motivos distintos:</p>
+      <ul>
+        <li><b>Legal</b></li>
+        <li><b>Relación comercial</b></li>
+        <li><b>Explotación</b></li>
+      </ul>
+      <p>La herramienta para ello son las <b>bases de datos</b>.</p>
+
+      <h3>Bases de datos: SQL frente a NoSQL</h3>
+      <div class="vs">
+        <div class="tile"><h4>SQL (el que usamos)</h4><ul><li>Relacional</li><li>Analítico (OLAP)</li></ul></div>
+        <div class="tile"><h4>NoSQL</h4><ul><li>Clave-valor</li><li>Familia de columnas</li><li>Grafo</li><li>Documento</li></ul></div>
+      </div>
+
+      <h3>Desfase objeto-relacional</h3>
+      <p>Con JDBC puro hay que convertir a mano cada fila en un objeto y cerrar los recursos. Es código largo y repetitivo.</p>
+      <div class="code"><span class="cap">Java · JDBC</span><pre>PreparedStatement ps = con
+    .prepareStatement("SELECT * FROM empleados WHERE id = ?");
+ps.setInt(1, id);
+ResultSet rs = ps.executeQuery();
+Empleado result = null;
+if (rs.next()) {
+    result = new Empleado(rs.getInt("id"),
+        rs.getString("nombre"),
+        rs.getString("apellidos"),
+        rs.getDate("fecha_nacimiento").toLocalDate(),
+        rs.getFloat("sueldo"));
+}
+rs.close();
+ps.close();
+return result;</pre></div>
+
+      <h3>Solución: ORM</h3>
+      <p><b>ORM</b> significa Object-Relational Mapping. Una capa traduce entre los objetos de la aplicación y la base de datos relacional.</p>
+      <div class="flow" aria-label="Objetos, ORM, base de datos relacional"><span>Objetos de la aplicación</span><i>⇄</i><span class="orm">ORM</span><i>⇄</i><span>Base de datos relacional</span></div>
+      <p>ORMs para Java: <b>Hibernate</b> y <b>EclipseLink</b>.</p>
+
+      <h3>La batalla de las siglas</h3>
+      <dl>
+        <dt>JDBC</dt><dd>Java Database Connectivity</dd>
+        <dt>JPA</dt><dd>Java Persistence API</dd>
+        <dt>SGBDR</dt><dd>Sistema Gestor de Bases de Datos Relacional</dd>
+        <dt>H2</dt><dd>Una base de datos</dd>
+      </dl>
+
+      <h3>El stack, de arriba abajo</h3>
+      <div class="stack" role="list">
+        <div role="listitem">Spring Data JPA <small>lo que usamos</small></div>
+        <div role="listitem">JPA <small>el estándar</small></div>
+        <div role="listitem">Hibernate <small>implementación de JPA</small></div>
+        <div role="listitem">JDBC <small>conexión</small></div>
+        <div role="listitem">SGBDR · PostgreSQL <small>los datos</small></div>
+      </div>
+
+      <h3>JPA</h3>
+      <ul>
+        <li>Es una <b>estandarización</b> de la persistencia en Java.</li>
+        <li>No trae implementación concreta. La ponen los proveedores: Hibernate, EclipseLink, OpenJPA…</li>
+      </ul>
+
+      <h3>Spring Data</h3>
+      <ul>
+        <li>Proyecto paraguas.</li>
+        <li>Acceso a orígenes de datos: SQL, NoSQL…</li>
+        <li>Modelo de programación consistente.</li>
+      </ul>
+
+      <h3>Spring Data JPA</h3>
+      <ul>
+        <li>Aprovecha lo mejor de JPA.</li>
+        <li>Elimina código repetitivo.</li>
+        <li>API sencilla para acceder a los datos.</li>
+        <li>Una única dependencia <b>starter</b>.</li>
+      </ul>
+
+      <h3>Características de Spring Data JPA</h3>
+      <div class="grid">
+        <div class="tile"><h4>Consultas</h4><ul><li>Repositorios basados en interfaces</li><li>Consultas derivadas del nombre de un método</li><li>Consultas JPQL o SQL nativo</li><li>Otras estrategias de consulta</li></ul></div>
+        <div class="tile"><h4>Extras</h4><ul><li>Paginación y ordenación</li><li>Integración con Spring Boot</li><li>Gestión automática de transacciones</li></ul></div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section id="entorno">
+      <h2>Entorno de trabajo</h2>
+      <p class="from">Entorno de trabajo.pdf</p>
+
+      <h3>JDK</h3>
+      <ul>
+        <li>Una aplicación de Spring Data JPA es una aplicación Java.</li>
+        <li>Usar el último JDK con versión LTS.</li>
+        <li>Spring Boot 3 necesita <b>JDK 17 o 21</b>.</li>
+      </ul>
+
+      <h3>¿Qué JDK?</h3>
+      <ul>
+        <li>Como estudiante puedes usar Oracle JDK.</li>
+        <li>En producción hay que pagar por él.</li>
+        <li>Otras opciones: OpenJDK, Eclipse Temurin, Amazon Corretto, Liberica JDK…</li>
+      </ul>
+
+      <h3>Instalarlo con gestor de paquetes</h3>
+      <div class="code"><span class="cap">Terminal</span><pre># Mac
+brew install openjdk@21
+
+# Ubuntu
+sudo apt-get install openjdk-21-jdk
+
+# Windows
+choco install openjdk --version=21.0.0</pre></div>
+
+      <h3>IntelliJ IDEA</h3>
+      <div class="vs">
+        <div class="tile"><h4>Community</h4><p>La edición gratuita.</p></div>
+        <div class="tile"><h4>Ultimate</h4><p>La edición completa, de pago.</p></div>
+      </div>
+      <p>Descarga: <a href="https://www.jetbrains.com/idea/download/" target="_blank" rel="noopener">jetbrains.com/idea/download</a></p>
+
+      <h3>Plugins para IntelliJ IDEA</h3>
+      <ul>
+        <li><b>JPA Buddy</b></li>
+        <li><b>Database Navigator</b></li>
+      </ul>
+    </section>
+
+    <!-- 4 -->
+    <section id="postgres">
+      <h2>PostgreSQL sin Docker</h2>
+      <p class="from">Instalación de PostgreSQL sin Docker.pdf</p>
+
+      <h3>PostgreSQL</h3>
+      <ul>
+        <li>SGBDR de código abierto.</li>
+        <li>Relacional y objeto-relacional.</li>
+        <li>Variedad de tipos de datos.</li>
+        <li>Extensiones.</li>
+        <li>Alta disponibilidad y escalabilidad.</li>
+      </ul>
+
+      <h3>Ventajas frente a otros SGBDR</h3>
+      <div class="grid">
+        <div class="tile"><ul><li>Código abierto</li><li>Comunidad activa</li><li>Flexibilidad</li></ul></div>
+        <div class="tile"><ul><li>Rendimiento</li><li>Estándar SQL</li></ul></div>
+      </div>
+
+      <h3>Otros SGBDR</h3>
+      <p>MySQL / MariaDB, Oracle, SQL Server, DB2…</p>
+
+      <h3>pgAdmin</h3>
+      <p>El cliente por excelencia para PostgreSQL.</p>
+
+      <h3>Descarga</h3>
+      <p>Hay paquetes e instaladores para Linux, macOS, Windows, BSD y Solaris, además del código fuente. <a href="https://www.postgresql.org/download/" target="_blank" rel="noopener">postgresql.org/download</a></p>
+    </section>
+
+    <!-- 5 -->
+    <section id="docker">
+      <h2>PostgreSQL con Docker</h2>
+      <p class="from">Despliegue de PostgreSQL con Docker.pdf</p>
+
+      <h3>Docker</h3>
+      <p>Estándar de facto para contenedores de aplicaciones.</p>
+
+      <h3>Instalar Docker Desktop</h3>
+      <ul>
+        <li>Guía oficial: <a href="https://docs.docker.com/desktop/" target="_blank" rel="noopener">docs.docker.com/desktop</a></li>
+        <li>Los contenedores son Linux.</li>
+        <li>En Windows hay dos opciones: <b>WSL 2</b> o <b>Hyper-V</b>.</li>
+      </ul>
+
+      <h3>Desplegar PostgreSQL</h3>
+      <div class="code"><span class="cap">Terminal · imagen estándar</span><pre>docker run --name some-postgres -e POSTGRES_PASSWORD=mypass -d postgres</pre></div>
+      <div class="code"><span class="cap">Terminal · imagen alpine, más ligera</span><pre>docker run --name some-postgres -e POSTGRES_PASSWORD=mypass -d postgres:alpine</pre></div>
+
+      <h3>Desplegar pgAdmin</h3>
+      <div class="code"><span class="cap">Terminal</span><pre>docker run -p 5050:80 \
+  -e 'PGADMIN_DEFAULT_EMAIL=admin@admin.com' \
+  -e 'PGADMIN_DEFAULT_PASSWORD=1' \
+  --name pgadmin \
+  -d dpage/pgadmin4</pre></div>
+      <p>El puerto <code>5050</code> de tu máquina apunta al <code>80</code> del contenedor.</p>
+
+      <h3>Todo junto con docker-compose</h3>
+      <p>El script está en el repositorio del curso.</p>
+      <div class="code"><span class="cap">Terminal</span><pre>docker-compose up -d</pre></div>
+      <div class="note"><b>¡Ojo!</b>PostgreSQL responde en el puerto <code>5433</code> desde fuera (tu máquina) y en el <code>5432</code> desde dentro (entre contenedores).</div>
+
+      <h3>Crear una nueva base de datos</h3>
+      <p>Hace falta para trabajar desde Spring Boot. En pgAdmin: clic derecho sobre <i>Bases de datos</i> → <i>Crear</i> → <i>Base de Datos…</i></p>
+    </section>
+
+    <!-- 6 -->
+    <section id="entidades">
+      <h2>Entidades</h2>
+      <p class="from">Entidades.pdf</p>
+
+      <h3>Modelo de dominio</h3>
+      <ul>
+        <li>Son los conceptos del problema a resolver.</li>
+        <li>Ayuda a comprender el problema y a diseñar la aplicación.</li>
+        <li>Sus elementos son las <b>entidades</b> y las <b>asociaciones</b>.</li>
+      </ul>
+
+      <h3>Entidad</h3>
+      <p>Es un concepto del «mundo real». Sus características son la <b>identidad</b>, los <b>atributos</b> y las <b>asociaciones</b>.</p>
+
+      <h3>Mapeo de entidad a tabla</h3>
+      <div class="grid">
+        <div class="tile"><h4>Entidad Contacto</h4><p>Propiedades: id, nombre, apellidos, email, teléfono.</p></div>
+        <div class="tile"><h4>Tabla CONTACTO</h4><p>Columnas: id, nombre, apellidos, email, teléfono.</p></div>
+      </div>
+
+      <h3>Entidad frente a valor</h3>
+      <div class="vs">
+        <div class="tile"><h4>Entidad</h4><p>Tiene identificador único y ciclo de vida.</p></div>
+        <div class="tile"><h4>Valor</h4><p>Sin identificador ni ciclo de vida propio. Tipos: basic, embedded, collection.</p></div>
+      </div>
+
+      <h3>Requisitos para ser entidad</h3>
+      <ul>
+        <li>Llevar <code>@Entity</code>.</li>
+        <li>Constructor sin argumentos.</li>
+        <li>Ser una clase de nivel superior (top-level).</li>
+        <li>No puede ser enum, interface ni record.</li>
+        <li>No puede ser final.</li>
+        <li>Tener un identificador.</li>
+        <li><code>equals()</code> y <code>hashCode()</code> consistentes.</li>
+      </ul>
+      <p>Cosas que admite o deja abiertas:</p>
+      <ul>
+        <li>¿Serializable? Opcional.</li>
+        <li>Puede ser abstracta o concreta.</li>
+        <li>Puede extender de otra entidad o no.</li>
+        <li>Getters y setters.</li>
+      </ul>
+
+      <h3>Nuestra primera entidad</h3>
+      <ul>
+        <li>Clase <b>Producto</b>.</li>
+        <li>Algunos atributos básicos.</li>
+        <li>Métodos generados con Lombok.</li>
+      </ul>
+    </section>
+
+    <!-- 7 -->
+    <section id="identificadores">
+      <h2>Identificadores</h2>
+      <p class="from">Identificadores.pdf</p>
+
+      <h3>Identificador frente a clave primaria</h3>
+      <div class="vs">
+        <div class="tile"><h4>Identificador</h4><p>Se usa en la <b>entidad</b>.</p></div>
+        <div class="tile"><h4>Clave primaria</h4><p>Se usa en la <b>tabla</b>.</p></div>
+      </div>
+
+      <h3>Requisitos de un identificador</h3>
+      <ul><li>Único</li><li>No nulo</li><li>Inmutable</li></ul>
+
+      <h3>Tipos de identificadores</h3>
+      <p>Simples y compuestos.</p>
+
+      <h3>Tipos de datos soportados</h3>
+      <ul>
+        <li>Primitivos: <code>int</code>, <code>long</code>…</li>
+        <li>Wrapper: <code>Integer</code>, <code>Long</code>…</li>
+        <li><code>String</code> y <code>Date</code> (util y sql).</li>
+        <li><code>BigDecimal</code> y <code>BigInteger</code>.</li>
+        <li><code>UUID</code>.</li>
+      </ul>
+
+      <h3>Generación del valor</h3>
+      <ul>
+        <li>Se pueden generar valores numéricos.</li>
+        <li>También UUID.</li>
+        <li>Se configura con <code>@GeneratedValue(strategy)</code>.</li>
+      </ul>
+    </section>
+
+    <!-- 8 -->
+    <section id="basic-table">
+      <h2>@Basic y @Table</h2>
+      <p class="from">Anotación Basic.pdf</p>
+
+      <h3>@Basic</h3>
+      <ul>
+        <li>Representa un valor básico.</li>
+        <li>Por sí sola se puede ignorar.</li>
+      </ul>
+      <dl>
+        <dt>optional</dt><dd>booleano, por defecto <code>true</code></dd>
+        <dt>fetch</dt><dd><code>FetchType</code>, por defecto <code>EAGER</code></dd>
+      </dl>
+
+      <h3>@Table</h3>
+      <p>Por defecto el nombre de la entidad es el nombre de la tabla. <code>@Table</code> permite personalizarlo.</p>
+      <dl>
+        <dt>name</dt><dd>nombre de la tabla</dd>
+        <dt>schema</dt><dd>esquema</dd>
+        <dt>catalog</dt><dd>catálogo</dd>
+      </dl>
+    </section>
+
+    <!-- 9 -->
+    <section id="column">
+      <h2>@Column</h2>
+      <p class="from">Column.pdf</p>
+
+      <p>Por defecto el nombre del atributo es el nombre de la columna, y el Camel Case pasa a guiones bajos: <code>nombreProducto</code> pasa a <code>nombre_producto</code>.</p>
+
+      <h3>Atributos</h3>
+      <dl>
+        <dt>name</dt><dd>nombre de la columna (por defecto, el del atributo)</dd>
+        <dt>nullable</dt><dd>por defecto <code>true</code></dd>
+        <dt>precision, scale</dt><dd>por defecto <code>0</code> y <code>0</code></dd>
+        <dt>length</dt><dd>por defecto <code>255</code></dd>
+        <dt>unique</dt><dd>restricción de valor único</dd>
+        <dt>insertable, updatable</dt><dd>por defecto <code>true</code> ambos</dd>
+        <dt>columnDefinition</dt><dd>definición SQL de la columna</dd>
+      </dl>
+    </section>
+
+    <!-- 10 -->
+    <section id="equals">
+      <h2>equals y hashCode</h2>
+      <p class="from">Métodos equals y hashCode.pdf</p>
+
+      <h3>Qué hace cada uno</h3>
+      <dl>
+        <dt>equals</dt><dd>dice si dos objetos son iguales</dd>
+        <dt>hashCode</dt><dd>devuelve el código hash de un objeto</dd>
+      </dl>
+
+      <h3>¿Dónde está el problema?</h3>
+      <ul>
+        <li>Las instancias de entidad representan filas.</li>
+        <li>Dos filas son iguales si lo son sus claves primarias.</li>
+        <li>Por tanto, dos objetos son iguales si lo son sus ID.</li>
+      </ul>
+
+      <h3>Dos propuestas: ChatGPT y Thorben Janssen</h3>
+      <p>El <code>equals</code> es el mismo en ambas. Cambia el <code>hashCode</code>.</p>
+      <div class="vs">
+        <div class="code"><span class="cap">ChatGPT</span><pre>return Objects.hash(id);</pre></div>
+        <div class="code"><span class="cap">Thorben Janssen</span><pre>return 13;</pre></div>
+      </div>
+
+      <h3>Una buena aproximación</h3>
+      <div class="code"><span class="cap">Java · entidad Student</span><pre>@Getter
+@Setter
+@Entity
+@Table(name = "student")
+public class Student {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Student other = (Student) o;
+        return id != null && id.equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+}</pre></div>
+
+      <h3>La definitiva</h3>
+      <p>Que lo haga JPA Buddy. Si usas <code>@Data</code> de Lombok en una entidad JPA, avisa de que no se recomienda por problemas graves de rendimiento y consumo de memoria. Ofrece sustituirlo por anotaciones seguras con <code>equals()</code> y <code>hashCode()</code> autogenerados.</p>
+    </section>
+
+    <footer>Apuntes hechos a partir de los PDFs de OpenWebinars</footer>
+  </main>
+</div>
+
+<script>
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll(".tabs a"));
+  var secs = links.map(function (a) { return document.querySelector(a.getAttribute("href")); });
+  function mark() {
+    var y = window.scrollY + 120, cur = 0;
+    secs.forEach(function (s, i) { if (s && s.offsetTop <= y) cur = i; });
+    links.forEach(function (a, i) { a.classList.toggle("on", i === cur); });
+  }
+  window.addEventListener("scroll", mark, { passive: true });
+  mark();
+})();
+</script>
+
+</body></html>
