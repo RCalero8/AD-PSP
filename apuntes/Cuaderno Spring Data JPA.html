@@ -3,7 +3,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: hoja de cuaderno pautada sobre fondo verde, pestañas fijas arriba, una sección por PDF */
+/* Layout: hoja de cuaderno pautada sobre fondo verde, pestañas fijas arriba, una sección por bloque del curso */
 :root {
   --bg: #dfece1;
   --paper: #f4faf4;
@@ -55,7 +55,6 @@ body::before {
 }
 .wrap { max-width: 880px; margin: 0 auto; }
 
-/* Pestañas */
 .tabs {
   position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
   background: var(--bg); padding-block: 12px 0;
@@ -73,7 +72,6 @@ body::before {
 .tabs a:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .tabs a.on { background: var(--paper); color: var(--accent); }
 
-/* Hoja */
 .sheet {
   background-color: var(--paper);
   background-image: linear-gradient(to bottom, transparent 27px, var(--rule) 27px, var(--rule) 28px);
@@ -82,19 +80,14 @@ body::before {
   box-shadow: 0 1px 0 var(--rule), 0 10px 30px -18px rgba(10, 40, 20, .45);
   padding: 28px 24px 40px 64px; position: relative;
 }
-.sheet::before {
-  content: ""; position: absolute; left: 44px; top: 0; bottom: 0; width: 2px; background: var(--margin);
-}
+.sheet::before { content: ""; position: absolute; left: 44px; top: 0; bottom: 0; width: 2px; background: var(--margin); }
 .sheet::after {
   content: ""; position: absolute; left: 14px; top: 56px; bottom: 56px; width: 12px;
   background: radial-gradient(circle at 6px 6px, var(--bg) 0 5px, transparent 5.5px) 0 0 / 12px 112px repeat-y;
 }
 .cover { padding-bottom: 8px; }
 .cover .kicker { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin: 0; }
-.cover h1 {
-  font-family: var(--f-display); font-size: clamp(34px, 7vw, 52px); line-height: 1.15; margin: 0;
-  text-wrap: balance; font-weight: 700;
-}
+.cover h1 { font-family: var(--f-display); font-size: clamp(34px, 7vw, 52px); line-height: 1.15; margin: 0; text-wrap: balance; font-weight: 700; }
 .cover p { margin: 0; color: var(--ink-soft); max-width: 58ch; }
 
 section { scroll-margin-top: 72px; padding-top: 28px; }
@@ -111,23 +104,11 @@ li::marker { color: var(--accent); }
 ul ul { margin: 0; }
 b, strong { font-weight: 700; }
 a { color: var(--accent); text-underline-offset: 3px; overflow-wrap: anywhere; }
-code {
-  font-family: var(--f-mono); font-size: .86em; background: var(--hl); color: var(--ink);
-  padding: 1px 6px; border-radius: 4px; overflow-wrap: anywhere;
-}
-.code {
-  background: var(--code-bg); color: var(--code-fg); border-radius: 8px; margin: 0 0 28px;
-  font-family: var(--f-mono); font-size: 13.5px; line-height: 1.6; overflow-x: auto; max-width: 100%;
-}
-.code .cap {
-  display: block; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--code-dim);
-  padding: 8px 16px 0;
-}
+code { font-family: var(--f-mono); font-size: .86em; background: var(--hl); color: var(--ink); padding: 1px 6px; border-radius: 4px; overflow-wrap: anywhere; }
+.code { background: var(--code-bg); color: var(--code-fg); border-radius: 8px; margin: 0 0 28px; font-family: var(--f-mono); font-size: 13.5px; line-height: 1.6; overflow-x: auto; max-width: 100%; }
+.code .cap { display: block; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--code-dim); padding: 8px 16px 0; }
 .code pre { margin: 0; padding: 8px 16px 14px; white-space: pre; }
-.note {
-  background: var(--warn-bg); color: var(--warn-ink); border-radius: 6px; padding: 14px 16px; margin: 0 0 28px;
-  max-width: 68ch; line-height: 1.6;
-}
+.note { background: var(--warn-bg); color: var(--warn-ink); border-radius: 6px; padding: 14px 16px; margin: 0 0 28px; max-width: 68ch; line-height: 1.6; }
 .note b { display: block; font-family: var(--f-display); font-size: 18px; line-height: 1.3; }
 .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin: 0 0 28px; }
 .grid > * { min-width: 0; }
@@ -137,6 +118,7 @@ code {
 .tile ul { padding-left: 18px; }
 .vs { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 0 0 28px; }
 .vs > * { min-width: 0; }
+.vs .code { margin: 0; }
 .stack { display: grid; gap: 0; margin: 0 0 28px; max-width: 460px; }
 .stack div { padding: 10px 16px; font-weight: 700; font-size: 14px; letter-spacing: .04em; text-transform: uppercase; line-height: 1.4; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .stack small { font-weight: 500; text-transform: none; letter-spacing: 0; opacity: .85; }
@@ -152,6 +134,12 @@ code {
 dl { margin: 0 0 28px; display: grid; grid-template-columns: max-content 1fr; gap: 0 16px; max-width: 68ch; }
 dt { font-family: var(--f-mono); font-weight: 500; color: var(--accent); font-size: 15px; }
 dd { margin: 0; }
+.tbl { overflow-x: auto; margin: 0 0 28px; max-width: 100%; }
+.tbl table { border-collapse: collapse; font-size: 15px; line-height: 1.5; min-width: 440px; }
+.tbl th { text-align: left; font-family: var(--f-display); font-size: 17px; color: var(--accent); border-bottom: 2px solid var(--margin); padding: 4px 14px 4px 0; }
+.tbl td { padding: 8px 14px 8px 0; vertical-align: top; border-bottom: 1px solid var(--rule); }
+.tbl td:first-child { font-family: var(--f-mono); font-size: 13.5px; white-space: nowrap; color: var(--accent); }
+.part { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: var(--accent-ink); background: var(--accent); display: inline-block; padding: 2px 10px; border-radius: 4px; margin: 28px 0 0; line-height: 1.7; }
 footer { text-align: center; color: var(--ink-soft); font-size: 13px; line-height: 1.6; padding-top: 24px; }
 @media (max-width: 560px) {
   .sheet { padding: 20px 14px 32px 40px; }
@@ -168,16 +156,19 @@ footer { text-align: center; color: var(--ink-soft); font-size: 13px; line-heigh
 <div class="wrap">
   <nav class="tabs" aria-label="Secciones del cuaderno">
     <ul>
-      <li><a href="#presentacion" class="on">Curso</a></li>
+      <li><a href="#curso" class="on">Curso</a></li>
       <li><a href="#persistencia">Persistencia</a></li>
       <li><a href="#entorno">Entorno</a></li>
-      <li><a href="#postgres">PostgreSQL</a></li>
-      <li><a href="#docker">Docker</a></li>
+      <li><a href="#proyecto">Proyecto</a></li>
       <li><a href="#entidades">Entidades</a></li>
-      <li><a href="#identificadores">Identificadores</a></li>
-      <li><a href="#basic-table">@Basic y @Table</a></li>
-      <li><a href="#column">@Column</a></li>
-      <li><a href="#equals">equals y hashCode</a></li>
+      <li><a href="#repositorio">Repositorio y datos</a></li>
+      <li><a href="#asociaciones">Asociaciones</a></li>
+      <li><a href="#fetching">Fetching y cascada</a></li>
+      <li><a href="#herencia">Herencia</a></li>
+      <li><a href="#derivadas">Consultas derivadas</a></li>
+      <li><a href="#jpql">JPQL</a></li>
+      <li><a href="#modifying">@Modifying</a></li>
+      <li><a href="#paginacion">Paginación y orden</a></li>
     </ul>
   </nav>
 
@@ -185,54 +176,40 @@ footer { text-align: center; color: var(--ink-soft); font-size: 13px; line-heigh
     <header class="cover">
       <p class="kicker">Apuntes · OpenWebinars</p>
       <h1>Fundamentos de Spring Data JPA</h1>
-      <p>Resumen de diez documentos: presentación del curso, persistencia, entorno de trabajo, PostgreSQL con y sin Docker, entidades, identificadores, anotaciones y equals/hashCode.</p>
+      <p>Cuaderno completo del curso, de la persistencia de datos hasta la paginación y la ordenación. Incluye el entorno con PostgreSQL y Docker.</p>
     </header>
 
-    <!-- 1 -->
-    <section id="presentacion">
+    <!-- CURSO -->
+    <section id="curso">
       <h2>Presentación del curso</h2>
       <p class="from">Presentación.pdf</p>
-
-      <h3>Quién imparte</h3>
-      <p>Profesor de ciclos formativos relacionados con el desarrollo de software. Trabaja con Java, Spring, Hibernate, bases de datos, DevOps, Android y más. LinkedIn: <a href="https://www.linkedin.com/in/luismi-lopez/" target="_blank" rel="noopener">linkedin.com/in/luismi-lopez</a></p>
-
       <h3>Requisitos</h3>
       <ul>
         <li>Conocimientos de Java.</li>
         <li>Conocimientos básicos de Spring Boot (sirve el curso de Fundamentos de Spring Boot).</li>
       </ul>
-
-      <h3>Índice del curso</h3>
-      <div class="grid">
-        <div class="tile"><h4>Bloque 1</h4><ul><li>Introducción</li><li>Entidades</li><li>Repositorios y carga de datos</li><li>Asociaciones</li></ul></div>
-        <div class="tile"><h4>Bloque 2</h4><ul><li>Herencia</li><li>Consultas derivadas</li><li>Consultas JPQL</li><li>Paginación y ordenación</li><li>Proyecto práctico</li></ul></div>
-      </div>
-
       <h3>Objetivos</h3>
       <ul>
         <li>Reconocer la importancia de la persistencia de información.</li>
         <li>Conocer las diferencias entre Hibernate, JPA y Spring Data JPA.</li>
-        <li>Instalar el entorno de trabajo necesario para trabajar con Spring Data JPA.</li>
+        <li>Instalar el entorno de trabajo necesario.</li>
         <li>Implementar modelos de datos orientados a objetos para almacenarlos en una base de datos relacional.</li>
         <li>Definir consultas con alguno de los mecanismos que ofrece Spring Data JPA.</li>
       </ul>
+      <h3>Índice</h3>
+      <div class="grid">
+        <div class="tile"><h4>Bloque 1</h4><ul><li>Introducción</li><li>Entidades</li><li>Repositorios y carga de datos</li><li>Asociaciones</li></ul></div>
+        <div class="tile"><h4>Bloque 2</h4><ul><li>Herencia</li><li>Consultas derivadas</li><li>Consultas JPQL</li><li>Paginación y ordenación</li><li>Proyecto práctico</li></ul></div>
+      </div>
     </section>
 
-    <!-- 2 -->
+    <!-- PERSISTENCIA -->
     <section id="persistencia">
       <h2>Persistencia de la información</h2>
-      <p class="from">Persistencia de la información.pdf</p>
+      <p class="from">Fundamentos de Spring Data JPA · bloque de introducción</p>
 
       <h3>Persistencia de datos</h3>
-      <p>Hay que almacenar datos por motivos distintos:</p>
-      <ul>
-        <li><b>Legal</b></li>
-        <li><b>Relación comercial</b></li>
-        <li><b>Explotación</b></li>
-      </ul>
-      <p>La herramienta para ello son las <b>bases de datos</b>.</p>
-
-      <h3>Bases de datos: SQL frente a NoSQL</h3>
+      <p>Hay que almacenar datos por motivos <b>legales</b>, de <b>relación comercial</b> y de <b>explotación</b>. La herramienta son las bases de datos.</p>
       <div class="vs">
         <div class="tile"><h4>SQL (el que usamos)</h4><ul><li>Relacional</li><li>Analítico (OLAP)</li></ul></div>
         <div class="tile"><h4>NoSQL</h4><ul><li>Clave-valor</li><li>Familia de columnas</li><li>Grafo</li><li>Documento</li></ul></div>
@@ -257,9 +234,8 @@ ps.close();
 return result;</pre></div>
 
       <h3>Solución: ORM</h3>
-      <p><b>ORM</b> significa Object-Relational Mapping. Una capa traduce entre los objetos de la aplicación y la base de datos relacional.</p>
-      <div class="flow" aria-label="Objetos, ORM, base de datos relacional"><span>Objetos de la aplicación</span><i>⇄</i><span class="orm">ORM</span><i>⇄</i><span>Base de datos relacional</span></div>
-      <p>ORMs para Java: <b>Hibernate</b> y <b>EclipseLink</b>.</p>
+      <p><b>ORM</b> significa Object-Relational Mapping. Una capa traduce entre los objetos y la base de datos relacional. Para Java: <b>Hibernate</b> y <b>EclipseLink</b>.</p>
+      <div class="flow" aria-label="Objetos, ORM, base de datos relacional"><span>Objetos</span><i>⇄</i><span class="orm">ORM</span><i>⇄</i><span>Base de datos relacional</span></div>
 
       <h3>La batalla de las siglas</h3>
       <dl>
@@ -269,7 +245,7 @@ return result;</pre></div>
         <dt>H2</dt><dd>Una base de datos</dd>
       </dl>
 
-      <h3>El stack, de arriba abajo</h3>
+      <h3>El stack</h3>
       <div class="stack" role="list">
         <div role="listitem">Spring Data JPA <small>lo que usamos</small></div>
         <div role="listitem">JPA <small>el estándar</small></div>
@@ -278,55 +254,36 @@ return result;</pre></div>
         <div role="listitem">SGBDR · PostgreSQL <small>los datos</small></div>
       </div>
 
-      <h3>JPA</h3>
-      <ul>
-        <li>Es una <b>estandarización</b> de la persistencia en Java.</li>
-        <li>No trae implementación concreta. La ponen los proveedores: Hibernate, EclipseLink, OpenJPA…</li>
-      </ul>
-
-      <h3>Spring Data</h3>
-      <ul>
-        <li>Proyecto paraguas.</li>
-        <li>Acceso a orígenes de datos: SQL, NoSQL…</li>
-        <li>Modelo de programación consistente.</li>
-      </ul>
-
-      <h3>Spring Data JPA</h3>
-      <ul>
-        <li>Aprovecha lo mejor de JPA.</li>
-        <li>Elimina código repetitivo.</li>
-        <li>API sencilla para acceder a los datos.</li>
-        <li>Una única dependencia <b>starter</b>.</li>
-      </ul>
+      <div class="grid">
+        <div class="tile"><h4>JPA</h4><ul><li>Estandarización de la persistencia en Java.</li><li>Sin implementación concreta. La ponen proveedores: Hibernate, EclipseLink, OpenJPA…</li></ul></div>
+        <div class="tile"><h4>Spring Data</h4><ul><li>Proyecto paraguas.</li><li>Acceso a orígenes de datos: SQL, NoSQL…</li><li>Modelo consistente.</li></ul></div>
+        <div class="tile"><h4>Spring Data JPA</h4><ul><li>Aprovecha lo mejor de JPA.</li><li>Elimina código repetitivo.</li><li>API sencilla para acceder a los datos.</li><li>Una única dependencia <b>starter</b>.</li></ul></div>
+      </div>
 
       <h3>Características de Spring Data JPA</h3>
-      <div class="grid">
-        <div class="tile"><h4>Consultas</h4><ul><li>Repositorios basados en interfaces</li><li>Consultas derivadas del nombre de un método</li><li>Consultas JPQL o SQL nativo</li><li>Otras estrategias de consulta</li></ul></div>
-        <div class="tile"><h4>Extras</h4><ul><li>Paginación y ordenación</li><li>Integración con Spring Boot</li><li>Gestión automática de transacciones</li></ul></div>
-      </div>
+      <ul>
+        <li>Repositorios basados en interfaces.</li>
+        <li>Consultas derivadas del nombre de un método.</li>
+        <li>Consultas JPQL o SQL nativo.</li>
+        <li>Otras estrategias de consulta.</li>
+        <li>Paginación y ordenación.</li>
+        <li>Integración con Spring Boot.</li>
+        <li>Gestión automática de transacciones.</li>
+      </ul>
     </section>
 
-    <!-- 3 -->
+    <!-- ENTORNO -->
     <section id="entorno">
       <h2>Entorno de trabajo</h2>
-      <p class="from">Entorno de trabajo.pdf</p>
+      <p class="from">Entorno de trabajo · PostgreSQL sin Docker · PostgreSQL con Docker</p>
 
-      <h3>JDK</h3>
+      <span class="part">JDK e IDE</span>
       <ul>
-        <li>Una aplicación de Spring Data JPA es una aplicación Java.</li>
-        <li>Usar el último JDK con versión LTS.</li>
-        <li>Spring Boot 3 necesita <b>JDK 17 o 21</b>.</li>
+        <li>Spring Boot 3 necesita <b>JDK 17 o 21</b> (usar la última versión LTS).</li>
+        <li>Como estudiante vale Oracle JDK. En producción es de pago. Alternativas: OpenJDK, Eclipse Temurin, Amazon Corretto, Liberica JDK…</li>
+        <li><b>IntelliJ IDEA</b>: Community (gratuita) o Ultimate (de pago). Plugins útiles: <b>JPA Buddy</b> y <b>Database Navigator</b>.</li>
       </ul>
-
-      <h3>¿Qué JDK?</h3>
-      <ul>
-        <li>Como estudiante puedes usar Oracle JDK.</li>
-        <li>En producción hay que pagar por él.</li>
-        <li>Otras opciones: OpenJDK, Eclipse Temurin, Amazon Corretto, Liberica JDK…</li>
-      </ul>
-
-      <h3>Instalarlo con gestor de paquetes</h3>
-      <div class="code"><span class="cap">Terminal</span><pre># Mac
+      <div class="code"><span class="cap">Terminal · instalar el JDK</span><pre># Mac
 brew install openjdk@21
 
 # Ubuntu
@@ -335,100 +292,66 @@ sudo apt-get install openjdk-21-jdk
 # Windows
 choco install openjdk --version=21.0.0</pre></div>
 
-      <h3>IntelliJ IDEA</h3>
-      <div class="vs">
-        <div class="tile"><h4>Community</h4><p>La edición gratuita.</p></div>
-        <div class="tile"><h4>Ultimate</h4><p>La edición completa, de pago.</p></div>
-      </div>
-      <p>Descarga: <a href="https://www.jetbrains.com/idea/download/" target="_blank" rel="noopener">jetbrains.com/idea/download</a></p>
-
-      <h3>Plugins para IntelliJ IDEA</h3>
+      <span class="part">PostgreSQL</span>
       <ul>
-        <li><b>JPA Buddy</b></li>
-        <li><b>Database Navigator</b></li>
-      </ul>
-    </section>
-
-    <!-- 4 -->
-    <section id="postgres">
-      <h2>PostgreSQL sin Docker</h2>
-      <p class="from">Instalación de PostgreSQL sin Docker.pdf</p>
-
-      <h3>PostgreSQL</h3>
-      <ul>
-        <li>SGBDR de código abierto.</li>
-        <li>Relacional y objeto-relacional.</li>
-        <li>Variedad de tipos de datos.</li>
-        <li>Extensiones.</li>
-        <li>Alta disponibilidad y escalabilidad.</li>
+        <li>SGBDR de código abierto, relacional y objeto-relacional.</li>
+        <li>Variedad de tipos de datos, extensiones, alta disponibilidad y escalabilidad.</li>
+        <li>Ventajas: código abierto, comunidad activa, flexibilidad, rendimiento y estándar SQL.</li>
+        <li>Otros SGBDR: MySQL / MariaDB, Oracle, SQL Server, DB2…</li>
+        <li><b>pgAdmin</b> es el cliente por excelencia.</li>
+        <li>Descarga: <a href="https://www.postgresql.org/download/" target="_blank" rel="noopener">postgresql.org/download</a></li>
       </ul>
 
-      <h3>Ventajas frente a otros SGBDR</h3>
-      <div class="grid">
-        <div class="tile"><ul><li>Código abierto</li><li>Comunidad activa</li><li>Flexibilidad</li></ul></div>
-        <div class="tile"><ul><li>Rendimiento</li><li>Estándar SQL</li></ul></div>
-      </div>
-
-      <h3>Otros SGBDR</h3>
-      <p>MySQL / MariaDB, Oracle, SQL Server, DB2…</p>
-
-      <h3>pgAdmin</h3>
-      <p>El cliente por excelencia para PostgreSQL.</p>
-
-      <h3>Descarga</h3>
-      <p>Hay paquetes e instaladores para Linux, macOS, Windows, BSD y Solaris, además del código fuente. <a href="https://www.postgresql.org/download/" target="_blank" rel="noopener">postgresql.org/download</a></p>
-    </section>
-
-    <!-- 5 -->
-    <section id="docker">
-      <h2>PostgreSQL con Docker</h2>
-      <p class="from">Despliegue de PostgreSQL con Docker.pdf</p>
-
-      <h3>Docker</h3>
-      <p>Estándar de facto para contenedores de aplicaciones.</p>
-
-      <h3>Instalar Docker Desktop</h3>
-      <ul>
-        <li>Guía oficial: <a href="https://docs.docker.com/desktop/" target="_blank" rel="noopener">docs.docker.com/desktop</a></li>
-        <li>Los contenedores son Linux.</li>
-        <li>En Windows hay dos opciones: <b>WSL 2</b> o <b>Hyper-V</b>.</li>
-      </ul>
-
-      <h3>Desplegar PostgreSQL</h3>
-      <div class="code"><span class="cap">Terminal · imagen estándar</span><pre>docker run --name some-postgres -e POSTGRES_PASSWORD=mypass -d postgres</pre></div>
-      <div class="code"><span class="cap">Terminal · imagen alpine, más ligera</span><pre>docker run --name some-postgres -e POSTGRES_PASSWORD=mypass -d postgres:alpine</pre></div>
-
-      <h3>Desplegar pgAdmin</h3>
-      <div class="code"><span class="cap">Terminal</span><pre>docker run -p 5050:80 \
+      <span class="part">Docker</span>
+      <p>Estándar de facto para contenedores. Los contenedores son Linux; en Windows hay dos opciones: <b>WSL 2</b> o <b>Hyper-V</b>. Guía: <a href="https://docs.docker.com/desktop/" target="_blank" rel="noopener">docs.docker.com/desktop</a></p>
+      <div class="code"><span class="cap">Terminal · PostgreSQL (alpine es la imagen ligera)</span><pre>docker run --name some-postgres -e POSTGRES_PASSWORD=mypass -d postgres
+docker run --name some-postgres -e POSTGRES_PASSWORD=mypass -d postgres:alpine</pre></div>
+      <div class="code"><span class="cap">Terminal · pgAdmin</span><pre>docker run -p 5050:80 \
   -e 'PGADMIN_DEFAULT_EMAIL=admin@admin.com' \
   -e 'PGADMIN_DEFAULT_PASSWORD=1' \
   --name pgadmin \
   -d dpage/pgadmin4</pre></div>
-      <p>El puerto <code>5050</code> de tu máquina apunta al <code>80</code> del contenedor.</p>
-
-      <h3>Todo junto con docker-compose</h3>
-      <p>El script está en el repositorio del curso.</p>
-      <div class="code"><span class="cap">Terminal</span><pre>docker-compose up -d</pre></div>
+      <div class="code"><span class="cap">Terminal · todo junto (el script está en el repositorio del curso)</span><pre>docker-compose up -d</pre></div>
       <div class="note"><b>¡Ojo!</b>PostgreSQL responde en el puerto <code>5433</code> desde fuera (tu máquina) y en el <code>5432</code> desde dentro (entre contenedores).</div>
-
-      <h3>Crear una nueva base de datos</h3>
-      <p>Hace falta para trabajar desde Spring Boot. En pgAdmin: clic derecho sobre <i>Bases de datos</i> → <i>Crear</i> → <i>Base de Datos…</i></p>
+      <p>Después hay que crear una base de datos nueva para Spring Boot. En pgAdmin: clic derecho sobre <i>Bases de datos</i> → <i>Crear</i> → <i>Base de Datos…</i></p>
     </section>
 
-    <!-- 6 -->
+    <!-- PROYECTO -->
+    <section id="proyecto">
+      <h2>Primer proyecto</h2>
+      <p class="from">Fundamentos de Spring Data JPA · primer proyecto</p>
+
+      <h3>start.spring.io</h3>
+      <p>Asistente para crear proyectos de Spring Boot: <a href="https://start.spring.io/" target="_blank" rel="noopener">start.spring.io</a>. Ahí eliges las dependencias.</p>
+
+      <h3>Conexión a la base de datos</h3>
+      <p>Hay varias vías: <code>application.properties</code> o JavaConfig. Las tres propiedades básicas:</p>
+      <dl>
+        <dt>spring.datasource.url</dt><dd>URL de la base de datos</dd>
+        <dt>spring.datasource.username</dt><dd>usuario</dd>
+        <dt>spring.datasource.password</dt><dd>contraseña</dd>
+      </dl>
+
+      <h3>Algunas properties más</h3>
+      <dl>
+        <dt>spring.jpa.hibernate.ddl-auto</dt><dd><code>none</code>, <code>validate</code>, <code>create</code>, <code>create-drop</code>, <code>update</code></dd>
+        <dt>spring.datasource.driverClassName</dt><dd>no es obligatoria si se puede detectar</dd>
+        <dt>spring.sql.init.mode</dt><dd><code>always</code>, <code>never</code></dd>
+        <dt>spring.jpa.show_sql</dt><dd><code>true</code>, <code>false</code></dd>
+      </dl>
+    </section>
+
+    <!-- ENTIDADES -->
     <section id="entidades">
       <h2>Entidades</h2>
-      <p class="from">Entidades.pdf</p>
+      <p class="from">Entidades · Identificadores · @Basic y @Table · @Column · equals y hashCode</p>
 
-      <h3>Modelo de dominio</h3>
+      <span class="part">Modelo de dominio</span>
       <ul>
-        <li>Son los conceptos del problema a resolver.</li>
-        <li>Ayuda a comprender el problema y a diseñar la aplicación.</li>
+        <li>Son los conceptos del problema a resolver: ayudan a comprender el problema y a diseñar la aplicación.</li>
         <li>Sus elementos son las <b>entidades</b> y las <b>asociaciones</b>.</li>
+        <li>Una entidad es un concepto del «mundo real» con <b>identidad</b>, <b>atributos</b> y <b>asociaciones</b>.</li>
       </ul>
-
-      <h3>Entidad</h3>
-      <p>Es un concepto del «mundo real». Sus características son la <b>identidad</b>, los <b>atributos</b> y las <b>asociaciones</b>.</p>
 
       <h3>Mapeo de entidad a tabla</h3>
       <div class="grid">
@@ -438,7 +361,7 @@ choco install openjdk --version=21.0.0</pre></div>
 
       <h3>Entidad frente a valor</h3>
       <div class="vs">
-        <div class="tile"><h4>Entidad</h4><p>Tiene identificador único y ciclo de vida.</p></div>
+        <div class="tile"><h4>Entidad</h4><p>Identificador único y ciclo de vida.</p></div>
         <div class="tile"><h4>Valor</h4><p>Sin identificador ni ciclo de vida propio. Tipos: basic, embedded, collection.</p></div>
       </div>
 
@@ -446,132 +369,60 @@ choco install openjdk --version=21.0.0</pre></div>
       <ul>
         <li>Llevar <code>@Entity</code>.</li>
         <li>Constructor sin argumentos.</li>
-        <li>Ser una clase de nivel superior (top-level).</li>
-        <li>No puede ser enum, interface ni record.</li>
-        <li>No puede ser final.</li>
+        <li>Clase de nivel superior (top-level). No enum, interface ni record. No final.</li>
         <li>Tener un identificador.</li>
         <li><code>equals()</code> y <code>hashCode()</code> consistentes.</li>
       </ul>
-      <p>Cosas que admite o deja abiertas:</p>
-      <ul>
-        <li>¿Serializable? Opcional.</li>
-        <li>Puede ser abstracta o concreta.</li>
-        <li>Puede extender de otra entidad o no.</li>
-        <li>Getters y setters.</li>
-      </ul>
+      <p>Lo que queda abierto: ¿serializable?, abstracta o concreta, extender de otra entidad o no, getters y setters. La primera entidad del curso es la clase <b>Producto</b>, con métodos generados con Lombok.</p>
 
-      <h3>Nuestra primera entidad</h3>
-      <ul>
-        <li>Clase <b>Producto</b>.</li>
-        <li>Algunos atributos básicos.</li>
-        <li>Métodos generados con Lombok.</li>
-      </ul>
-    </section>
-
-    <!-- 7 -->
-    <section id="identificadores">
-      <h2>Identificadores</h2>
-      <p class="from">Identificadores.pdf</p>
-
-      <h3>Identificador frente a clave primaria</h3>
+      <span class="part">Identificadores</span>
       <div class="vs">
         <div class="tile"><h4>Identificador</h4><p>Se usa en la <b>entidad</b>.</p></div>
         <div class="tile"><h4>Clave primaria</h4><p>Se usa en la <b>tabla</b>.</p></div>
       </div>
-
-      <h3>Requisitos de un identificador</h3>
-      <ul><li>Único</li><li>No nulo</li><li>Inmutable</li></ul>
-
-      <h3>Tipos de identificadores</h3>
-      <p>Simples y compuestos.</p>
-
-      <h3>Tipos de datos soportados</h3>
       <ul>
-        <li>Primitivos: <code>int</code>, <code>long</code>…</li>
-        <li>Wrapper: <code>Integer</code>, <code>Long</code>…</li>
-        <li><code>String</code> y <code>Date</code> (util y sql).</li>
-        <li><code>BigDecimal</code> y <code>BigInteger</code>.</li>
-        <li><code>UUID</code>.</li>
+        <li>Requisitos: <b>único</b>, <b>no nulo</b>, <b>inmutable</b>.</li>
+        <li>Tipos: simples y compuestos.</li>
+        <li>Datos soportados: primitivos (<code>int</code>, <code>long</code>…), wrappers (<code>Integer</code>, <code>Long</code>…), <code>String</code>, <code>Date</code> (util y sql), <code>BigDecimal</code>, <code>BigInteger</code> y <code>UUID</code>.</li>
+        <li>Se pueden generar valores numéricos y UUID con <code>@GeneratedValue(strategy)</code>.</li>
       </ul>
 
-      <h3>Generación del valor</h3>
-      <ul>
-        <li>Se pueden generar valores numéricos.</li>
-        <li>También UUID.</li>
-        <li>Se configura con <code>@GeneratedValue(strategy)</code>.</li>
-      </ul>
-    </section>
-
-    <!-- 8 -->
-    <section id="basic-table">
-      <h2>@Basic y @Table</h2>
-      <p class="from">Anotación Basic.pdf</p>
-
-      <h3>@Basic</h3>
-      <ul>
-        <li>Representa un valor básico.</li>
-        <li>Por sí sola se puede ignorar.</li>
-      </ul>
+      <span class="part">@Basic y @Table</span>
+      <p><code>@Basic</code> representa un valor básico y por sí sola se puede ignorar.</p>
       <dl>
         <dt>optional</dt><dd>booleano, por defecto <code>true</code></dd>
         <dt>fetch</dt><dd><code>FetchType</code>, por defecto <code>EAGER</code></dd>
       </dl>
-
-      <h3>@Table</h3>
-      <p>Por defecto el nombre de la entidad es el nombre de la tabla. <code>@Table</code> permite personalizarlo.</p>
+      <p>Por defecto el nombre de la entidad es el nombre de la tabla. <code>@Table</code> permite personalizarlo:</p>
       <dl>
         <dt>name</dt><dd>nombre de la tabla</dd>
         <dt>schema</dt><dd>esquema</dd>
         <dt>catalog</dt><dd>catálogo</dd>
       </dl>
-    </section>
 
-    <!-- 9 -->
-    <section id="column">
-      <h2>@Column</h2>
-      <p class="from">Column.pdf</p>
-
-      <p>Por defecto el nombre del atributo es el nombre de la columna, y el Camel Case pasa a guiones bajos: <code>nombreProducto</code> pasa a <code>nombre_producto</code>.</p>
-
-      <h3>Atributos</h3>
+      <span class="part">@Column</span>
+      <p>Por defecto el nombre del atributo es el de la columna, y el Camel Case pasa a guiones bajos: <code>nombreProducto</code> pasa a <code>nombre_producto</code>.</p>
       <dl>
-        <dt>name</dt><dd>nombre de la columna (por defecto, el del atributo)</dd>
+        <dt>name</dt><dd>nombre de la columna</dd>
         <dt>nullable</dt><dd>por defecto <code>true</code></dd>
         <dt>precision, scale</dt><dd>por defecto <code>0</code> y <code>0</code></dd>
         <dt>length</dt><dd>por defecto <code>255</code></dd>
-        <dt>unique</dt><dd>restricción de valor único</dd>
+        <dt>unique</dt><dd>valor único</dd>
         <dt>insertable, updatable</dt><dd>por defecto <code>true</code> ambos</dd>
         <dt>columnDefinition</dt><dd>definición SQL de la columna</dd>
       </dl>
-    </section>
 
-    <!-- 10 -->
-    <section id="equals">
-      <h2>equals y hashCode</h2>
-      <p class="from">Métodos equals y hashCode.pdf</p>
-
-      <h3>Qué hace cada uno</h3>
-      <dl>
-        <dt>equals</dt><dd>dice si dos objetos son iguales</dd>
-        <dt>hashCode</dt><dd>devuelve el código hash de un objeto</dd>
-      </dl>
-
-      <h3>¿Dónde está el problema?</h3>
+      <span class="part">equals y hashCode</span>
       <ul>
-        <li>Las instancias de entidad representan filas.</li>
-        <li>Dos filas son iguales si lo son sus claves primarias.</li>
-        <li>Por tanto, dos objetos son iguales si lo son sus ID.</li>
+        <li><code>equals</code> dice si dos objetos son iguales. <code>hashCode</code> devuelve el código hash.</li>
+        <li>Las instancias de entidad representan filas. Dos filas son iguales si lo son sus claves primarias, así que dos objetos son iguales si lo son sus ID.</li>
       </ul>
-
-      <h3>Dos propuestas: ChatGPT y Thorben Janssen</h3>
-      <p>El <code>equals</code> es el mismo en ambas. Cambia el <code>hashCode</code>.</p>
+      <p>Dos propuestas con el mismo <code>equals</code> y distinto <code>hashCode</code>:</p>
       <div class="vs">
         <div class="code"><span class="cap">ChatGPT</span><pre>return Objects.hash(id);</pre></div>
         <div class="code"><span class="cap">Thorben Janssen</span><pre>return 13;</pre></div>
       </div>
-
-      <h3>Una buena aproximación</h3>
-      <div class="code"><span class="cap">Java · entidad Student</span><pre>@Getter
+      <div class="code"><span class="cap">Java · una buena aproximación</span><pre>@Getter
 @Setter
 @Entity
 @Table(name = "student")
@@ -594,12 +445,371 @@ public class Student {
         return getClass().hashCode();
     }
 }</pre></div>
-
-      <h3>La definitiva</h3>
-      <p>Que lo haga JPA Buddy. Si usas <code>@Data</code> de Lombok en una entidad JPA, avisa de que no se recomienda por problemas graves de rendimiento y consumo de memoria. Ofrece sustituirlo por anotaciones seguras con <code>equals()</code> y <code>hashCode()</code> autogenerados.</p>
+      <div class="note"><b>La definitiva</b>Que lo haga JPA Buddy. Si usas <code>@Data</code> de Lombok en una entidad JPA, avisa de que no se recomienda por problemas graves de rendimiento y memoria, y ofrece sustituirlo por anotaciones seguras con <code>equals()</code> y <code>hashCode()</code> autogenerados.</div>
     </section>
 
-    <footer>Apuntes hechos a partir de los PDFs de OpenWebinars</footer>
+    <!-- REPOSITORIO -->
+    <section id="repositorio">
+      <h2>Repositorio, esquema y carga de datos</h2>
+      <p class="from">Fundamentos de Spring Data JPA · creación de un repositorio</p>
+
+      <h3>Repositorios en Spring Data JPA</h3>
+      <ul>
+        <li>Es la gran diferencia con JPA. Sustituyen al patrón DAO.</li>
+        <li>Son <b>interfaces</b>, no clases, y usan <b>genéricos</b>.</li>
+        <li>Para crear uno: una interfaz que extienda el repositorio base que queramos. Lo ideal es <code>JpaRepository</code>.</li>
+      </ul>
+
+      <h3>¿Quién crea el DDL?</h3>
+      <p>Spring Data JPA… bueno, JPA… bueno, realmente <b>Hibernate</b>. O el programador.</p>
+      <div class="vs">
+        <div class="tile"><h4>Hibernate genera el DDL</h4><ul><li><code>spring.jpa.hibernate.ddl-auto</code>: <code>none</code>, <code>create</code>, <code>drop</code>, <code>create-only</code>, <code>create-drop</code>, <code>validate</code>, <code>update</code></li><li>También <code>spring.jpa.properties.hibernate.hbm2ddl.auto</code></li></ul></div>
+        <div class="tile"><h4>Spring Data genera el esquema</h4><ul><li>Ficheros <code>schema.sql</code> y <code>data.sql</code></li><li>Por defecto en el classpath: <code>/src/main/resources</code></li><li><code>ddl-auto</code> a <code>none</code></li></ul></div>
+      </div>
+
+      <h3>schema.sql</h3>
+      <dl>
+        <dt>spring.sql.init.schema-locations</dt><dd>configura la ubicación</dd>
+        <dt>schema-h2.sql</dt><dd>esquema por plataforma</dd>
+        <dt>schema-postgresql.sql</dt><dd>esquema por plataforma</dd>
+      </dl>
+      <p>Otras herramientas, que compiten entre sí: <b>Flyway</b> y <b>Liquibase</b>.</p>
+
+      <h3>Carga inicial de datos</h3>
+      <ul>
+        <li><b>Datos maestros</b>: categorías, literales, i18n…</li>
+        <li><b>Datos de ejemplo</b>: prototipado, testeo…</li>
+      </ul>
+      <div class="grid">
+        <div class="tile"><h4>data.sql</h4><p>Va de la mano de <code>schema.sql</code>. Se configura con <code>spring.sql.init.data-locations</code> y admite <code>data-${platform}.sql</code>.</p></div>
+        <div class="tile"><h4>import.sql</h4><p>Mecanismo de Hibernate. Admite sentencias DDL y DML. Compatible con <code>ddl-auto</code> distinto de <code>none</code>.</p></div>
+      </div>
+    </section>
+
+    <!-- ASOCIACIONES -->
+    <section id="asociaciones">
+      <h2>Asociaciones</h2>
+      <p class="from">ManyToOne · OneToMany · OneToOne · ManyToMany</p>
+
+      <p>Las entidades no están aisladas: Producto - Categoría, Producto - LineaVenta, LineaVenta - Venta…</p>
+      <div class="grid">
+        <div class="tile"><h4>Multiplicidad</h4><ul><li><code>@ManyToOne</code> / <code>@OneToMany</code></li><li><code>@OneToOne</code></li><li><code>@ManyToMany</code></li></ul></div>
+        <div class="tile"><h4>Direccionalidad</h4><ul><li><b>Unidireccional</b>: de A hacia B.</li><li><b>Bidireccional</b>: de A hacia B y de B hacia A.</li></ul></div>
+      </div>
+
+      <span class="part">@ManyToOne</span>
+      <ul>
+        <li>Es la asociación más común.</li>
+        <li>Equivale a una clave externa (FK) y establece una relación padre / hijo.</li>
+        <li>Se anota con <code>@ManyToOne</code> y <code>@JoinColumn</code> (nombre de la columna y FK, tipo de dato…).</li>
+      </ul>
+      <p>Ejemplo del curso: entidad y repositorio de Categoría, <code>import.sql</code>, y rescatar un producto por ID incluyendo su categoría.</p>
+
+      <span class="part">@OneToMany</span>
+      <div class="vs">
+        <div class="tile"><h4>Unidireccional</h4><ul><li>Sobre una colección, sin <code>@ManyToOne</code> correspondiente.</li><li>Crea una tabla join.</li><li>Muy ineficiente.</li></ul></div>
+        <div class="tile"><h4>Bidireccional</h4><ul><li><code>@ManyToOne</code> + <code>@OneToMany</code>.</li><li>Mismo DDL que con <code>@ManyToOne</code> a secas.</li><li><code>@OneToMany</code> es el lado mapeado.</li></ul></div>
+      </div>
+      <p>El atributo <code>mappedBy</code> lleva el nombre del atributo del lado propietario.</p>
+
+      <h3>toString con recursión infinita</h3>
+      <p>En una bidireccional, el <code>toString</code> de cada lado llama al del otro, sin fin. Dos soluciones:</p>
+      <ul>
+        <li><b>Lombok</b>: <code>@ToString.Exclude</code> sobre el lado mapeado.</li>
+        <li><b>JPA Buddy</b>.</li>
+      </ul>
+
+      <h3>Sincronización de ambos lados</h3>
+      <p>Hay que mantener coherentes los dos lados (la categoría y su colección de productos). Se hace con <b>métodos auxiliares (helper)</b> que desarrollas tú. En los ejemplos aparecen en el lado mapeado (la colección).</p>
+      <div class="note"><b>Fetch</b>Por ahora todo funciona porque el <code>FetchType</code> es EAGER. Lo ideal es usar LAZY (ver la sección de fetching).</div>
+
+      <span class="part">@OneToOne</span>
+      <ul>
+        <li>Una instancia de A se relaciona con una sola de B: Usuario - Perfil, Producto - DetalleProducto…</li>
+        <li>Puede ser unidireccional o bidireccional, según convenga a la semántica del problema.</li>
+        <li>Se usa a menudo para desgajar una entidad en dos: los atributos que se leen o modifican siempre, y los que se tocan de vez en cuando.</li>
+      </ul>
+      <p>Se puede mejorar con:</p>
+      <dl>
+        <dt>cascade = CascadeType.ALL</dt><dd>ciclo de vida en cascada: cualquier operación sobre Producto afecta a ProductoDescripción</dd>
+        <dt>@MapsId</dt><dd>mapea un atributo (clave externa) como identificador; sirve a la vez como PK y FK</dd>
+      </dl>
+
+      <span class="part">@ManyToMany</span>
+      <ul>
+        <li>Una instancia de A se relaciona con muchas de B, y una de B con muchas de A: Proyecto - Empleado, Usuario - Producto (me gusta)…</li>
+        <li>Unidireccional o bidireccional, según la semántica del problema.</li>
+      </ul>
+      <h3>¿Qué tipo de colección usar?</h3>
+      <div class="vs">
+        <div class="tile"><h4>List (realmente Bag)</h4><ul><li>Más difícil mantener la coherencia.</li><li>Suele rendir mejor, pero no para el borrado.</li><li>Puede contener duplicados.</li></ul></div>
+        <div class="tile"><h4>Set</h4><ul><li>Genera el DDL adecuado.</li><li>Puede rendir peor.</li><li>No contiene duplicados.</li></ul></div>
+      </div>
+    </section>
+
+    <!-- FETCHING -->
+    <section id="fetching">
+      <h2>Fetching y operaciones en cascada</h2>
+      <p class="from">Fundamentos de Spring Data JPA · fetching y cascada</p>
+
+      <h3>Fetching</h3>
+      <p>Es la obtención de datos desde la base de datos. Hay que decidir <b>cuándo</b> (¿ahora o más tarde?) y <b>cómo</b>.</p>
+      <div class="grid">
+        <div class="tile"><h4>FetchType por defecto</h4><ul><li><code>XXXToOne</code>: EAGER</li><li><code>XXXToMany</code>: LAZY</li></ul></div>
+        <div class="tile"><h4>EAGER (ansioso)</h4><p>Toma todos los datos, se vayan a usar o no.</p></div>
+        <div class="tile"><h4>LAZY (perezoso)</h4><p>No toma todos los datos al rescatar la entidad. Lo hace cuando se usan (<code>getXXX()</code>) y con la sesión abierta.</p></div>
+      </div>
+
+      <h3>Sesión abierta</h3>
+      <p>Opciones para acceder a datos LAZY:</p>
+      <ul>
+        <li><b>Open Session in View</b> (antipatrón).</li>
+        <li>Consultas <code>JOIN FETCH</code>.</li>
+        <li>Acceso dentro de una transacción.</li>
+        <li>Grafos de entidad.</li>
+        <li>Usar EAGER.</li>
+      </ul>
+      <p><b>Dentro de una transacción</b>: crear un bean (¿servicio?), inyectar el repositorio, anotar con <code>@Transactional(readOnly=true)</code> y cargar la colección LAZY. <b>Con JOIN FETCH</b>: una consulta en <code>CategoriaRepository</code>, se ejecuta y se compara.</p>
+
+      <span class="part">Cascada</span>
+      <ul>
+        <li>Una acción sobre una entidad se transmite a las relacionadas. Es útil en asociaciones padre/hijo.</li>
+        <li>El atributo <code>cascade</code> está en todas las asociaciones. Es un array de <code>CascadeType</code>: <code>DETACH</code>, <code>MERGE</code>, <code>PERSIST</code>, <code>REFRESH</code>, <code>REMOVE</code> y <code>ALL</code>.</li>
+        <li>Ciclo de vida de una entidad, con las operaciones <code>findById(id)</code>, <code>save(entity)</code> y <code>delete(entity)</code>.</li>
+      </ul>
+    </section>
+
+    <!-- HERENCIA -->
+    <section id="herencia">
+      <h2>Herencia</h2>
+      <p class="from">MappedSuperclass · Single Table · Joined · Table Per Class</p>
+
+      <ul>
+        <li>La herencia es un mecanismo de la orientación a objetos (relación <i>es-un</i>): una clase extendida recibe atributos y métodos de una base.</li>
+        <li>Las bases de datos relacionales <b>no soportan herencia</b>, así que hay que trasladarla a estructuras relacionales.</li>
+      </ul>
+      <div class="tbl"><table>
+        <thead><tr><th>Estrategia</th><th>Cómo se guarda</th></tr></thead>
+        <tbody>
+          <tr><td>MappedSuperclass</td><td>La clase base no es entidad. Hay herencia en Java, pero no se refleja en la base de datos.</td></tr>
+          <tr><td>Single Table</td><td>Clase y subclases en una sola tabla. Es la opción por defecto.</td></tr>
+          <tr><td>Joined</td><td>Una tabla por clase. Las hijas llevan sus atributos y la FK a la base.</td></tr>
+          <tr><td>Table Per Class</td><td>Una tabla por subclase, con los atributos base más los propios. Sin FK.</td></tr>
+        </tbody>
+      </table></div>
+
+      <span class="part">MappedSuperclass</span>
+      <p>La «entidad» base reúne lo común sin ser entidad: id, <code>hashCode</code>, auditoría (creador, fecha…).</p>
+
+      <span class="part">Single Table</span>
+      <ul>
+        <li>Cada subclase declara sus propias propiedades persistentes.</li>
+        <li>En la clase base: <code>@Inheritance(strategy = InheritanceType.SINGLE_TABLE)</code>, <code>@DiscriminatorColumn</code> y <code>@DiscriminatorValue</code>.</li>
+        <li>Repositorio polimórfico: <code>UsuarioRepository.save(administrador)</code>.</li>
+      </ul>
+      <p>Ejemplo del curso: Administrador extiende a Usuario, con un único atributo.</p>
+
+      <span class="part">Joined</span>
+      <ul>
+        <li>Tabla base con los atributos de la clase. Tablas hijas con los atributos de las subclases más la FK a la base.</li>
+        <li>Se anota en la clase base con <code>@Inheritance(strategy = InheritanceType.JOINED)</code>.</li>
+        <li>Guardar un empleado: 1 <code>INSERT</code>. Guardar un gerente: 2 <code>INSERT</code>.</li>
+      </ul>
+      <div class="code"><span class="cap">SQL · EMPLEADO(id, nombre, email, teléfono, departamento) y GERENTE(id, tieneMBA)</span><pre>INSERT INTO EMPLEADO VALUES (1, 'Pepe', …);
+INSERT INTO GERENTE VALUES (1, true);
+
+SELECT *
+FROM empleado JOIN gerente …</pre></div>
+
+      <h3>Consultas polimórficas</h3>
+      <p>No hace falta un repositorio por clase: se puede trabajar con el de la clase base.</p>
+      <div class="code"><span class="cap">JPQL</span><pre>-- Versión 1
+select g from Gerente g
+
+-- Versión 2: TYPE(entity)
+select e from Empleado e where TYPE(e) = Gerente</pre></div>
+
+      <span class="part">Table Per Class</span>
+      <ul>
+        <li>Inversa a Joined: las subclases incluyen los atributos de la base más los propios. No hay FK.</li>
+        <li>Guardar una vivienda (alquiler o venta): 1 insert. Las consultas polimórficas usan <code>UNION ALL</code>.</li>
+      </ul>
+      <div class="code"><span class="cap">Ejemplo del curso</span><pre>VIVIENDA_EN_ALQUILER(id, numHabitaciones, direccion,
+  poblacion, provincia, precioMensual, importeFianza,
+  duracionMinima)
+VIVIENDA_EN_VENTA(id, numHabitaciones, direccion, poblacion,
+  provincia, precio, obraNueva, hipotecada)</pre></div>
+      <div class="vs">
+        <div class="tile"><h4>¿Por qué no MappedSuperclass?</h4><p>Consultas polimórficas: Table Per Class sí, MappedSuperclass no.</p></div>
+        <div class="tile"><h4>¿Cuándo usar Table Per Class?</h4><ul><li>Necesitas alguna consulta polimórfica (no muchas).</li><li>Las subclases tienen asociaciones por separado.</li></ul></div>
+      </div>
+    </section>
+
+    <!-- DERIVADAS -->
+    <section id="derivadas">
+      <h2>Consultas derivadas</h2>
+      <p class="from">Fundamentos de Spring Data JPA · consultas derivadas</p>
+
+      <ul>
+        <li>Las bases de datos relacionales usan SQL. JPA ofrece distintas estrategias, y Spring Data JPA añade las consultas derivadas.</li>
+        <li>Se derivan <b>del nombre del método</b>: escribes el nombre siguiendo unas reglas y Spring Data JPA lo traduce a SQL.</li>
+        <li>Los métodos se añaden en el repositorio correspondiente. Dan gran flexibilidad, con reglas estrictas.</li>
+      </ul>
+      <div class="code"><span class="cap">Ejemplo</span><pre>List&lt;Producto&gt; findByNombre(...);
+// select * from Producto where nombre = …;</pre></div>
+
+      <h3>Sujeto y predicado</h3>
+      <div class="code"><span class="cap">List&lt;Person&gt; findByLastnameIgnoreCase(...)</span><pre>List&lt;Person&gt;       findBy       LastnameIgnoreCase(...)
+tipo de retorno   sujeto       predicado</pre></div>
+      <p><b>Tipos de retorno</b>: <code>T</code> (la entidad), <code>Optional&lt;T&gt;</code>, <code>List&lt;T&gt;</code>, <code>Collection&lt;T&gt;</code>, <code>Iterator&lt;T&gt;</code>, <code>Slice&lt;T&gt;</code>, <code>Page&lt;T&gt;</code>, <code>void</code>, primitivos, wrappers…</p>
+
+      <h3>Sujetos</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>Keyword</th><th>Descripción</th></tr></thead>
+        <tbody>
+          <tr><td>find…By, read…By, get…By, query…By, search…By, stream…By</td><td>Método general de consulta. Devuelve el tipo del repositorio, una colección, un Stream o un Page.</td></tr>
+          <tr><td>exists…By</td><td>Comprobación de existencia. Suele devolver un <code>boolean</code>.</td></tr>
+          <tr><td>…Distinct…</td><td>Devuelve resultados únicos.</td></tr>
+          <tr><td>count…By</td><td>Conteo. Devuelve un número (habitualmente <code>Long</code>).</td></tr>
+          <tr><td>delete…By, remove…By</td><td>Eliminación. No devuelve nada o devuelve el recuento de eliminaciones.</td></tr>
+          <tr><td>…First&lt;n&gt;…, …Top&lt;n&gt;…</td><td>Limita el resultado a los N primeros.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Predicados</h3>
+      <p>Son las condiciones que deben cumplir las entidades. Van a continuación de <code>…By</code> y se encadenan con <code>And</code> y <code>Or</code>.</p>
+      <ul>
+        <li><code>And</code>, <code>Or</code></li>
+        <li><code>After</code>, <code>Before</code></li>
+        <li><code>Containing</code>, <code>EndingWith</code>, <code>StartingWith</code></li>
+        <li><code>GreaterThan</code>, <code>GreaterThanEqual</code>, <code>LessThan</code>, <code>LessThanEqual</code></li>
+      </ul>
+      <p><b>Modificadores</b> (ajustan un predicado): <code>IgnoreCase</code>, <code>OrderBy…[Asc|Desc]</code>.</p>
+
+      <h3>Ejemplos del curso</h3>
+      <div class="code"><span class="cap">Java</span><pre>List&lt;Producto&gt; findTop10ByOrderByPrecioVentaDesc();
+// Devuelve una colección de la entidad del repositorio.
+// Top10: las 10 primeras instancias. Sin condiciones.
+// Ordena por precioVenta descendente.
+
+long countByCategoriaNombre(String nombre);
+// Devuelve un número entero (largo).
+// Cuenta las instancias que cumplen la condición:
+// el atributo nombre de Categoria, que es
+// un atributo de Producto (@ManyToOne).</pre></div>
+      <p>Ejercicios propuestos: el producto más barato de Papelería y Oficina (filtrar por nombre de categoría, ordenar por <code>precioVenta</code> ascendente y tomar el primero), productos cuyo nombre contiene «Inalámbrico» sin distinguir mayúsculas, productos con <code>precioVenta</code> entre 20 y 50 € (extremos incluidos) y la combinación de las dos últimas condiciones.</p>
+      <div class="note"><b>¿Qué tan largo debe ser un método?</b>Si te cuesta leerlo o no cabe en pantalla, no es adecuado. En esos casos es mejor escoger JPQL.</div>
+    </section>
+
+    <!-- JPQL -->
+    <section id="jpql">
+      <h2>Consultas JPQL</h2>
+      <p class="from">Fundamentos de Spring Data JPA · JPQL</p>
+
+      <ul>
+        <li><b>Jakarta (antes Java) Persistence Query Language</b>: lenguaje de consulta orientado a objetos, basado en SQL y muy parecido a él.</li>
+        <li>Trabaja con objetos, no con tablas ni columnas. Abstrae la base de datos y soporta operaciones CRUD.</li>
+        <li>Con JPA/Hibernate: objetos <code>Query</code> / <code>TypedQuery</code>, y consultas estáticas con <code>@NamedQuery</code>.</li>
+        <li>Con Spring Data JPA: anotación <code>@Query</code> en un método del repositorio. Y ya está.</li>
+        <li>Tipos de consulta: <code>select</code>, <code>update</code>, <code>delete</code>, <code>insert … values</code> e <code>insert … select</code>.</li>
+      </ul>
+
+      <h3>Literales</h3>
+      <ul>
+        <li>Booleanos: <code>true</code>, <code>false</code>. Cadenas entre comillas simples. Numéricos.</li>
+        <li>Fecha y hora con sintaxis de escape JDBC: <code>{d 'yyyy-mm-dd'}</code> y <code>{ts 'yyyy-mm-ddThh:mm:ss'}</code>.</li>
+        <li>Enumeración: no hace falta el tipo como prefijo, se infiere de la consulta.</li>
+      </ul>
+      <div class="code"><span class="cap">JPQL</span><pre>WHERE o.status = SHIPPED</pre></div>
+      <p><b>Funciones</b>: conversiones de tipos, valores nulos, fechas y horas, cadenas y numéricas.</p>
+
+      <h3>Consultas nativas</h3>
+      <p>Se puede usar SQL nativo, útil en situaciones concretas. No abusar.</p>
+      <div class="code"><span class="cap">Java</span><pre>@Query("...", nativeQuery = true)</pre></div>
+
+      <h3>SELECT básico</h3>
+      <div class="code"><span class="cap">JPQL</span><pre>SELECT …
+FROM …
+[WHERE …]</pre></div>
+      <ul>
+        <li><code>DISTINCT</code> deja un valor de los iguales. Tiene sentido al hacer JOIN y en consultas escalares.</li>
+        <li><b>Agregación</b>: <code>COUNT(..)</code>, <code>MAX(...)</code>, <code>MIN(...)</code>, <code>AVG(...)</code> y <code>SUM(...)</code>. Devuelven un valor escalar.</li>
+        <li><b>Proyecciones con constructor</b>: se obtiene un DTO con datos parciales de una entidad. Hace falta un constructor con los argumentos necesarios.</li>
+      </ul>
+
+      <h3>Cláusula FROM</h3>
+      <p>Determina la entidad a consultar.</p>
+      <dl>
+        <dt>JOIN [FETCH]</dt><dd>reunión con una asociación. Con <code>FETCH</code> se incluyen también los datos de la asociación</dd>
+        <dt>LEFT JOIN [FETCH]</dt><dd>por defecto <code>JOIN</code> es <code>INNER JOIN</code>: una entidad sin correspondencia no sale. <code>LEFT</code> da el <code>OUTER JOIN</code></dd>
+      </dl>
+
+      <h3>Cláusula WHERE</h3>
+      <ul>
+        <li>Añade condiciones con valores literales o con parámetros de la función de consulta.</li>
+        <li>Operadores habituales: <code>=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>, <code>!=</code> o <code>&lt;&gt;</code>, <code>LIKE</code>, <code>BETWEEN</code>, <code>IS NULL</code>, <code>IN</code>. Otros: <code>IS TRUE/FALSE</code>, <code>MEMBER OF</code>…</li>
+      </ul>
+      <p><b>Parámetros</b>, dos estilos: posicional (<code>?1</code>, <code>?2</code>) o por nombre (<code>:nombre</code>, <code>:precio</code>). Con nombre, <code>@Param</code> si la variable y la expresión no coinciden.</p>
+      <p>Ejercicios propuestos: el precio más caro de la categoría Electrónica, productos que incluyen algunos tags de una lista, y los productos con «Inalámbrico» y precio entre 20 y 50 €.</p>
+    </section>
+
+    <!-- MODIFYING -->
+    <section id="modifying">
+      <h2>Consultas con @Modifying</h2>
+      <p class="from">Fundamentos de Spring Data JPA · DML</p>
+
+      <p>Hasta ahora, consultas <b>DQL</b> (Data Query Language). ¿Y las <b>DML</b> (INSERT, UPDATE, DELETE)? Mecanismos: consultas derivadas, <code>@Query</code> y customización del repositorio.</p>
+
+      <div class="vs">
+        <div class="tile"><h4>DML con consultas derivadas</h4><ul><li>Empiezan por <code>deleteBy…</code> y siguen con un predicado.</li><li>Requieren <code>@Transactional</code>.</li><li>Ejemplo: <code>deleteByPrecioVentaGreaterThan(...)</code></li><li>Ventaja: conectan con el ciclo de vida. Al eliminar Producto, elimina ProductoDescripcion.</li><li>Desventaja: solo borran. No insertan ni actualizan.</li></ul></div>
+        <div class="tile"><h4>DML con @Query</h4><ul><li>Sin <code>@Modifying</code> da error: <code>InvalidDataAccessApiUsageException</code>.</li><li>Con <code>@Modifying</code> son operaciones <b>BULK</b>: no se hacen entidad a entidad.</li><li>Dificultad: no respetan el ciclo de vida.</li></ul></div>
+      </div>
+      <p>Ejercicios propuestos: incrementar el precio de todos los productos en un %, y decrementar el de todos los de una categoría en un %.</p>
+      <div class="note"><b>En resumen</b>Las consultas derivadas están conectadas al ciclo de vida. Las <code>@Query</code> con <code>@Modifying</code> son potentes pero no están conectadas al ciclo de vida.</div>
+    </section>
+
+    <!-- PAGINACION -->
+    <section id="paginacion">
+      <h2>Paginación y ordenación</h2>
+      <p class="from">Fundamentos de Spring Data JPA · paginación, Limit y Sort</p>
+
+      <span class="part">Paginación</span>
+      <p><code>findAll()</code> puede ser un antipatrón: ¿10 filas?, ¿1000?, ¿1 000 000? Paginar es obtener un conjunto limitado de resultados e incluir la información para llegar a los conjuntos adyacentes. Se usa <code>PagingAndSortingRepository</code>.</p>
+      <div class="code"><span class="cap">Java</span><pre>Page&lt;T&gt; findAll(Pageable p)
+
+// También en cualquier otra consulta
+Page&lt;T&gt; findByCategoria(Categoria c, Pageable p)
+
+@Query("""select p from Producto p
+         where p.precioVenta > :precio""")
+Page&lt;T&gt; porPrecio(double precio, Pageable p)</pre></div>
+      <div class="vs">
+        <div class="tile"><h4>Pageable</h4><p>Elemento de entrada para paginar: número de página, tamaño de página y ordenación.</p></div>
+        <div class="tile"><h4>Page&lt;T&gt;</h4><p>Resultado de una consulta paginada: un subconjunto del resultado completo, con información para navegar a otras páginas.</p></div>
+      </div>
+      <div class="note"><b>Warning de Hibernate</b>«firstResult/maxResults specified with collection fetch; applying in memory!». La consulta incluye una colección y, si pagina, los tags pueden quedar a medias. Soluciones: caché de 1.er nivel y dos consultas, o una consulta compleja.</div>
+
+      <span class="part">Limit</span>
+      <p>Disponible desde Spring Boot 3.2. Limita los resultados devueltos con <code>Limit.of(cantidad)</code> o <code>Limit.unlimited()</code>.</p>
+
+      <span class="part">Ordenación</span>
+      <p>Hasta ahora, <code>order by</code> en consultas derivadas (<code>…OrderBy…</code>) y en JPQL. <code>Sort</code> permite ordenar en cualquier consulta: indicar propiedades y dirección (asc, desc).</p>
+      <ul>
+        <li><code>by(...)</code>: lista de atributos, dirección y atributos, o lista de <code>Sort.Order</code> (dirección + atributo).</li>
+        <li><code>and()</code> combina dos <code>Sort</code>.</li>
+        <li><code>ascending()</code> y <code>descending()</code> convierten un <code>Sort</code> en ascendente o descendente.</li>
+      </ul>
+      <div class="code"><span class="cap">Java · Sort, Limit y Pageable</span><pre>// Sort y Limit se combinan sin problema
+List&lt;T&gt; consulta(Sort s, Limit l)
+
+// ¡Error!
+Page&lt;T&gt; query(Pageable p, Sort s)
+
+// Correcto: Sort como argumento de Pageable
+PageRequest.of(n, s, Sort.by(...))</pre></div>
+    </section>
+
+    <footer>Apuntes hechos a partir de los PDFs y del texto del curso de OpenWebinars</footer>
   </main>
 </div>
 
@@ -611,6 +821,8 @@ public class Student {
     var y = window.scrollY + 120, cur = 0;
     secs.forEach(function (s, i) { if (s && s.offsetTop <= y) cur = i; });
     links.forEach(function (a, i) { a.classList.toggle("on", i === cur); });
+    var on = links[cur];
+    if (on && on.scrollIntoView) { var box = on.parentNode.parentNode; var l = on.offsetLeft - 16; if (Math.abs(box.scrollLeft - l) > 200) box.scrollLeft = l; }
   }
   window.addEventListener("scroll", mark, { passive: true });
   mark();
