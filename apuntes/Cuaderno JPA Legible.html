@@ -267,7 +267,6 @@ footer { margin-top: 2.5em; color: var(--ink-soft); font-size: .85em; }
       </div>
       <h2 id="indice">Índice</h2>
       <nav aria-label="Índice del cuaderno"><ul class="idx">
-<li><a href="#curso">Presentación del curso</a></li>
 <li><a href="#persistencia">Persistencia de la información</a></li>
 <li><a href="#entorno">Entorno de trabajo</a></li>
 <li><a href="#proyecto">Primer proyecto</a></li>
@@ -278,39 +277,13 @@ footer { margin-top: 2.5em; color: var(--ink-soft); font-size: .85em; }
 <li><a href="#herencia">Herencia</a></li>
 <li><a href="#derivadas">Consultas derivadas</a></li>
 <li><a href="#jpql">Consultas JPQL</a></li>
+<li><a href="#tutorial">Tutorial JPQL con @Query</a></li>
 <li><a href="#modifying">Consultas con @Modifying</a></li>
 <li><a href="#paginacion">Paginación y ordenación</a></li>
 <li><a href="#docs">Documentación oficial</a></li>
 <li><a href="#siglas">Siglas y palabras clave</a></li>
       </ul></nav>
     </header>
-
-    <!-- CURSO -->
-    <section id="curso">
-      <h2>Presentación del curso</h2>
-      <p class="from">Presentación.pdf</p>
-      <div class="key"><b>Idea clave</b><p>Este curso enseña a guardar los datos de tus objetos Java en una base de datos con Spring Data JPA. Necesitas saber Java y un poco de Spring Boot.</p></div>
-      <h3>Requisitos</h3>
-      <ul>
-        <li>Conocimientos de Java.</li>
-        <li>Conocimientos básicos de Spring Boot (sirve el curso de Fundamentos de Spring Boot).</li>
-      </ul>
-      <h3>Objetivos</h3>
-      <ul>
-        <li>Reconocer la importancia de la persistencia de información.</li>
-        <li>Conocer las diferencias entre Hibernate, JPA y Spring Data JPA.</li>
-        <li>Instalar el entorno de trabajo necesario.</li>
-        <li>Implementar modelos de datos orientados a objetos para almacenarlos en una base de datos relacional.</li>
-        <li>Definir consultas con alguno de los mecanismos que ofrece Spring Data JPA.</li>
-      </ul>
-      <h3>Índice</h3>
-      <div class="grid">
-        <div class="tile"><h4>Bloque 1</h4><ul><li>Introducción</li><li>Entidades</li><li>Repositorios y carga de datos</li><li>Asociaciones</li></ul></div>
-        <div class="tile"><h4>Bloque 2</h4><ul><li>Herencia</li><li>Consultas derivadas</li><li>Consultas JPQL</li><li>Paginación y ordenación</li><li>Proyecto práctico</li></ul></div>
-      </div>
-    
-      <p class="up"><a href="#indice">Volver al índice</a></p>
-    </section>
 
     <!-- PERSISTENCIA -->
     <section id="persistencia">
@@ -888,6 +861,193 @@ FROM …
       </ul>
       <p><b>Parámetros</b>, dos estilos: posicional (<code>?1</code>, <code>?2</code>) o por nombre (<code>:nombre</code>, <code>:precio</code>). Con nombre, <code>@Param</code> si la variable y la expresión no coinciden.</p>
       <p>Ejercicios propuestos: el precio más caro de la categoría Electrónica, productos que incluyen algunos tags de una lista, y los productos con «Inalámbrico» y precio entre 20 y 50 €.</p>
+    
+      <p class="up"><a href="#indice">Volver al índice</a></p>
+    </section>
+
+    <!-- TUTORIAL JPQL -->
+    <section id="tutorial">
+      <h2>Tutorial JPQL con @Query</h2>
+      <p class="from">Tutorial-Consultas_JPQL_Spring.md</p>
+      <div class="key"><b>Idea clave</b><p>Con <code>@Query</code> escribes la consulta JPQL encima del método del repositorio. Aquí hay 10 consultas de ejemplo con un comercio electrónico: filtros, joins, paginación y DTO.</p></div>
+
+      <p>JPQL trabaja sobre el modelo de objetos (entidades y atributos Java), no sobre tablas y columnas. En Spring Boot, <code>@Query</code> sobre la interfaz del repositorio es la forma preferida por su legibilidad, flexibilidad y mantenimiento.</p>
+
+      <span class="part">Dominio de ejemplo</span>
+      <p>Todos los ejemplos usan un comercio electrónico:</p>
+      <dl>
+        <dt>Categoria</dt><dd>id, nombre</dd>
+        <dt>Producto</dt><dd>id, nombre, precio, categoria (<code>@ManyToOne</code>)</dd>
+        <dt>Cliente</dt><dd>id, nombre, email, activo</dd>
+        <dt>Pedido</dt><dd>id, fecha, total, estado, cliente (<code>@ManyToOne</code>)</dd>
+      </dl>
+
+      <span class="part">Parámetros y filtrado</span>
+      <p>Una consulta simple se puede derivar del nombre del método (<code>findByEmail</code>). Cuando necesitas precisión o claridad, escribes el JPQL con <code>@Query</code>. Hay dos formas de pasar parámetros:</p>
+      <ul>
+        <li><b>Posicionales</b> (<code>?1</code>, <code>?2</code>): coinciden con el orden de los argumentos del método.</li>
+        <li><b>Con nombre</b> (<code>:parametro</code>): se enlazan con <code>@Param("parametro")</code>. Son más legibles y resisten los cambios de orden.</li>
+      </ul>
+      <div class="code"><span class="cap">Java · derivada frente a JPQL</span><pre>public interface ClienteRepository extends JpaRepository&lt;Cliente, Long&gt; {
+
+    // 1. Derivada: Spring deduce la consulta por el nombre
+    Optional&lt;Cliente&gt; findByEmailAndActivoTrue(String email);
+
+    // 2. JPQL con @Query: consulta explícita y equivalente
+    @Query("SELECT c FROM Cliente c WHERE c.email = :email AND c.activo = true")
+    Optional&lt;Cliente&gt; buscarPorEmailActivo(@Param("email") String email);
+
+    // 3. JPQL con parámetro posicional
+    @Query("SELECT c FROM Cliente c WHERE c.nombre LIKE %?1% AND c.activo = true")
+    List&lt;Cliente&gt; buscarActivosPorNombreParcial(String parteNombre);
+}</pre></div>
+      <p>En <code>SELECT c FROM Cliente c</code>, <code>c</code> es un <b>alias</b> de la entidad <code>Cliente</code>. La consulta devuelve instancias completas de <code>Cliente</code>.</p>
+
+      <span class="part">Relaciones y joins</span>
+      <p>JPQL permite navegar por los atributos de relación con el punto (<code>.</code>) o con <code>JOIN</code>. Hay dos tipos fundamentales:</p>
+      <ul>
+        <li><b>JOIN simple</b> (<code>INNER JOIN</code> / <code>LEFT JOIN</code>): filtra la entidad principal según los atributos de la relacionada.</li>
+        <li><b>JOIN FETCH</b>: carga la asociación diferida (lazy) en la misma consulta SQL. Evita el problema de las N+1 consultas y las excepciones <code>LazyInitializationException</code> fuera de la transacción.</li>
+      </ul>
+      <div class="code"><span class="cap">Java · filtrar por relación y JOIN FETCH</span><pre>public interface ProductoRepository extends JpaRepository&lt;Producto, Long&gt; {
+
+    // A) Derivada que navega Producto -&gt; Categoria -&gt; Nombre
+    List&lt;Producto&gt; findByCategoria_Nombre(String nombreCategoria);
+
+    // B) Equivalente en JPQL con JOIN explícito
+    @Query("SELECT p FROM Producto p JOIN p.categoria c WHERE c.nombre = :nombreCategoria")
+    List&lt;Producto&gt; buscarPorNombreCategoria(@Param("nombreCategoria") String nombreCategoria);
+
+    // C) JOIN FETCH: productos y su Categoria en un solo SELECT
+    @Query("SELECT p FROM Producto p JOIN FETCH p.categoria WHERE p.precio &gt;= :precioMinimo")
+    List&lt;Producto&gt; buscarProductosConCategoriaCargada(@Param("precioMinimo") Double precioMinimo);
+}</pre></div>
+      <div class="note"><b>Consejo de rendimiento</b>Si vas a usar <code>producto.getCategoria().getNombre()</code> después de la consulta y la relación es <code>FetchType.LAZY</code>, usa <code>JOIN FETCH</code> para traer todo en una sola llamada a la base de datos.</div>
+
+      <span class="part">Operadores y funciones</span>
+      <ul>
+        <li><code>IN</code>: el atributo coincide con algún elemento de una lista o colección pasada como parámetro.</li>
+        <li><code>MEMBER OF</code>: un elemento pertenece a una colección mapeada en la entidad.</li>
+        <li><b>Funciones de cadena</b>: <code>UPPER()</code>, <code>LOWER()</code>, <code>CONCAT()</code>, <code>SUBSTRING()</code>, <code>TRIM()</code>, <code>LENGTH()</code>.</li>
+        <li><b>Funciones numéricas y de fecha</b>: <code>ABS()</code>, <code>ROUND()</code>, <code>MOD()</code>, <code>CURRENT_DATE</code>, <code>CURRENT_TIME</code>, <code>EXTRACT()</code>.</li>
+        <li><b>Funciones para nulos</b>: <code>COALESCE(x, y)</code> devuelve el primer valor no nulo. También <code>NULLIF(x, y)</code>.</li>
+      </ul>
+      <p>Se pueden usar en <code>WHERE</code>, <code>HAVING</code> y <code>SELECT</code>.</p>
+
+      <span class="part">Las 10 consultas imprescindibles</span>
+
+      <h3>1. Selección por atributos con parámetros con nombre</h3>
+      <p><b>Caso de uso:</b> recuperar una entidad por coincidencia exacta en uno o más atributos.</p>
+      <div class="code"><span class="cap">Java</span><pre>@Query("SELECT c FROM Cliente c WHERE c.email = :email AND c.activo = true")
+Optional&lt;Cliente&gt; buscarClienteActivoPorEmail(@Param("email") String email);</pre></div>
+      <p><b>Lección clave:</b> <code>SELECT c FROM Cliente c</code> selecciona la instancia completa de <code>Cliente</code>, representada por el alias <code>c</code>.</p>
+
+      <h3>2. Búsqueda de texto parcial, sin distinguir mayúsculas</h3>
+      <p><b>Caso de uso:</b> un buscador de productos donde el usuario escribe un término. Se combinan <code>LOWER()</code>, <code>CONCAT()</code> y <code>LIKE</code>.</p>
+      <div class="code"><span class="cap">Java</span><pre>@Query("SELECT p FROM Producto p WHERE LOWER(p.nombre) LIKE LOWER(CONCAT('%', :termino, '%'))")
+List&lt;Producto&gt; buscarPorNombreContiene(@Param("termino") String termino);</pre></div>
+      <p><b>Lección clave:</b> con <code>CONCAT('%', :termino, '%')</code> no hace falta concatenar los signos <code>%</code> a mano en la capa de servicio.</p>
+
+      <h3>3. Navegar una @ManyToOne con JOIN</h3>
+      <p><b>Caso de uso:</b> filtrar <code>Producto</code> por propiedades de su <code>Categoria</code>.</p>
+      <div class="code"><span class="cap">Java</span><pre>@Query("SELECT p FROM Producto p JOIN p.categoria c WHERE c.nombre = :nombreCategoria")
+List&lt;Producto&gt; buscarPorNombreCategoria(@Param("nombreCategoria") String nombreCategoria);</pre></div>
+      <p><b>Lección clave:</b> <code>p.categoria</code> es el atributo de relación. Con <code>JOIN p.categoria c</code> creas el alias <code>c</code> para acceder a los campos de <code>Categoria</code>.</p>
+
+      <h3>4. Cargar asociaciones diferidas con JOIN FETCH</h3>
+      <p><b>Caso de uso:</b> evitar <code>LazyInitializationException</code> y el problema N+1 al recuperar pedidos y sus clientes. Si accedes a <code>pedido.getCliente().getNombre()</code> fuera de la transacción con una relación <code>LAZY</code>, falla.</p>
+      <div class="code"><span class="cap">Java</span><pre>@Query("SELECT p FROM Pedido p JOIN FETCH p.cliente WHERE p.estado = :estado")
+List&lt;Pedido&gt; buscarPedidosConClienteCargado(@Param("estado") String estado);</pre></div>
+      <p><b>Lección clave:</b> <code>FETCH</code> hace que Hibernate cargue en memoria el <code>Cliente</code> dentro de cada <code>Pedido</code>, en una sola consulta SQL.</p>
+
+      <h3>5. Filtrar por una colección de valores (IN)</h3>
+      <p><b>Caso de uso:</b> pedidos cuyo estado sea cualquiera de una lista (por ejemplo <code>"PENDIENTE"</code> o <code>"EN_PROCESO"</code>). JPQL traduce <code>IN</code> y la colección Java a <code>IN (?, ?, ...)</code>.</p>
+      <div class="code"><span class="cap">Java</span><pre>@Query("SELECT p FROM Pedido p WHERE p.estado IN :estados")
+List&lt;Pedido&gt; buscarPorEstados(@Param("estados") Collection&lt;String&gt; estados);</pre></div>
+      <p><b>Lección clave:</b> el parámetro puede ser cualquier <code>Collection&lt;T&gt;</code>: un <code>List</code>, un <code>Set</code>…</p>
+
+      <h3>6. Rangos de fechas y valores (BETWEEN)</h3>
+      <p><b>Caso de uso:</b> un informe de ventas entre dos fechas con un importe mínimo. Se combina <code>BETWEEN</code> con <code>&gt;=</code> y <code>&lt;=</code>.</p>
+      <div class="code"><span class="cap">Java</span><pre>@Query("SELECT p FROM Pedido p WHERE p.fecha BETWEEN :desde AND :hasta AND p.total &gt;= :totalMinimo")
+List&lt;Pedido&gt; buscarPedidosEnRangoYTotal(
+        @Param("desde") LocalDateTime desde,
+        @Param("hasta") LocalDateTime hasta,
+        @Param("totalMinimo") BigDecimal totalMinimo);</pre></div>
+      <p><b>Lección clave:</b> <code>BETWEEN</code> incluye los extremos. JPQL maneja de forma nativa los tipos de <code>java.time</code> (<code>LocalDateTime</code>, <code>LocalDate</code>).</p>
+
+      <h3>7. Valores nulos y valores por defecto (COALESCE)</h3>
+      <p><b>Caso de uso:</b> filtrar productos sin que los precios nulos excluyan registros por error. <code>COALESCE(expresion, valorPorDefecto)</code> devuelve el valor alternativo si la expresión es <code>NULL</code>.</p>
+      <div class="code"><span class="cap">Java</span><pre>@Query("SELECT p FROM Producto p WHERE COALESCE(p.precio, 0) &lt;= :precioMaximo")
+List&lt;Producto&gt; buscarPorPrecioMaximoSeguro(@Param("precioMaximo") BigDecimal precioMaximo);</pre></div>
+      <p><b>Lección clave:</b> evita que los nulos de la base de datos estropeen las comparaciones del <code>WHERE</code>.</p>
+
+      <h3>8. Subconsultas y existencia (EXISTS)</h3>
+      <p><b>Caso de uso:</b> clientes con al menos un pedido cuyo total supere una cantidad. Es útil cuando filtras la entidad principal según si tiene registros asociados que cumplen una condición, sin cargar los hijos en memoria.</p>
+      <div class="code"><span class="cap">Java</span><pre>@Query("SELECT c FROM Cliente c WHERE EXISTS (" +
+       "  SELECT p FROM Pedido p WHERE p.cliente = c AND p.total &gt; :montoMinimo" +
+       ")")
+List&lt;Cliente&gt; buscarClientesConPedidosMayoresA(@Param("montoMinimo") BigDecimal montoMinimo);</pre></div>
+      <p><b>Lección clave:</b> la subconsulta usa la entidad externa <code>c</code>. <code>EXISTS</code> devuelve <code>true</code> en cuanto encuentra una coincidencia, así que es muy eficiente.</p>
+
+      <h3>9. Consultas paginadas con Pageable y Page</h3>
+      <p><b>Caso de uso:</b> listar los productos de una categoría en páginas de 10 elementos. Con un parámetro <code>Pageable</code> en un método con <code>@Query</code>, Spring Data aplica paginación y orden a la consulta.</p>
+      <div class="code"><span class="cap">Java</span><pre>@Query("SELECT p FROM Producto p WHERE p.categoria.id = :categoriaId")
+Page&lt;Producto&gt; buscarPorCategoriaPaginado(
+        @Param("categoriaId") Long categoriaId,
+        Pageable pageable);
+
+// En la capa de servicio
+Pageable paginacion = PageRequest.of(0, 10, Sort.by("nombre").ascending());
+Page&lt;Producto&gt; pagina = productoRepository.buscarPorCategoriaPaginado(2L, paginacion);</pre></div>
+      <p><b>Lección clave:</b> no escribes <code>LIMIT</code> ni <code>OFFSET</code> en JPQL. Spring Data genera el SQL de paginación y ejecuta por detrás la consulta <code>COUNT</code> para construir el <code>Page</code>.</p>
+
+      <h3>10. Proyección a DTO con SELECT new</h3>
+      <p><b>Caso de uso:</b> una tabla resumen de pedidos en una pantalla de administración, sin cargar objetos completos de <code>Cliente</code> ni <code>Pedido</code>. Un <b>DTO</b> (Data Transfer Object) es un objeto ligero que no es entidad. Se crea con <code>SELECT new com.paquete.DTO(...)</code>.</p>
+      <div class="code"><span class="cap">Java · paso A: el DTO</span><pre>public class ResumenPedidoDTO {
+
+    private final Long pedidoId;
+    private final String nombreCliente;
+    private final BigDecimal total;
+    private final LocalDateTime fecha;
+
+    // El constructor debe coincidir en tipo y orden con la consulta
+    public ResumenPedidoDTO(Long pedidoId, String nombreCliente,
+                            BigDecimal total, LocalDateTime fecha) {
+        this.pedidoId = pedidoId;
+        this.nombreCliente = nombreCliente;
+        this.total = total;
+        this.fecha = fecha;
+    }
+
+    // Getters...
+}</pre></div>
+      <div class="code"><span class="cap">Java · paso B: la consulta</span><pre>@Query("SELECT new com.ejemplo.dto.ResumenPedidoDTO(p.id, p.cliente.nombre, p.total, p.fecha) " +
+       "FROM Pedido p " +
+       "WHERE p.estado = :estado")
+List&lt;ResumenPedidoDTO&gt; obtenerResumenesPorEstado(@Param("estado") String estado);</pre></div>
+      <p><b>Lección clave:</b> el orden y el tipo de los argumentos del <code>SELECT new</code> deben coincidir exactamente con los del constructor. Evita cargar entidades gestionadas en el contexto de persistencia, usa menos memoria y selecciona solo las columnas necesarias.</p>
+
+      <span class="part">Los 10 patrones de un vistazo</span>
+      <dl>
+        <dt>WHERE c.email = :email</dt><dd>1. Filtrado exacto con parámetros con nombre.</dd>
+        <dt>LOWER() + LIKE + CONCAT()</dt><dd>2. Búsqueda de texto flexible, sin distinguir mayúsculas.</dd>
+        <dt>JOIN p.categoria c</dt><dd>3. Navegar y filtrar por entidades asociadas.</dd>
+        <dt>JOIN FETCH p.cliente</dt><dd>4. Evitar el problema N+1 y <code>LazyInitializationException</code>.</dd>
+        <dt>WHERE p.estado IN :estados</dt><dd>5. Filtrar por una colección de elementos.</dd>
+        <dt>BETWEEN :desde AND :hasta</dt><dd>6. Rangos de fechas o valores continuos.</dd>
+        <dt>COALESCE(p.precio, 0)</dt><dd>7. Manejar nulos con un valor por defecto.</dd>
+        <dt>WHERE EXISTS (SELECT ...)</dt><dd>8. Filtrado avanzado con subconsultas de existencia.</dd>
+        <dt>@Query + Pageable</dt><dd>9. Paginación y orden integrados con Spring Data.</dd>
+        <dt>SELECT new DTO(...)</dt><dd>10. Proyección directa a objetos ligeros no gestionados.</dd>
+      </dl>
+
+      <span class="part">¿Derivadas o @Query?</span>
+      <dl>
+        <dt>Complejidad</dt><dd><b>Derivadas:</b> ideales para consultas con 1 o 2 condiciones.<br><b>@Query:</b> mejor para consultas complejas, con varios <code>JOIN</code> o funciones.</dd>
+        <dt>Optimización FETCH</dt><dd><b>Derivadas:</b> limitada, puede requerir <code>@EntityGraph</code>.<br><b>@Query:</b> excelente, control directo con <code>JOIN FETCH</code>.</dd>
+        <dt>Proyecciones DTO</dt><dd><b>Derivadas:</b> requieren interfaces o DTO con nombres exactos.<br><b>@Query:</b> directo y flexible con <code>SELECT new</code>.</dd>
+        <dt>Mantenibilidad</dt><dd><b>Derivadas:</b> los nombres muy largos son difíciles de leer.<br><b>@Query:</b> el método Java conserva un nombre corto y descriptivo.</dd>
+      </dl>
     
       <p class="up"><a href="#indice">Volver al índice</a></p>
     </section>
