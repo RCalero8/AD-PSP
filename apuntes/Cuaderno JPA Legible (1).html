@@ -201,6 +201,17 @@ dd { margin: 0; }
 /* Índice */
 .idx { list-style: none; margin: 0; padding: 0; max-width: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(14em, 1fr)); gap: .6em; }
 .idx li { margin: 0; }
+.blk { margin: 1.6em 0 .6em; color: var(--accent); border-bottom: 0; padding-bottom: 0; }
+.blk a { color: inherit; text-decoration: none; }
+.blk a:hover { text-decoration: underline; text-underline-offset: .2em; }
+
+/* Cabecera de bloque */
+.blockhead { margin: 3em 0 0; padding: 1.1em 1.3em 1em; background: var(--accent); color: var(--accent-ink); border-radius: 14px; scroll-margin-top: 5em; }
+.blockhead p { margin: 0; max-width: none; }
+.blk-kicker { font-size: .95em; font-weight: 700; }
+.blockhead h2 { color: inherit; font-size: 1.65em; margin: .1em 0 .5em; scroll-margin-top: 5em; }
+.blk-list { font-size: .88em; line-height: 1.6; }
+.blockhead + section { border-top: 0; margin-top: 0; padding-top: 1.4em; }
 .idx a {
   display: block; padding: .6em 1em; background: var(--paper); border: 2px solid var(--rule); border-radius: 12px;
   color: var(--ink); text-decoration: none; line-height: 1.4;
@@ -266,7 +277,9 @@ footer { margin-top: 2.5em; color: var(--ink-soft); font-size: .85em; }
         </ul>
       </div>
       <h2 id="indice">Índice</h2>
-      <nav aria-label="Índice del cuaderno"><ul class="idx">
+      <nav aria-label="Índice del cuaderno">
+<h3 class="blk"><a href="#bloque-1">Bloque 1 · Introducción, entidades y asociaciones</a></h3>
+<ul class="idx">
 <li><a href="#persistencia">Persistencia de la información</a></li>
 <li><a href="#entorno">Entorno de trabajo</a></li>
 <li><a href="#proyecto">Primer proyecto</a></li>
@@ -274,18 +287,27 @@ footer { margin-top: 2.5em; color: var(--ink-soft); font-size: .85em; }
 <li><a href="#repositorio">Repositorio, esquema y carga de datos</a></li>
 <li><a href="#asociaciones">Asociaciones</a></li>
 <li><a href="#fetching">Fetching y operaciones en cascada</a></li>
+<li><a href="#entitygraph">Tutorial Entity Graphs</a></li>
+</ul>
+<h3 class="blk"><a href="#bloque-2">Bloque 2 · Herencia y consultas</a></h3>
+<ul class="idx">
 <li><a href="#herencia">Herencia</a></li>
 <li><a href="#derivadas">Consultas derivadas</a></li>
 <li><a href="#jpql">Consultas JPQL</a></li>
 <li><a href="#tutorial">Tutorial JPQL con @Query</a></li>
 <li><a href="#modifying">Consultas con @Modifying</a></li>
 <li><a href="#paginacion">Paginación y ordenación</a></li>
+</ul>
+<h3 class="blk"><a href="#consulta">Material de consulta · Documentación oficial y siglas</a></h3>
+<ul class="idx">
 <li><a href="#docs">Documentación oficial</a></li>
 <li><a href="#siglas">Siglas y palabras clave</a></li>
-      </ul></nav>
+</ul>
+      </nav>
     </header>
 
     <!-- PERSISTENCIA -->
+    <div class="blockhead" id="bloque-1"><p class="blk-kicker">Bloque 1</p><h2>Introducción, entidades y asociaciones</h2><p class="blk-list">Persistencia de la información · Entorno de trabajo · Primer proyecto · Entidades · Repositorio, esquema y carga de datos · Asociaciones · Fetching y operaciones en cascada · Tutorial Entity Graphs</p></div>
     <section id="persistencia">
       <h2>Persistencia de la información</h2>
       <p class="from">Fundamentos de Spring Data JPA · bloque de introducción</p>
@@ -682,7 +704,202 @@ public class Student {
       <p class="up"><a href="#indice">Volver al índice</a></p>
     </section>
 
+    <!-- TUTORIAL ENTITY GRAPHS -->
+    <section id="entitygraph">
+      <h2>Tutorial Entity Graphs</h2>
+      <p class="from">Tutorial-Entity_Graphs_Spring_Data_JPA.md</p>
+      <div class="key"><b>Idea clave</b><p>Un <b>Entity Graph</b> cambia el plan de carga solo para una consulta. Así evitas <code>LazyInitializationException</code> y el problema N+1 sin escribir <code>JOIN FETCH</code>.</p></div>
+
+      <p>Los <b>grafos de entidad</b> (Entity Graphs) llegan con JPA 2.1 y Spring Data JPA. Resuelven los problemas de rendimiento al cargar asociaciones.</p>
+
+      <span class="part">El problema de fondo</span>
+      <p>La regla de oro es mapear todas las asociaciones como <code>FetchType.LAZY</code>. Así no se arrastra media base de datos a memoria cada vez que lees una entidad simple. Pero eso trae dos problemas en producción:</p>
+      <ul>
+        <li><b>LazyInitializationException</b>: ocurre al acceder a una relación <code>LAZY</code> (por ejemplo <code>pedido.getLineas()</code>) fuera de una sesión o transacción abierta. Pasa en el controlador o al serializar JSON en una API REST.</li>
+        <li><b>Problema N+1</b>: si recorres 100 pedidos y accedes a sus clientes <code>LAZY</code>, Hibernate lanza 1 consulta para los pedidos y 100 más para los clientes. Son 101 consultas SQL.</li>
+      </ul>
+
+      <h3>¿Por qué mejor que JOIN FETCH?</h3>
+      <p><code>JOIN FETCH</code> en JPQL tiene inconvenientes:</p>
+      <ul>
+        <li>Acopla la lógica de carga a cadenas JPQL largas.</li>
+        <li>Dificulta reutilizar métodos derivados o estándar de <code>JpaRepository</code> (<code>findAll()</code>, <code>findById()</code>).</li>
+        <li>Combinar varias colecciones <code>List</code> en un solo <code>JOIN FETCH</code> produce el error <code>MultipleBagFetchException</code>.</li>
+      </ul>
+      <div class="key"><b>Qué es un Entity Graph</b><p>Una <b>plantilla de lectura dinámica</b>: cambia el plan de carga (fetching plan) solo para una consulta concreta. Sobrescribe de forma temporal el <code>LAZY</code> sin tocar el código del modelo.</p></div>
+
+      <span class="part">Modelo de dominio ampliado</span>
+      <p>El comercio electrónico crece con relaciones de varias cardinalidades:</p>
+      <dl>
+        <dt>Cliente - Direccion</dt><dd>uno a uno (<code>@OneToOne</code>)</dd>
+        <dt>Cliente - Pedido</dt><dd>uno a muchos</dd>
+        <dt>Pedido - LineaPedido</dt><dd>uno a muchos</dd>
+        <dt>LineaPedido - Producto</dt><dd>muchos a uno</dd>
+        <dt>Producto - Categoria</dt><dd>muchos a uno</dd>
+        <dt>Producto - Etiqueta</dt><dd>muchos a muchos</dd>
+      </dl>
+      <p>Código abreviado: solo los campos de relación. <code>Direccion</code>, <code>Categoria</code> y <code>Etiqueta</code> son entidades simples con id y algún texto.</p>
+      <div class="code"><span class="cap">Java · relaciones de las entidades</span><pre>// Cliente
+@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+@JoinColumn(name = "direccion_id")
+private Direccion direccion;
+
+@OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
+private List&lt;Pedido&gt; pedidos = new ArrayList&lt;&gt;();
+
+// Producto
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "categoria_id")
+private Categoria categoria;
+
+@ManyToMany(fetch = FetchType.LAZY)
+@JoinTable(name = "producto_etiquetas",
+    joinColumns = @JoinColumn(name = "producto_id"),
+    inverseJoinColumns = @JoinColumn(name = "etiqueta_id"))
+private Set&lt;Etiqueta&gt; etiquetas = new HashSet&lt;&gt;();
+
+// LineaPedido
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "pedido_id")
+private Pedido pedido;
+
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "producto_id")
+private Producto producto;
+
+// Pedido (entidad principal)
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "cliente_id")
+private Cliente cliente;
+
+@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+private List&lt;LineaPedido&gt; lineas = new ArrayList&lt;&gt;();</pre></div>
+
+      <span class="part">Grafos ad hoc con attributePaths</span>
+      <p>Se definen <b>directamente en el método del repositorio</b> con <code>@EntityGraph</code>. Son ideales para una solución rápida y localizada, sin llenar la entidad de anotaciones.</p>
+      <h3>Ejemplo 1: grafo simple de primer nivel</h3>
+      <p>Cargar un <code>Cliente</code> con su <code>Direccion</code> (<code>@OneToOne</code>) en una sola consulta SQL.</p>
+      <div class="code"><span class="cap">Java</span><pre>public interface ClienteRepository extends JpaRepository&lt;Cliente, Long&gt; {
+
+    // 'direccion' pasa a EAGER solo para esta consulta
+    @EntityGraph(attributePaths = {"direccion"})
+    Optional&lt;Cliente&gt; findWithDireccionByEmail(String email);
+}</pre></div>
+      <div class="code"><span class="cap">SQL generado por Hibernate</span><pre>SELECT c.id, c.email, c.nombre, c.direccion_id,
+       d.id, d.calle, d.ciudad, d.codigoPostal
+FROM clientes c
+LEFT OUTER JOIN direcciones d ON c.direccion_id = d.id
+WHERE c.email = ?;</pre></div>
+
+      <h3>Ejemplo 2: rutas compuestas (subgrafos implícitos)</h3>
+      <p>¿Y si al consultar un <code>Pedido</code> quieres sus <code>lineas</code>, el <code>producto</code> de cada línea y la <code>categoria</code> de cada producto? En <code>attributePaths</code> puedes escribir rutas anidadas con <b>notación de punto</b>. Spring Data JPA las traduce a subgrafos.</p>
+      <div class="code"><span class="cap">Java</span><pre>public interface PedidoRepository extends JpaRepository&lt;Pedido, Long&gt; {
+
+    // 1. En un método derivado por nombre
+    // Carga: Pedido -&gt; cliente -&gt; direccion
+    //   y también: Pedido -&gt; lineas -&gt; producto -&gt; categoria
+    @EntityGraph(attributePaths = {
+        "cliente.direccion",
+        "lineas.producto.categoria"
+    })
+    List&lt;Pedido&gt; findByEstado(String estado);
+
+    // 2. En la sobrescritura de un método estándar de JpaRepository
+    @Override
+    @EntityGraph(attributePaths = {"cliente", "lineas.producto"})
+    Optional&lt;Pedido&gt; findById(Long id);
+
+    // 3. En una consulta con @Query explícita
+    @EntityGraph(attributePaths = {"lineas.producto.etiquetas"})
+    @Query("SELECT p FROM Pedido p WHERE p.total &gt; :minimo")
+    List&lt;Pedido&gt; buscarPedidosGrandesConEtiquetas(@Param("minimo") BigDecimal minimo);
+}</pre></div>
+
+      <span class="part">Grafos con nombre</span>
+      <p>Cuando la estructura de lectura es compleja o se repite en varios repositorios, lo mejor es declarar un <b>grafo con nombre</b> sobre la clase <code>@Entity</code>.</p>
+      <dl>
+        <dt>@NamedEntityGraph</dt><dd>define el grafo raíz sobre la entidad. Tiene <code>name</code> (nombre del grafo), <code>attributeNodes</code> (atributos de primer nivel, con <code>@NamedAttributeNode</code>) y <code>subgraphs</code> (subgrafos para profundizar).</dd>
+        <dt>@NamedSubgraph</dt><dd>especifica qué atributos cargar dentro de una entidad relacionada.</dd>
+      </dl>
+      <h3>Ejemplo completo: Pedido.completoConDetalles</h3>
+      <p>Un grafo reutilizable que carga:</p>
+      <ul>
+        <li>el <code>cliente</code> del pedido y la <code>direccion</code> de ese cliente;</li>
+        <li>las <code>lineas</code>, el <code>producto</code> de cada línea, la <code>categoria</code> del producto y sus <code>etiquetas</code> (<code>@ManyToMany</code>).</li>
+      </ul>
+      <div class="code"><span class="cap">Java · sobre la entidad Pedido</span><pre>@Entity
+@Table(name = "pedidos")
+@NamedEntityGraph(
+    name = "Pedido.completoConDetalles",
+    attributeNodes = {
+        // atributo simple, con subgrafo hasta la dirección del cliente
+        @NamedAttributeNode(value = "cliente", subgraph = "subgrafo-cliente-direccion"),
+        // colección, con subgrafo para navegar por las líneas
+        @NamedAttributeNode(value = "lineas", subgraph = "subgrafo-lineas-producto")
+    },
+    subgraphs = {
+        // Subgrafo 1: Cliente -&gt; Direccion
+        @NamedSubgraph(name = "subgrafo-cliente-direccion",
+            attributeNodes = { @NamedAttributeNode("direccion") }),
+        // Subgrafo 2: LineaPedido -&gt; Producto
+        @NamedSubgraph(name = "subgrafo-lineas-producto",
+            attributeNodes = { @NamedAttributeNode(value = "producto",
+                                 subgraph = "subgrafo-producto-detalles") }),
+        // Subgrafo 3: Producto -&gt; Categoria y Etiquetas
+        @NamedSubgraph(name = "subgrafo-producto-detalles",
+            attributeNodes = { @NamedAttributeNode("categoria"),
+                               @NamedAttributeNode("etiquetas") })
+    }
+)
+public class Pedido {
+    // Campos y relaciones mapeados antes...
+}</pre></div>
+      <p>Para usarlo en el repositorio basta con referirse a su nombre con el atributo <code>value</code> de <code>@EntityGraph</code>:</p>
+      <div class="code"><span class="cap">Java</span><pre>public interface PedidoRepository extends JpaRepository&lt;Pedido, Long&gt; {
+
+    @EntityGraph(value = "Pedido.completoConDetalles")
+    Optional&lt;Pedido&gt; findCompletoById(Long id);
+
+    @EntityGraph(value = "Pedido.completoConDetalles")
+    List&lt;Pedido&gt; findCompletoByClienteId(Long clienteId);
+}</pre></div>
+
+      <span class="part">Modos: FETCH frente a LOAD</span>
+      <p><code>@EntityGraph</code> tiene un parámetro <code>type</code> con dos valores de <code>EntityGraphType</code>:</p>
+      <div class="code"><span class="cap">Java</span><pre>@EntityGraph(value = "Pedido.completoConDetalles", type = EntityGraphType.FETCH)</pre></div>
+      <div class="tbl"><table>
+        <thead><tr><th>Modo</th><th>Atributos del grafo</th><th>Atributos fuera del grafo</th></tr></thead>
+        <tbody>
+          <tr><td>EntityGraphType.FETCH (por defecto)</td><td>Se cargan como EAGER.</td><td>Se tratan como LAZY, incluso si en la entidad estaban mapeados como EAGER.</td></tr>
+          <tr><td>EntityGraphType.LOAD</td><td>Se cargan como EAGER.</td><td>Respetan su configuración original en las entidades Java (EAGER o LAZY).</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note"><b>Recomendación del tutorial</b>Mantén el valor por defecto (<code>FETCH</code>). Da un control total y predecible del SQL generado y evita que se cuelen en la lectura relaciones declaradas como <code>EAGER</code> por descuido.</div>
+
+      <span class="part">Comparar estrategias de fetching</span>
+      <div class="tbl"><table>
+        <thead><tr><th>Criterio</th><th>JOIN FETCH (JPQL)</th><th>@EntityGraph(attributePaths)</th><th>@NamedEntityGraph</th><th>Proyección DTO (SELECT new)</th></tr></thead>
+        <tbody>
+          <tr><td>Ubicación</td><td>En la anotación <code>@Query</code>.</td><td>En el repositorio.</td><td>En la <code>@Entity</code>.</td><td>En la <code>@Query</code> o en una interfaz DTO.</td></tr>
+          <tr><td>Complejidad de lectura</td><td>Media.</td><td>Alta (con notación de punto).</td><td>Muy alta (con <code>@NamedSubgraph</code>).</td><td>Alta.</td></tr>
+          <tr><td>Reutilización</td><td>Baja, ligada a la consulta.</td><td>Alta.</td><td>Muy alta, global.</td><td>Media.</td></tr>
+          <tr><td>Entidades gestionadas</td><td>Sí, devuelve entidades.</td><td>Sí, devuelve entidades.</td><td>Sí, devuelve entidades.</td><td>No, devuelve objetos planos de solo lectura.</td></tr>
+          <tr><td>Caso de uso ideal</td><td>Consultas ad hoc con filtros complejos.</td><td>Métodos derivados o estándar del repositorio.</td><td>Estructuras de carga complejas y recurrentes.</td><td>Informes, vistas web y APIs de solo lectura.</td></tr>
+        </tbody>
+      </table></div>
+
+      <span class="part">Resumen</span>
+      <ul>
+        <li><b>LAZY en el modelo</b>: configura siempre tus entidades con carga perezosa por defecto.</li>
+        <li><b><code>@EntityGraph(attributePaths = {...})</code> para el 80 % de los casos</b>: grafos ad hoc en métodos de repositorio simples o derivados.</li>
+        <li><b><code>@NamedEntityGraph</code> + <code>@NamedSubgraph</code> para grafos profundos</b>: cuando la navegación pasa de 2 niveles y se repite en varias partes del sistema.</li>
+      </ul>
+    
+      <p class="up"><a href="#indice">Volver al índice</a></p>
+    </section>
+
     <!-- HERENCIA -->
+    <div class="blockhead" id="bloque-2"><p class="blk-kicker">Bloque 2</p><h2>Herencia y consultas</h2><p class="blk-list">Herencia · Consultas derivadas · Consultas JPQL · Tutorial JPQL con @Query · Consultas con @Modifying · Paginación y ordenación</p></div>
     <section id="herencia">
       <h2>Herencia</h2>
       <p class="from">MappedSuperclass · Single Table · Joined · Table Per Class</p>
@@ -1115,6 +1332,7 @@ PageRequest.of(n, s, Sort.by(...))</pre></div>
     </section>
 
     <!-- DOCS OFICIALES -->
+    <div class="blockhead" id="consulta"><p class="blk-kicker">Material de consulta</p><h2>Documentación oficial y siglas</h2><p class="blk-list">Documentación oficial · Siglas y palabras clave</p></div>
     <section id="docs">
       <h2>Documentación oficial</h2>
       <p class="from">Spring Data JPA 4.1.2 · docs.spring.io</p>
