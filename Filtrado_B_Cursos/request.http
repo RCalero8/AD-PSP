@@ -1,0 +1,40 @@
+@baseUrl = http://localhost:8080
+
+### 01 Sin filtros: total=18; ids=1,2,3,4,5
+GET {{baseUrl}}/api/cursos
+
+### 02 Segunda pagina: total=18; ids=13,12,11,10,9
+GET {{baseUrl}}/api/cursos?page=1&size=5&sort=id,desc
+
+### 03 Texto: total=6; primera pagina ids=1,2,5,9,13
+GET {{baseUrl}}/api/cursos?titulo=JAVA
+
+### 04 Limite inclusivo: total=5; ids=1,2,3,11,12
+GET {{baseUrl}}/api/cursos?precioMax=30
+
+### 05 Asociacion sin include: total=6; ids=1,2,5,9,13
+GET {{baseUrl}}/api/cursos?tematica=PROGRAMACION
+
+### 06 Tres filtros: total=3; ids=1,2,5
+GET {{baseUrl}}/api/cursos?titulo=JAVA&precioMax=50&tematica=Programacion
+
+### 07 Solo primera asociacion: total=18
+GET {{baseUrl}}/api/cursos?include=tematica
+
+### 08 Solo segunda asociacion: total=18
+GET {{baseUrl}}/api/cursos?include=instructor
+
+### 09 Ambas asociaciones y COUNT: total=18; totalPages=4
+GET {{baseUrl}}/api/cursos?include=tematica,instructor&size=5
+
+### 10 Tres filtros y ambas asociaciones: total=3; ids=1,2,5
+GET {{baseUrl}}/api/cursos?titulo=JAVA&precioMax=50&tematica=Programacion&include=tematica,instructor
+
+### 11 Sin coincidencias: total=0; content=[]
+GET {{baseUrl}}/api/cursos?titulo=inexistente
+
+### 12 Repeticiones y valor desconocido: total=18
+GET {{baseUrl}}/api/cursos?include=tematica,tematica,desconocido
+
+### 13 Ultima pagina: ids=16,17,18; total=18
+GET {{baseUrl}}/api/cursos?page=3&size=5
