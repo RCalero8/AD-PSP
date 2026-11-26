@@ -1,0 +1,1805 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Cuaderno JPA Legible</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
+<style>
+/* Layout: una sola columna ancha de 50rem, barra fija arriba con ajustes de lectura, un tema tras otro separados por una línea gruesa */
+:root {
+  --bg: #e3eee3;
+  --paper: #f4f8f0;
+  --ink: #1e2b23;
+  --ink-soft: #44594b;
+  --rule: #c9ddcd;
+  --accent: #1f6040;
+  --accent-ink: #ffffff;
+  --hl: #d8ebcf;
+  --code-bg: #e8f1e3;
+  --code-fg: #1e2b23;
+  --code-dim: #44594b;
+  --key-bg: #dcecd0;
+  --key-line: #2e7a50;
+  --warn-bg: #f4efc4;
+  --warn-ink: #3a3510;
+  --veil: rgba(25, 45, 35, .45);
+  --f-sans: "Atkinson Hyperlegible", Verdana, "Segoe UI", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Consolas, Menlo, monospace;
+  --f-body: var(--f-sans);
+  --fs: 18px; --lh: 1.85; --ls: .03em; --ws: .12em;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1b14; --paper: #16271d; --ink: #e3efe6; --ink-soft: #a9c1b0; --rule: #274236;
+    --accent: #8fd6aa; --accent-ink: #0f1b14; --hl: #244632; --code-bg: #1b3126; --code-fg: #e3efe6;
+    --code-dim: #9ab8a4; --key-bg: #1f3b2b; --key-line: #6fc18f; --warn-bg: #3a3a16; --warn-ink: #f1eec7;
+    --veil: rgba(0, 0, 0, .6);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1b14; --paper: #16271d; --ink: #e3efe6; --ink-soft: #a9c1b0; --rule: #274236;
+  --accent: #8fd6aa; --accent-ink: #0f1b14; --hl: #244632; --code-bg: #1b3126; --code-fg: #e3efe6;
+  --code-dim: #9ab8a4; --key-bg: #1f3b2b; --key-line: #6fc18f; --warn-bg: #3a3a16; --warn-ink: #f1eec7;
+  --veil: rgba(0, 0, 0, .6);
+  color-scheme: dark;
+}
+/* Fondos elegidos por la persona lectora: mandan sobre el tema del sistema */
+:root[data-tint="verde"] {
+  --bg: #e3eee3; --paper: #f4f8f0; --ink: #1e2b23; --ink-soft: #44594b; --rule: #c9ddcd;
+  --accent: #1f6040; --accent-ink: #ffffff; --hl: #d8ebcf; --code-bg: #e8f1e3; --code-fg: #1e2b23;
+  --code-dim: #44594b; --key-bg: #dcecd0; --key-line: #2e7a50; --warn-bg: #f4efc4; --warn-ink: #3a3510;
+  --veil: rgba(25, 45, 35, .45);
+  color-scheme: light;
+}
+:root[data-tint="crema"] {
+  --bg: #efe9d6; --paper: #f8f3e3; --ink: #2a2a20; --ink-soft: #565440; --rule: #ddd5bb;
+  --accent: #2b6a46; --accent-ink: #ffffff; --hl: #e1ebcd; --code-bg: #eee8d2; --code-fg: #2a2a20;
+  --code-dim: #565440; --key-bg: #e4ecd0; --key-line: #3a7a52; --warn-bg: #f1e6b8; --warn-ink: #3a3010;
+  --veil: rgba(60, 50, 20, .42);
+  color-scheme: light;
+}
+:root[data-tint="oscuro"] {
+  --bg: #0f1b14; --paper: #16271d; --ink: #e3efe6; --ink-soft: #a9c1b0; --rule: #274236;
+  --accent: #8fd6aa; --accent-ink: #0f1b14; --hl: #244632; --code-bg: #1b3126; --code-fg: #e3efe6;
+  --code-dim: #9ab8a4; --key-bg: #1f3b2b; --key-line: #6fc18f; --warn-bg: #3a3a16; --warn-ink: #f1eec7;
+  --veil: rgba(0, 0, 0, .6);
+  color-scheme: dark;
+}
+:root[data-font="lexend"] { --f-body: "Lexend", Verdana, "Segoe UI", sans-serif; }
+:root[data-font="sistema"] { --f-body: Verdana, "Segoe UI", system-ui, sans-serif; }
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: var(--fs); line-height: var(--lh);
+  letter-spacing: var(--ls); word-spacing: var(--ws);
+  text-align: left; hyphens: none;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 56px;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  background: var(--bg); z-index: 40;
+}
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.wrap { max-width: 50rem; margin: 0 auto; }
+/* Sin ligaduras en el código: == y != se leen tal cual */
+code, .code, pre, dt { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
+
+/* Barra de ajustes */
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bg);
+  padding-block: 10px; font-size: 16px; line-height: 1.4; letter-spacing: 0; word-spacing: 0;
+  font-family: var(--f-sans);
+}
+.bar-in { max-width: 50rem; margin: 0 auto; }
+.bar-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.btn {
+  font: inherit; font-weight: 700; color: var(--ink); background: var(--paper); cursor: pointer;
+  min-height: 44px; padding: 6px 16px; border: 2px solid var(--accent); border-radius: 10px;
+  text-decoration: none; display: inline-flex; align-items: center;
+}
+.btn:hover { background: var(--hl); }
+.btn[aria-pressed="true"], .btn[aria-expanded="true"] { background: var(--accent); color: var(--accent-ink); }
+.panel {
+  margin-top: 10px; background: var(--paper); border: 2px solid var(--rule); border-radius: 12px;
+  padding: 14px; display: grid; gap: 14px; max-height: 65vh; overflow-y: auto;
+}
+.panel .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.panel .lbl { font-weight: 700; min-width: 9.5em; }
+.panel .val { min-width: 2.5em; text-align: center; font-weight: 700; }
+
+/* Hoja */
+.sheet { background: var(--paper); border: 2px solid var(--rule); border-radius: 14px; padding: 1.4em 1.4em 2em; }
+.cover { padding-bottom: .5em; }
+.kicker { margin: 0; font-size: .9em; font-weight: 700; color: var(--accent); }
+.cover h1 { font-size: 2.1em; line-height: 1.2; margin: .15em 0 .3em; text-wrap: balance; }
+.lead { color: var(--ink-soft); margin: 0 0 1.2em; max-width: 62ch; }
+
+section { margin-top: 2.4em; padding-top: 1.8em; border-top: 3px solid var(--rule); scroll-margin-top: 5em; }
+h2 { font-size: 1.7em; line-height: 1.25; margin: 0 0 .3em; color: var(--accent); text-wrap: balance; scroll-margin-top: 5em; }
+.from { margin: 0 0 1.1em; font-size: .85em; color: var(--ink-soft); }
+h3 { font-size: 1.25em; line-height: 1.35; margin: 1.8em 0 .55em; padding-bottom: .15em; border-bottom: 2px solid var(--rule); text-wrap: balance; }
+.part {
+  display: block; width: fit-content; max-width: 100%; margin: 2.2em 0 .9em; padding: .3em .9em;
+  background: var(--accent); color: var(--accent-ink); border-radius: 8px; font-weight: 700; font-size: .95em;
+}
+p { margin: 0 0 1.1em; max-width: 62ch; }
+ul, ol { margin: 0 0 1.2em; padding-left: 1.3em; max-width: 62ch; }
+li { margin-bottom: .45em; }
+li::marker { color: var(--accent); }
+ul ul { margin: .3em 0 0; }
+b, strong { font-weight: 700; }
+i, em { font-style: normal; font-weight: 700; }
+a { color: var(--accent); font-weight: 700; text-underline-offset: .2em; overflow-wrap: anywhere; }
+code {
+  font-family: var(--f-mono); font-size: .86em; letter-spacing: 0; word-spacing: 0;
+  background: var(--hl); color: var(--ink); padding: .08em .35em; border-radius: 5px; overflow-wrap: anywhere;
+}
+.up { margin: 2em 0 0; }
+.up a { display: inline-block; padding: .3em 0; }
+
+/* Idea clave y avisos */
+.key {
+  background: var(--key-bg); border: 2px solid var(--key-line); border-radius: 12px;
+  padding: .9em 1.1em .6em; margin: 0 0 1.6em; max-width: 62ch;
+}
+.key > b { display: block; color: var(--accent); margin-bottom: .2em; }
+.key p, .key ul { margin: 0 0 .5em; }
+.note { background: var(--warn-bg); color: var(--warn-ink); border: 2px solid var(--warn-ink); border-radius: 12px; padding: .9em 1.1em; margin: 0 0 1.4em; max-width: 62ch; }
+.note b { display: block; }
+.note code { background: rgba(0, 0, 0, .08); color: inherit; }
+
+/* Código */
+.code {
+  background: var(--code-bg); color: var(--code-fg); border: 2px solid var(--rule); border-radius: 10px;
+  margin: 0 0 1.5em; font-family: var(--f-mono); font-size: .84em; line-height: 1.75;
+  letter-spacing: 0; word-spacing: 0; max-width: 100%;
+}
+.code .cap { display: block; padding: .6em 1em 0; font-size: .85em; font-weight: 700; color: var(--code-dim); }
+.code pre { margin: 0; padding: .5em 1em .9em; white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 2; font: inherit; }
+
+/* Bloques */
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15em, 1fr)); gap: 1em; margin: 0 0 1.5em; }
+.grid > *, .vs > * { min-width: 0; }
+.tile { background: var(--paper); border: 2px solid var(--rule); border-radius: 12px; padding: .8em 1em .5em; }
+.tile h4 { font-size: 1.05em; margin: 0 0 .3em; color: var(--accent); }
+.tile p, .tile ul { margin: 0 0 .6em; }
+.tile ul { padding-left: 1.2em; }
+.vs { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; margin: 0 0 1.5em; }
+.vs .code { margin: 0; }
+.stack { display: grid; margin: 0 0 1.5em; max-width: 30em; }
+.stack div { padding: .6em 1em; font-weight: 700; line-height: 1.4; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.stack small { font-weight: 400; font-size: .85em; }
+.stack div:nth-child(1) { background: #1d5c3b; color: #fff; }
+.stack div:nth-child(2) { background: #2c7048; color: #fff; }
+.stack div:nth-child(3) { background: #8cc5a0; color: #14281c; }
+.stack div:nth-child(4) { background: #b4dcc1; color: #14281c; }
+.stack div:nth-child(5) { background: #d5ecdc; color: #14281c; }
+.flow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 0 1.5em; }
+.flow span { background: var(--hl); color: var(--ink); border-radius: 8px; padding: .25em .9em; font-weight: 700; }
+.flow span.orm { background: var(--accent); color: var(--accent-ink); }
+.flow i { color: var(--accent); }
+dl { margin: 0 0 1.5em; display: grid; grid-template-columns: max-content 1fr; gap: .6em 1.2em; max-width: 62ch; }
+dt { font-family: var(--f-mono); font-weight: 700; color: var(--accent); font-size: .88em; letter-spacing: 0; overflow-wrap: anywhere; }
+dd { margin: 0; }
+
+/* Tablas */
+.tbl { margin: 0 0 1.5em; max-width: 100%; }
+/* Cada fila es una tarjeta: sin columnas estrechas que partan las palabras */
+.tbl thead { display: none; }
+.tbl table, .tbl tbody, .tbl tr, .tbl td { display: block; width: 100%; }
+.tbl tr { border: 2px solid var(--rule); border-radius: 12px; padding: .5em 1em .4em; margin-bottom: .8em; }
+.tbl td { border: 0; padding: .25em 0; overflow-wrap: anywhere; }
+.tbl td:first-child { font-family: var(--f-mono); font-size: .9em; font-weight: 700; color: var(--accent); letter-spacing: 0; }
+.tbl td::before { content: attr(data-label); display: block; font-weight: 700; font-size: .8em; color: var(--ink-soft); }
+.tbl td:first-child::before { display: none; }
+
+/* Índice */
+.idx { list-style: none; margin: 0; padding: 0; max-width: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(14em, 1fr)); gap: .6em; }
+.idx li { margin: 0; }
+.blk { margin: 1.6em 0 .6em; color: var(--accent); border-bottom: 0; padding-bottom: 0; }
+.blk a { color: inherit; text-decoration: none; }
+.blk a:hover { text-decoration: underline; text-underline-offset: .2em; }
+
+/* Cabecera de bloque */
+.blockhead { margin: 3em 0 0; padding: 1.1em 1.3em 1em; background: var(--accent); color: var(--accent-ink); border-radius: 14px; scroll-margin-top: 5em; }
+.blockhead p { margin: 0; max-width: none; }
+.blk-kicker { font-size: .95em; font-weight: 700; }
+.blockhead h2 { color: inherit; font-size: 1.65em; margin: .1em 0 .5em; scroll-margin-top: 5em; }
+.blk-list { font-size: .88em; line-height: 1.6; }
+.blockhead + section { border-top: 0; margin-top: 0; padding-top: 1.4em; }
+.idx a {
+  display: block; padding: .6em 1em; background: var(--paper); border: 2px solid var(--rule); border-radius: 12px;
+  color: var(--ink); text-decoration: none; line-height: 1.4;
+}
+.idx a:hover { background: var(--hl); border-color: var(--accent); }
+footer { margin-top: 2.5em; color: var(--ink-soft); font-size: .85em; }
+
+/* Regla de lectura */
+.veil { position: fixed; left: 0; right: 0; background: var(--veil); pointer-events: none; z-index: 25; display: none; }
+.veil.on { display: block; }
+
+@media (max-width: 640px) {
+  .sheet { padding: 1em 1em 1.6em; border-radius: 12px; }
+  .vs { grid-template-columns: 1fr; }
+  dl { grid-template-columns: 1fr; gap: 0; }
+  dd { margin-bottom: .9em; }
+  .panel .lbl { min-width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+
+<div class="bar"><div class="bar-in">
+  <div class="bar-row">
+    <a class="btn" href="#indice">Índice</a>
+    <button class="btn" id="btn-settings" type="button" aria-expanded="false" aria-controls="panel">Ajustes de lectura</button>
+  </div>
+  <div class="panel" id="panel" hidden>
+    <div class="row"><span class="lbl">Tamaño</span>
+      <button class="btn" type="button" data-act="size" data-val="-1">Menos</button>
+      <span class="val" id="size-val">18</span>
+      <button class="btn" type="button" data-act="size" data-val="1">Más</button></div>
+    <div class="row"><span class="lbl">Espaciado</span>
+      <button class="btn" type="button" data-act="space" data-val="normal">Normal</button>
+      <button class="btn" type="button" data-act="space" data-val="amplio">Amplio</button>
+      <button class="btn" type="button" data-act="space" data-val="maximo">Muy amplio</button></div>
+    <div class="row"><span class="lbl">Letra</span>
+      <button class="btn" type="button" data-act="font" data-val="atkinson">Hyperlegible</button>
+      <button class="btn" type="button" data-act="font" data-val="lexend">Lexend</button>
+      <button class="btn" type="button" data-act="font" data-val="sistema">Sistema</button></div>
+    <div class="row"><span class="lbl">Fondo</span>
+      <button class="btn" type="button" data-act="tint" data-val="">Automático</button>
+      <button class="btn" type="button" data-act="tint" data-val="verde">Verde</button>
+      <button class="btn" type="button" data-act="tint" data-val="crema">Crema</button>
+      <button class="btn" type="button" data-act="tint" data-val="oscuro">Oscuro</button></div>
+    <div class="row"><span class="lbl">Regla de lectura</span>
+      <button class="btn" type="button" data-act="ruler" id="btn-ruler" aria-pressed="false">Desactivada</button>
+      <button class="btn" type="button" data-act="reset">Restaurar ajustes</button></div>
+  </div>
+</div></div>
+<div class="wrap">
+  <main class="sheet">
+    <header class="cover">
+      <p class="kicker">Apuntes de OpenWebinars · 2.º DAM</p>
+      <h1>Fundamentos de Spring Data JPA</h1>
+      <p class="lead">Un cuaderno para leer con calma: letra clara, frases cortas y un resumen al inicio de cada tema.</p>
+      <div class="key">
+        <b>Cómo leer este cuaderno</b>
+        <ul>
+          <li>Cada tema empieza con una <b>Idea clave</b>.</li>
+          <li>En <b>Ajustes de lectura</b> cambias letra, tamaño, espaciado y fondo.</li>
+          <li>La <b>regla de lectura</b> oscurece lo que no estás leyendo.</li>
+          <li>Al final hay una lista de siglas.</li>
+        </ul>
+      </div>
+      <h2 id="indice">Índice</h2>
+      <nav aria-label="Índice del cuaderno">
+<h3 class="blk"><a href="#bloque-1">Bloque 1 · Introducción, entidades y asociaciones</a></h3>
+<ul class="idx">
+<li><a href="#persistencia">Persistencia de la información</a></li>
+<li><a href="#entorno">Entorno de trabajo</a></li>
+<li><a href="#proyecto">Primer proyecto</a></li>
+<li><a href="#entidades">Entidades</a></li>
+<li><a href="#repositorio">Repositorio, esquema y carga de datos</a></li>
+<li><a href="#asociaciones">Asociaciones</a></li>
+<li><a href="#fetching">Fetching y operaciones en cascada</a></li>
+<li><a href="#entitygraph">Tutorial Entity Graphs</a></li>
+</ul>
+<h3 class="blk"><a href="#bloque-2">Bloque 2 · Herencia y consultas</a></h3>
+<ul class="idx">
+<li><a href="#herencia">Herencia</a></li>
+<li><a href="#derivadas">Consultas derivadas</a></li>
+<li><a href="#jpql">Consultas JPQL</a></li>
+<li><a href="#tutorial">Tutorial JPQL con @Query</a></li>
+<li><a href="#modifying">Consultas con @Modifying</a></li>
+<li><a href="#paginacion">Paginación y ordenación</a></li>
+</ul>
+<h3 class="blk"><a href="#consulta">Material de consulta · Documentación oficial y siglas</a></h3>
+<ul class="idx">
+<li><a href="#docs">Documentación oficial</a></li>
+<li><a href="#siglas">Siglas y palabras clave</a></li>
+</ul>
+      </nav>
+    </header>
+
+    <!-- PERSISTENCIA -->
+    <div class="blockhead" id="bloque-1"><p class="blk-kicker">Bloque 1</p><h2>Introducción, entidades y asociaciones</h2><p class="blk-list">Persistencia de la información · Entorno de trabajo · Primer proyecto · Entidades · Repositorio, esquema y carga de datos · Asociaciones · Fetching y operaciones en cascada · Tutorial Entity Graphs</p></div>
+    <section id="persistencia">
+      <h2>Persistencia de la información</h2>
+      <p class="from">Fundamentos de Spring Data JPA · bloque de introducción</p>
+      <div class="key"><b>Idea clave</b><p>Un <b>ORM</b> traduce entre objetos Java y tablas. <b>JPA</b> es el estándar, <b>Hibernate</b> lo implementa y <b>Spring Data JPA</b> lo hace más fácil.</p></div>
+
+      <h3>Persistencia de datos</h3>
+      <p>Hay que almacenar datos por motivos <b>legales</b>, de <b>relación comercial</b> y de <b>explotación</b>. La herramienta son las bases de datos.</p>
+      <div class="vs">
+        <div class="tile"><h4>SQL (el que usamos)</h4><ul><li>Relacional</li><li>Analítico (OLAP)</li></ul></div>
+        <div class="tile"><h4>NoSQL</h4><ul><li>Clave-valor</li><li>Familia de columnas</li><li>Grafo</li><li>Documento</li></ul></div>
+      </div>
+
+      <h3>Desfase objeto-relacional</h3>
+      <p>Con JDBC puro hay que convertir a mano cada fila en un objeto y cerrar los recursos. Es código largo y repetitivo.</p>
+      <div class="code"><span class="cap">Java · JDBC</span><pre>PreparedStatement ps = con
+    .prepareStatement("SELECT * FROM empleados WHERE id = ?");
+ps.setInt(1, id);
+ResultSet rs = ps.executeQuery();
+Empleado result = null;
+if (rs.next()) {
+    result = new Empleado(rs.getInt("id"),
+        rs.getString("nombre"),
+        rs.getString("apellidos"),
+        rs.getDate("fecha_nacimiento").toLocalDate(),
+        rs.getFloat("sueldo"));
+}
+rs.close();
+ps.close();
+return result;</pre></div>
+
+      <h3>Solución: ORM</h3>
+      <p><b>ORM</b> significa Object-Relational Mapping. Una capa traduce entre los objetos y la base de datos relacional. Para Java: <b>Hibernate</b> y <b>EclipseLink</b>.</p>
+      <div class="flow" aria-label="Objetos, ORM, base de datos relacional"><span>Objetos</span><i>⇄</i><span class="orm">ORM</span><i>⇄</i><span>Base de datos relacional</span></div>
+
+      <h3>La batalla de las siglas</h3>
+      <dl>
+        <dt>JDBC</dt><dd>Java Database Connectivity</dd>
+        <dt>JPA</dt><dd>Java Persistence API</dd>
+        <dt>SGBDR</dt><dd>Sistema Gestor de Bases de Datos Relacional</dd>
+        <dt>H2</dt><dd>Una base de datos</dd>
+      </dl>
+
+      <h3>El stack</h3>
+      <div class="stack" role="list">
+        <div role="listitem">Spring Data JPA <small>lo que usamos</small></div>
+        <div role="listitem">JPA <small>el estándar</small></div>
+        <div role="listitem">Hibernate <small>implementación de JPA</small></div>
+        <div role="listitem">JDBC <small>conexión</small></div>
+        <div role="listitem">SGBDR · PostgreSQL <small>los datos</small></div>
+      </div>
+
+      <div class="grid">
+        <div class="tile"><h4>JPA</h4><ul><li>Estandarización de la persistencia en Java.</li><li>Sin implementación concreta. La ponen proveedores: Hibernate, EclipseLink, OpenJPA…</li></ul></div>
+        <div class="tile"><h4>Spring Data</h4><ul><li>Proyecto paraguas.</li><li>Acceso a orígenes de datos: SQL, NoSQL…</li><li>Modelo consistente.</li></ul></div>
+        <div class="tile"><h4>Spring Data JPA</h4><ul><li>Aprovecha lo mejor de JPA.</li><li>Elimina código repetitivo.</li><li>API sencilla para acceder a los datos.</li><li>Una única dependencia <b>starter</b>.</li></ul></div>
+      </div>
+
+      <h3>Características de Spring Data JPA</h3>
+      <ul>
+        <li>Repositorios basados en interfaces.</li>
+        <li>Consultas derivadas del nombre de un método.</li>
+        <li>Consultas JPQL o SQL nativo.</li>
+        <li>Otras estrategias de consulta.</li>
+        <li>Paginación y ordenación.</li>
+        <li>Integración con Spring Boot.</li>
+        <li>Gestión automática de transacciones.</li>
+      </ul>
+    
+      <p class="up"><a href="#indice">Volver al índice</a></p>
+    </section>
+
+    <!-- ENTORNO -->
+    <section id="entorno">
+      <h2>Entorno de trabajo</h2>
+      <p class="from">Entorno de trabajo · PostgreSQL sin Docker · PostgreSQL con Docker</p>
+      <div class="key"><b>Idea clave</b><p>Necesitas el JDK 17 o 21, IntelliJ IDEA y PostgreSQL. La forma más cómoda es arrancar PostgreSQL y pgAdmin con Docker.</p></div>
+
+      <span class="part">JDK e IDE</span>
+      <ul>
+        <li>Spring Boot 3 necesita <b>JDK 17 o 21</b> (usar la última versión LTS).</li>
+        <li>Como estudiante vale Oracle JDK. En producción es de pago. Alternativas: OpenJDK, Eclipse Temurin, Amazon Corretto, Liberica JDK…</li>
+        <li><b>IntelliJ IDEA</b>: Community (gratuita) o Ultimate (de pago). Plugins útiles: <b>JPA Buddy</b> y <b>Database Navigator</b>.</li>
+      </ul>
+      <div class="code"><span class="cap">Terminal · instalar el JDK</span><pre># Mac
+brew install openjdk@21
+
+# Ubuntu
+sudo apt-get install openjdk-21-jdk
+
+# Windows
+choco install openjdk --version=21.0.0</pre></div>
+
+      <span class="part">PostgreSQL</span>
+      <ul>
+        <li>SGBDR de código abierto, relacional y objeto-relacional.</li>
+        <li>Variedad de tipos de datos, extensiones, alta disponibilidad y escalabilidad.</li>
+        <li>Ventajas: código abierto, comunidad activa, flexibilidad, rendimiento y estándar SQL.</li>
+        <li>Otros SGBDR: MySQL / MariaDB, Oracle, SQL Server, DB2…</li>
+        <li><b>pgAdmin</b> es el cliente por excelencia.</li>
+        <li>Descarga: <a href="https://www.postgresql.org/download/" target="_blank" rel="noopener">postgresql.org/download</a></li>
+      </ul>
+
+      <span class="part">Docker</span>
+      <p>Estándar de facto para contenedores. Los contenedores son Linux; en Windows hay dos opciones: <b>WSL 2</b> o <b>Hyper-V</b>. Guía: <a href="https://docs.docker.com/desktop/" target="_blank" rel="noopener">docs.docker.com/desktop</a></p>
+      <div class="code"><span class="cap">Terminal · PostgreSQL (alpine es la imagen ligera)</span><pre>docker run --name some-postgres -e POSTGRES_PASSWORD=mypass -d postgres
+docker run --name some-postgres -e POSTGRES_PASSWORD=mypass -d postgres:alpine</pre></div>
+      <div class="code"><span class="cap">Terminal · pgAdmin</span><pre>docker run -p 5050:80 \
+  -e 'PGADMIN_DEFAULT_EMAIL=admin@admin.com' \
+  -e 'PGADMIN_DEFAULT_PASSWORD=1' \
+  --name pgadmin \
+  -d dpage/pgadmin4</pre></div>
+      <div class="code"><span class="cap">Terminal · todo junto (el script está en el repositorio del curso)</span><pre>docker-compose up -d</pre></div>
+      <div class="note"><b>¡Ojo!</b>PostgreSQL responde en el puerto <code>5433</code> desde fuera (tu máquina) y en el <code>5432</code> desde dentro (entre contenedores).</div>
+      <p>Después hay que crear una base de datos nueva para Spring Boot. En pgAdmin: clic derecho sobre <i>Bases de datos</i> → <i>Crear</i> → <i>Base de Datos…</i></p>
+    
+      <p class="up"><a href="#indice">Volver al índice</a></p>
+    </section>
+
+    <!-- PROYECTO -->
+    <section id="proyecto">
+      <h2>Primer proyecto</h2>
+      <p class="from">Fundamentos de Spring Data JPA · primer proyecto</p>
+      <div class="key"><b>Idea clave</b><p>El proyecto se crea en start.spring.io. La conexión a la base de datos se escribe en <code>application.properties</code>.</p></div>
+
+      <h3>start.spring.io</h3>
+      <p>Asistente para crear proyectos de Spring Boot: <a href="https://start.spring.io/" target="_blank" rel="noopener">start.spring.io</a>. Ahí eliges las dependencias.</p>
+
+      <h3>Conexión a la base de datos</h3>
+      <p>Hay varias vías: <code>application.properties</code> o JavaConfig. Las tres propiedades básicas:</p>
+      <dl>
+        <dt>spring.datasource.url</dt><dd>URL de la base de datos</dd>
+        <dt>spring.datasource.username</dt><dd>usuario</dd>
+        <dt>spring.datasource.password</dt><dd>contraseña</dd>
+      </dl>
+
+      <h3>Algunas properties más</h3>
+      <dl>
+        <dt>spring.jpa.hibernate.ddl-auto</dt><dd><code>none</code>, <code>validate</code>, <code>create</code>, <code>create-drop</code>, <code>update</code></dd>
+        <dt>spring.datasource.driverClassName</dt><dd>no es obligatoria si se puede detectar</dd>
+        <dt>spring.sql.init.mode</dt><dd><code>always</code>, <code>never</code></dd>
+        <dt>spring.jpa.show_sql</dt><dd><code>true</code>, <code>false</code></dd>
+      </dl>
+    
+      <p class="up"><a href="#indice">Volver al índice</a></p>
+    </section>
+
+    <!-- ENTIDADES -->
+    <section id="entidades">
+      <h2>Entidades</h2>
+      <p class="from">Entidades · Identificadores · @Basic y @Table · @Column · equals y hashCode</p>
+      <div class="key"><b>Idea clave</b><p>Una entidad es una clase Java con <code>@Entity</code> que se guarda como una tabla. Necesita un identificador único, un constructor sin argumentos y <code>equals</code> y <code>hashCode</code> bien hechos.</p></div>
+
+      <span class="part">Modelo de dominio</span>
+      <ul>
+        <li>Son los conceptos del problema a resolver: ayudan a comprender el problema y a diseñar la aplicación.</li>
+        <li>Sus elementos son las <b>entidades</b> y las <b>asociaciones</b>.</li>
+        <li>Una entidad es un concepto del «mundo real» con <b>identidad</b>, <b>atributos</b> y <b>asociaciones</b>.</li>
+      </ul>
+
+      <h3>Mapeo de entidad a tabla</h3>
+      <div class="grid">
+        <div class="tile"><h4>Entidad Contacto</h4><p>Propiedades: id, nombre, apellidos, email, teléfono.</p></div>
+        <div class="tile"><h4>Tabla CONTACTO</h4><p>Columnas: id, nombre, apellidos, email, teléfono.</p></div>
+      </div>
+
+      <h3>Entidad frente a valor</h3>
+      <div class="vs">
+        <div class="tile"><h4>Entidad</h4><p>Identificador único y ciclo de vida.</p></div>
+        <div class="tile"><h4>Valor</h4><p>Sin identificador ni ciclo de vida propio. Tipos: basic, embedded, collection.</p></div>
+      </div>
+
+      <h3>Requisitos para ser entidad</h3>
+      <ul>
+        <li>Llevar <code>@Entity</code>.</li>
+        <li>Constructor sin argumentos.</li>
+        <li>Clase de nivel superior (top-level). No enum, interface ni record. No final.</li>
+        <li>Tener un identificador.</li>
+        <li><code>equals()</code> y <code>hashCode()</code> consistentes.</li>
+      </ul>
+      <p>Lo que queda abierto: ¿serializable?, abstracta o concreta, extender de otra entidad o no, getters y setters. La primera entidad del curso es la clase <b>Producto</b>, con métodos generados con Lombok.</p>
+
+      <span class="part">Identificadores</span>
+      <div class="vs">
+        <div class="tile"><h4>Identificador</h4><p>Se usa en la <b>entidad</b>.</p></div>
+        <div class="tile"><h4>Clave primaria</h4><p>Se usa en la <b>tabla</b>.</p></div>
+      </div>
+      <ul>
+        <li>Requisitos: <b>único</b>, <b>no nulo</b>, <b>inmutable</b>.</li>
+        <li>Tipos: simples y compuestos.</li>
+        <li>Datos soportados: primitivos (<code>int</code>, <code>long</code>…), wrappers (<code>Integer</code>, <code>Long</code>…), <code>String</code>, <code>Date</code> (util y sql), <code>BigDecimal</code>, <code>BigInteger</code> y <code>UUID</code>.</li>
+        <li>Se pueden generar valores numéricos y UUID con <code>@GeneratedValue(strategy)</code>.</li>
+      </ul>
+
+      <span class="part">@Basic y @Table</span>
+      <p><code>@Basic</code> representa un valor básico y por sí sola se puede ignorar.</p>
+      <dl>
+        <dt>optional</dt><dd>booleano, por defecto <code>true</code></dd>
+        <dt>fetch</dt><dd><code>FetchType</code>, por defecto <code>EAGER</code></dd>
+      </dl>
+      <p>Por defecto el nombre de la entidad es el nombre de la tabla. <code>@Table</code> permite personalizarlo:</p>
+      <dl>
+        <dt>name</dt><dd>nombre de la tabla</dd>
+        <dt>schema</dt><dd>esquema</dd>
+        <dt>catalog</dt><dd>catálogo</dd>
+      </dl>
+
+      <span class="part">@Column</span>
+      <p>Por defecto el nombre del atributo es el de la columna, y el Camel Case pasa a guiones bajos: <code>nombreProducto</code> pasa a <code>nombre_producto</code>.</p>
+      <dl>
+        <dt>name</dt><dd>nombre de la columna</dd>
+        <dt>nullable</dt><dd>por defecto <code>true</code></dd>
+        <dt>precision, scale</dt><dd>por defecto <code>0</code> y <code>0</code></dd>
+        <dt>length</dt><dd>por defecto <code>255</code></dd>
+        <dt>unique</dt><dd>valor único</dd>
+        <dt>insertable, updatable</dt><dd>por defecto <code>true</code> ambos</dd>
+        <dt>columnDefinition</dt><dd>definición SQL de la columna</dd>
+      </dl>
+
+      <span class="part">equals y hashCode</span>
+      <ul>
+        <li><code>equals</code> dice si dos objetos son iguales. <code>hashCode</code> devuelve el código hash.</li>
+        <li>Las instancias de entidad representan filas. Dos filas son iguales si lo son sus claves primarias, así que dos objetos son iguales si lo son sus ID.</li>
+      </ul>
+      <p>Dos propuestas con el mismo <code>equals</code> y distinto <code>hashCode</code>:</p>
+      <div class="vs">
+        <div class="code"><span class="cap">ChatGPT</span><pre>return Objects.hash(id);</pre></div>
+        <div class="code"><span class="cap">Thorben Janssen</span><pre>return 13;</pre></div>
+      </div>
+      <div class="code"><span class="cap">Java · una buena aproximación</span><pre>@Getter
+@Setter
+@Entity
+@Table(name = "student")
+public class Student {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Student other = (Student) o;
+        return id != null && id.equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+}</pre></div>
+      <div class="note"><b>La definitiva</b>Que lo haga JPA Buddy. Si usas <code>@Data</code> de Lombok en una entidad JPA, avisa de que no se recomienda por problemas graves de rendimiento y memoria, y ofrece sustituirlo por anotaciones seguras con <code>equals()</code> y <code>hashCode()</code> autogenerados.</div>
+    
+      <p class="up"><a href="#indice">Volver al índice</a></p>
+    </section>
+
+    <!-- REPOSITORIO -->
+    <section id="repositorio">
+      <h2>Repositorio, esquema y carga de datos</h2>
+      <p class="from">Fundamentos de Spring Data JPA · creación de un repositorio</p>
+      <div class="key"><b>Idea clave</b><p>Un repositorio es una interfaz que extiende <code>JpaRepository</code>. Las tablas las puede crear Hibernate o las creas tú con <code>schema.sql</code>.</p></div>
+
+      <h3>Repositorios en Spring Data JPA</h3>
+      <ul>
+        <li>Es la gran diferencia con JPA. Sustituyen al patrón DAO.</li>
+        <li>Son <b>interfaces</b>, no clases, y usan <b>genéricos</b>.</li>
+        <li>Para crear uno: una interfaz que extienda el repositorio base que queramos. Lo ideal es <code>JpaRepository</code>.</li>
+      </ul>
+
+      <h3>¿Quién crea el DDL?</h3>
+      <p>Spring Data JPA… bueno, JPA… bueno, realmente <b>Hibernate</b>. O el programador.</p>
+      <div class="vs">
+        <div class="tile"><h4>Hibernate genera el DDL</h4><ul><li><code>spring.jpa.hibernate.ddl-auto</code>: <code>none</code>, <code>create</code>, <code>drop</code>, <code>create-only</code>, <code>create-drop</code>, <code>validate</code>, <code>update</code></li><li>También <code>spring.jpa.properties.hibernate.hbm2ddl.auto</code></li></ul></div>
+        <div class="tile"><h4>Spring Data genera el esquema</h4><ul><li>Ficheros <code>schema.sql</code> y <code>data.sql</code></li><li>Por defecto en el classpath: <code>/src/main/resources</code></li><li><code>ddl-auto</code> a <code>none</code></li></ul></div>
+      </div>
+
+      <h3>schema.sql</h3>
+      <dl>
+        <dt>spring.sql.init.schema-locations</dt><dd>configura la ubicación</dd>
+        <dt>schema-h2.sql</dt><dd>esquema por plataforma</dd>
+        <dt>schema-postgresql.sql</dt><dd>esquema por plataforma</dd>
+      </dl>
+      <p>Otras herramientas, que compiten entre sí: <b>Flyway</b> y <b>Liquibase</b>.</p>
+
+      <h3>Carga inicial de datos</h3>
+      <ul>
+        <li><b>Datos maestros</b>: categorías, literales, i18n…</li>
+        <li><b>Datos de ejemplo</b>: prototipado, testeo…</li>
+      </ul>
+      <div class="grid">
+        <div class="tile"><h4>data.sql</h4><p>Va de la mano de <code>schema.sql</code>. Se configura con <code>spring.sql.init.data-locations</code> y admite <code>data-${platform}.sql</code>.</p></div>
+        <div class="tile"><h4>import.sql</h4><p>Mecanismo de Hibernate. Admite sentencias DDL y DML. Compatible con <code>ddl-auto</code> distinto de <code>none</code>.</p></div>
+      </div>
+    
+      <p class="up"><a href="#indice">Volver al índice</a></p>
+    </section>
+
+    <!-- ASOCIACIONES -->
+    <section id="asociaciones">
+      <h2>Asociaciones</h2>
+      <p class="from">ManyToOne · OneToMany · OneToOne · ManyToMany</p>
+      <div class="key"><b>Idea clave</b><p>Las asociaciones conectan entidades: <code>@ManyToOne</code>, <code>@OneToMany</code>, <code>@OneToOne</code> y <code>@ManyToMany</code>. En las bidireccionales hay que mantener coherentes los dos lados.</p></div>
+
+      <p>Las entidades no están aisladas: Producto - Categoría, Producto - LineaVenta, LineaVenta - Venta…</p>
+      <div class="grid">
+        <div class="tile"><h4>Multiplicidad</h4><ul><li><code>@ManyToOne</code> / <code>@OneToMany</code></li><li><code>@OneToOne</code></li><li><code>@ManyToMany</code></li></ul></div>
+        <div class="tile"><h4>Direccionalidad</h4><ul><li><b>Unidireccional</b>: de A hacia B.</li><li><b>Bidireccional</b>: de A hacia B y de B hacia A.</li></ul></div>
+      </div>
+
+      <span class="part">@ManyToOne</span>
+      <ul>
+        <li>Es la asociación más común.</li>
+        <li>Equivale a una clave externa (FK) y establece una relación padre / hijo.</li>
+        <li>Se anota con <code>@ManyToOne</code> y <code>@JoinColumn</code> (nombre de la columna y FK, tipo de dato…).</li>
+      </ul>
+      <p>Ejemplo del curso: entidad y repositorio de Categoría, <code>import.sql</code>, y rescatar un producto por ID incluyendo su categoría.</p>
+
+      <span class="part">@OneToMany</span>
+      <div class="vs">
+        <div class="tile"><h4>Unidireccional</h4><ul><li>Sobre una colección, sin <code>@ManyToOne</code> correspondiente.</li><li>Crea una tabla join.</li><li>Muy ineficiente.</li></ul></div>
+        <div class="tile"><h4>Bidireccional</h4><ul><li><code>@ManyToOne</code> + <code>@OneToMany</code>.</li><li>Mismo DDL que con <code>@ManyToOne</code> a secas.</li><li><code>@OneToMany</code> es el lado mapeado.</li></ul></div>
+      </div>
+      <p>El atributo <code>mappedBy</code> lleva el nombre del atributo del lado propietario.</p>
+
+      <h3>toString con recursión infinita</h3>
+      <p>En una bidireccional, el <code>toString</code> de cada lado llama al del otro, sin fin. Dos soluciones:</p>
+      <ul>
+        <li><b>Lombok</b>: <code>@ToString.Exclude</code> sobre el lado mapeado.</li>
+        <li><b>JPA Buddy</b>.</li>
+      </ul>
+
+      <h3>Sincronización de ambos lados</h3>
+      <p>Hay que mantener coherentes los dos lados (la categoría y su colección de productos). Se hace con <b>métodos auxiliares (helper)</b> que desarrollas tú. En los ejemplos aparecen en el lado mapeado (la colección).</p>
+      <div class="note"><b>Fetch</b>Por ahora todo funciona porque el <code>FetchType</code> es EAGER. Lo ideal es usar LAZY (ver la sección de fetching).</div>
+
+      <span class="part">@OneToOne</span>
+      <ul>
+        <li>Una instancia de A se relaciona con una sola de B: Usuario - Perfil, Producto - DetalleProducto…</li>
+        <li>Puede ser unidireccional o bidireccional, según convenga a la semántica del problema.</li>
+        <li>Se usa a menudo para desgajar una entidad en dos: los atributos que se leen o modifican siempre, y los que se tocan de vez en cuando.</li>
+      </ul>
+      <p>Se puede mejorar con:</p>
+      <dl>
+        <dt>cascade = CascadeType.ALL</dt><dd>ciclo de vida en cascada: cualquier operación sobre Producto afecta a ProductoDescripción</dd>
+        <dt>@MapsId</dt><dd>mapea un atributo (clave externa) como identificador; sirve a la vez como PK y FK</dd>
+      </dl>
+
+      <span class="part">@ManyToMany</span>
+      <ul>
+        <li>Una instancia de A se relaciona con muchas de B, y una de B con muchas de A: Proyecto - Empleado, Usuario - Producto (me gusta)…</li>
+        <li>Unidireccional o bidireccional, según la semántica del problema.</li>
+      </ul>
+      <h3>¿Qué tipo de colección usar?</h3>
+      <div class="vs">
+        <div class="tile"><h4>List (realmente Bag)</h4><ul><li>Más difícil mantener la coherencia.</li><li>Suele rendir mejor, pero no para el borrado.</li><li>Puede contener duplicados.</li></ul></div>
+        <div class="tile"><h4>Set</h4><ul><li>Genera el DDL adecuado.</li><li>Puede rendir peor.</li><li>No contiene duplicados.</li></ul></div>
+      </div>
+    
+      <p class="up"><a href="#indice">Volver al índice</a></p>
+    </section>
+
+    <!-- FETCHING -->
+    <section id="fetching">
+      <h2>Fetching y operaciones en cascada</h2>
+      <p class="from">Fundamentos de Spring Data JPA · fetching y cascada</p>
+      <div class="key"><b>Idea clave</b><p><b>EAGER</b> trae los datos siempre. <b>LAZY</b> los trae cuando los usas y necesita la sesión abierta. La <b>cascada</b> pasa una operación del padre a sus hijos.</p></div>
+
+      <h3>Fetching</h3>
+      <p>Es la obtención de datos desde la base de datos. Hay que decidir <b>cuándo</b> (¿ahora o más tarde?) y <b>cómo</b>.</p>
+      <div class="grid">
+        <div class="tile"><h4>FetchType por defecto</h4><ul><li><code>XXXToOne</code>: EAGER</li><li><code>XXXToMany</code>: LAZY</li></ul></div>
+        <div class="tile"><h4>EAGER (ansioso)</h4><p>Toma todos los datos, se vayan a usar o no.</p></div>
+        <div class="tile"><h4>LAZY (perezoso)</h4><p>No toma todos los datos al rescatar la entidad. Lo hace cuando se usan (<code>getXXX()</code>) y con la sesión abierta.</p></div>
+      </div>
+
+      <h3>Sesión abierta</h3>
+      <p>Opciones para acceder a datos LAZY:</p>
+      <ul>
+        <li><b>Open Session in View</b> (antipatrón).</li>
+        <li>Consultas <code>JOIN FETCH</code>.</li>
+        <li>Acceso dentro de una transacción.</li>
+        <li>Grafos de entidad.</li>
+        <li>Usar EAGER.</li>
+      </ul>
+      <p><b>Dentro de una transacción</b>: crear un bean (¿servicio?), inyectar el repositorio, anotar con <code>@Transactional(readOnly=true)</code> y cargar la colección LAZY. <b>Con JOIN FETCH</b>: una consulta en <code>CategoriaRepository</code>, se ejecuta y se compara.</p>
+
+      <span class="part">Cascada</span>
+      <ul>
+        <li>Una acción sobre una entidad se transmite a las relacionadas. Es útil en asociaciones padre/hijo.</li>
+        <li>El atributo <code>cascade</code> está en todas las asociaciones. Es un array de <code>CascadeType</code>: <code>DETACH</code>, <code>MERGE</code>, <code>PERSIST</code>, <code>REFRESH</code>, <code>REMOVE</code> y <code>ALL</code>.</li>
+        <li>Ciclo de vida de una entidad, con las operaciones <code>findById(id)</code>, <code>save(entity)</code> y <code>delete(entity)</code>.</li>
+      </ul>
+    
+      <p class="up"><a href="#indice">Volver al índice</a></p>
+    </section>
+
+    <!-- TUTORIAL ENTITY GRAPHS -->
+    <section id="entitygraph">
+      <h2>Tutorial Entity Graphs</h2>
+      <p class="from">Tutorial-Entity_Graphs_Spring_Data_JPA.md</p>
+      <div class="key"><b>Idea clave</b><p>Un <b>Entity Graph</b> cambia el plan de carga solo para una consulta. Así evitas <code>LazyInitializationException</code> y el problema N+1 sin escribir <code>JOIN FETCH</code>.</p></div>
+
+      <p>Los <b>grafos de entidad</b> (Entity Graphs) llegan con JPA 2.1 y Spring Data JPA. Resuelven los problemas de rendimiento al cargar asociaciones.</p>
+
+      <span class="part">El problema de fondo</span>
+      <p>La regla de oro es mapear todas las asociaciones como <code>FetchType.LAZY</code>. Así no se arrastra media base de datos a memoria cada vez que lees una entidad simple. Pero eso trae dos problemas en producción:</p>
+      <ul>
+        <li><b>LazyInitializationException</b>: ocurre al acceder a una relación <code>LAZY</code> (por ejemplo <code>pedido.getLineas()</code>) fuera de una sesión o transacción abierta. Pasa en el controlador o al serializar JSON en una API REST.</li>
+        <li><b>Problema N+1</b>: si recorres 100 pedidos y accedes a sus clientes <code>LAZY</code>, Hibernate lanza 1 consulta para los pedidos y 100 más para los clientes. Son 101 consultas SQL.</li>
+      </ul>
+
+      <h3>¿Por qué mejor que JOIN FETCH?</h3>
+      <p><code>JOIN FETCH</code> en JPQL tiene inconvenientes:</p>
+      <ul>
+        <li>Acopla la lógica de carga a cadenas JPQL largas.</li>
+        <li>Dificulta reutilizar métodos derivados o estándar de <code>JpaRepository</code> (<code>findAll()</code>, <code>findById()</code>).</li>
+        <li>Combinar varias colecciones <code>List</code> en un solo <code>JOIN FETCH</code> produce el error <code>MultipleBagFetchException</code>.</li>
+      </ul>
+      <div class="key"><b>Qué es un Entity Graph</b><p>Una <b>plantilla de lectura dinámica</b>: cambia el plan de carga (fetching plan) solo para una consulta concreta. Sobrescribe de forma temporal el <code>LAZY</code> sin tocar el código del modelo.</p></div>
+
+      <span class="part">Modelo de dominio ampliado</span>
+      <p>El comercio electrónico crece con relaciones de varias cardinalidades:</p>
+      <dl>
+        <dt>Cliente - Direccion</dt><dd>uno a uno (<code>@OneToOne</code>)</dd>
+        <dt>Cliente - Pedido</dt><dd>uno a muchos</dd>
+        <dt>Pedido - LineaPedido</dt><dd>uno a muchos</dd>
+        <dt>LineaPedido - Producto</dt><dd>muchos a uno</dd>
+        <dt>Producto - Categoria</dt><dd>muchos a uno</dd>
+        <dt>Producto - Etiqueta</dt><dd>muchos a muchos</dd>
+      </dl>
+      <p>Código abreviado: solo los campos de relación. <code>Direccion</code>, <code>Categoria</code> y <code>Etiqueta</code> son entidades simples con id y algún texto.</p>
+      <div class="code"><span class="cap">Java · relaciones de las entidades</span><pre>// Cliente
+@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+@JoinColumn(name = "direccion_id")
+private Direccion direccion;
+
+@OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
+private List&lt;Pedido&gt; pedidos = new ArrayList&lt;&gt;();
+
+// Producto
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "categoria_id")
+private Categoria categoria;
+
+@ManyToMany(fetch = FetchType.LAZY)
+@JoinTable(name = "producto_etiquetas",
+    joinColumns = @JoinColumn(name = "producto_id"),
+    inverseJoinColumns = @JoinColumn(name = "etiqueta_id"))
+private Set&lt;Etiqueta&gt; etiquetas = new HashSet&lt;&gt;();
+
+// LineaPedido
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "pedido_id")
+private Pedido pedido;
+
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "producto_id")
+private Producto producto;
+
+// Pedido (entidad principal)
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "cliente_id")
+private Cliente cliente;
+
+@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+private List&lt;LineaPedido&gt; lineas = new ArrayList&lt;&gt;();</pre></div>
+
+      <span class="part">Grafos ad hoc con attributePaths</span>
+      <p>Se definen <b>directamente en el método del repositorio</b> con <code>@EntityGraph</code>. Son ideales para una solución rápida y localizada, sin llenar la entidad de anotaciones.</p>
+      <h3>Ejemplo 1: grafo simple de primer nivel</h3>
+      <p>Cargar un <code>Cliente</code> con su <code>Direccion</code> (<code>@OneToOne</code>) en una sola consulta SQL.</p>
+      <div class="code"><span class="cap">Java</span><pre>public interface ClienteRepository extends JpaRepository&lt;Cliente, Long&gt; {
+
+    // 'direccion' pasa a EAGER solo para esta consulta
+    @EntityGraph(attributePaths = {"direccion"})
+    Optional&lt;Cliente&gt; findWithDireccionByEmail(String email);
+}</pre></div>
+      <div class="code"><span class="cap">SQL generado por Hibernate</span><pre>SELECT c.id, c.email, c.nombre, c.direccion_id,
+       d.id, d.calle, d.ciudad, d.codigoPostal
+FROM clientes c
+LEFT OUTER JOIN direcciones d ON c.direccion_id = d.id
+WHERE c.email = ?;</pre></div>
+
+      <h3>Ejemplo 2: rutas compuestas (subgrafos implícitos)</h3>
+      <p>¿Y si al consultar un <code>Pedido</code> quieres sus <code>lineas</code>, el <code>producto</code> de cada línea y la <code>categoria</code> de cada producto? En <code>attributePaths</code> puedes escribir rutas anidadas con <b>notación de punto</b>. Spring Data JPA las traduce a subgrafos.</p>
+      <div class="code"><span class="cap">Java</span><pre>public interface PedidoRepository extends JpaRepository&lt;Pedido, Long&gt; {
+
+    // 1. En un método derivado por nombre
+    // Carga: Pedido -&gt; cliente -&gt; direccion
+    //   y también: Pedido -&gt; lineas -&gt; producto -&gt; categoria
+    @EntityGraph(attributePaths = {
+        "cliente.direccion",
+        "lineas.producto.categoria"
+    })
+    List&lt;Pedido&gt; findByEstado(String estado);
+
+    // 2. En la sobrescritura de un método estándar de JpaRepository
+    @Override
+    @EntityGraph(attributePaths = {"cliente", "lineas.producto"})
+    Optional&lt;Pedido&gt; findById(Long id);
+
+    // 3. En una consulta con @Query explícita
+    @EntityGraph(attributePaths = {"lineas.producto.etiquetas"})
+    @Query("SELECT p FROM Pedido p WHERE p.total &gt; :minimo")
+    List&lt;Pedido&gt; buscarPedidosGrandesConEtiquetas(@Param("minimo") BigDecimal minimo);
+}</pre></div>
+
+      <span class="part">Grafos con nombre</span>
+      <p>Cuando la estructura de lectura es compleja o se repite en varios repositorios, lo mejor es declarar un <b>grafo con nombre</b> sobre la clase <code>@Entity</code>.</p>
+      <dl>
+        <dt>@NamedEntityGraph</dt><dd>define el grafo raíz sobre la entidad. Tiene <code>name</code> (nombre del grafo), <code>attributeNodes</code> (atributos de primer nivel, con <code>@NamedAttributeNode</code>) y <code>subgraphs</code> (subgrafos para profundizar).</dd>
+        <dt>@NamedSubgraph</dt><dd>especifica qué atributos cargar dentro de una entidad relacionada.</dd>
+      </dl>
+      <h3>Ejemplo completo: Pedido.completoConDetalles</h3>
+      <p>Un grafo reutilizable que carga:</p>
+      <ul>
+        <li>el <code>cliente</code> del pedido y la <code>direccion</code> de ese cliente;</li>
+        <li>las <code>lineas</code>, el <code>producto</code> de cada línea, la <code>categoria</code> del producto y sus <code>etiquetas</code> (<code>@ManyToMany</code>).</li>
+      </ul>
+      <div class="code"><span class="cap">Java · sobre la entidad Pedido</span><pre>@Entity
+@Table(name = "pedidos")
+@NamedEntityGraph(
+    name = "Pedido.completoConDetalles",
+    attributeNodes = {
+        // atributo simple, con subgrafo hasta la dirección del cliente
+        @NamedAttributeNode(value = "cliente", subgraph = "subgrafo-cliente-direccion"),
+        // colección, con subgrafo para navegar por las líneas
+        @NamedAttributeNode(value = "lineas", subgraph = "subgrafo-lineas-producto")
+    },
+    subgraphs = {
+        // Subgrafo 1: Cliente -&gt; Direccion
+        @NamedSubgraph(name = "subgrafo-cliente-direccion",
+            attributeNodes = { @NamedAttributeNode("direccion") }),
+        // Subgrafo 2: LineaPedido -&gt; Producto
+        @NamedSubgraph(name = "subgrafo-lineas-producto",
+            attributeNodes = { @NamedAttributeNode(value = "producto",
+                                 subgraph = "subgrafo-producto-detalles") }),
+        // Subgrafo 3: Producto -&gt; Categoria y Etiquetas
+        @NamedSubgraph(name = "subgrafo-producto-detalles",
+            attributeNodes = { @NamedAttributeNode("categoria"),
+                               @NamedAttributeNode("etiquetas") })
+    }
+)
+public class Pedido {
+    // Campos y relaciones mapeados antes...
+}</pre></div>
+      <p>Para usarlo en el repositorio basta con referirse a su nombre con el atributo <code>value</code> de <code>@EntityGraph</code>:</p>
+      <div class="code"><span class="cap">Java</span><pre>public interface PedidoRepository extends JpaRepository&lt;Pedido, Long&gt; {
+
+    @EntityGraph(value = "Pedido.completoConDetalles")
+    Optional&lt;Pedido&gt; findCompletoById(Long id);
+
+    @EntityGraph(value = "Pedido.completoConDetalles")
+    List&lt;Pedido&gt; findCompletoByClienteId(Long clienteId);
+}</pre></div>
+
+      <span class="part">Modos: FETCH frente a LOAD</span>
+      <p><code>@EntityGraph</code> tiene un parámetro <code>type</code> con dos valores de <code>EntityGraphType</code>:</p>
+      <div class="code"><span class="cap">Java</span><pre>@EntityGraph(value = "Pedido.completoConDetalles", type = EntityGraphType.FETCH)</pre></div>
+      <div class="tbl"><table>
+        <thead><tr><th>Modo</th><th>Atributos del grafo</th><th>Atributos fuera del grafo</th></tr></thead>
+        <tbody>
+          <tr><td>EntityGraphType.FETCH (por defecto)</td><td>Se cargan como EAGER.</td><td>Se tratan como LAZY, incluso si en la entidad estaban mapeados como EAGER.</td></tr>
+          <tr><td>EntityGraphType.LOAD</td><td>Se cargan como EAGER.</td><td>Respetan su configuración original en las entidades Java (EAGER o LAZY).</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note"><b>Recomendación del tutorial</b>Mantén el valor por defecto (<code>FETCH</code>). Da un control total y predecible del SQL generado y evita que se cuelen en la lectura relaciones declaradas como <code>EAGER</code> por descuido.</div>
+
+      <span class="part">Comparar estrategias de fetching</span>
+      <div class="tbl"><table>
+        <thead><tr><th>Criterio</th><th>JOIN FETCH (JPQL)</th><th>@EntityGraph(attributePaths)</th><th>@NamedEntityGraph</th><th>Proyección DTO (SELECT new)</th></tr></thead>
+        <tbody>
+          <tr><td>Ubicación</td><td>En la anotación <code>@Query</code>.</td><td>En el repositorio.</td><td>En la <code>@Entity</code>.</td><td>En la <code>@Query</code> o en una interfaz DTO.</td></tr>
+          <tr><td>Complejidad de lectura</td><td>Media.</td><td>Alta (con notación de punto).</td><td>Muy alta (con <code>@NamedSubgraph</code>).</td><td>Alta.</td></tr>
+          <tr><td>Reutilización</td><td>Baja, ligada a la consulta.</td><td>Alta.</td><td>Muy alta, global.</td><td>Media.</td></tr>
+          <tr><td>Entidades gestionadas</td><td>Sí, devuelve entidades.</td><td>Sí, devuelve entidades.</td><td>Sí, devuelve entidades.</td><td>No, devuelve objetos planos de solo lectura.</td></tr>
+          <tr><td>Caso de uso ideal</td><td>Consultas ad hoc con filtros complejos.</td><td>Métodos derivados o estándar del repositorio.</td><td>Estructuras de carga complejas y recurrentes.</td><td>Informes, vistas web y APIs de solo lectura.</td></tr>
+        </tbody>
+      </table></div>
+
+      <span class="part">Resumen</span>
+      <ul>
+        <li><b>LAZY en el modelo</b>: configura siempre tus entidades con carga perezosa por defecto.</li>
+        <li><b><code>@EntityGraph(attributePaths = {...})</code> para el 80 % de los casos</b>: grafos ad hoc en métodos de repositorio simples o derivados.</li>
+        <li><b><code>@NamedEntityGraph</code> + <code>@NamedSubgraph</code> para grafos profundos</b>: cuando la navegación pasa de 2 niveles y se repite en varias partes del sistema.</li>
+      </ul>
+    
+      <p class="up"><a href="#indice">Volver al índice</a></p>
+    </section>
+
+    <!-- HERENCIA -->
+    <div class="blockhead" id="bloque-2"><p class="blk-kicker">Bloque 2</p><h2>Herencia y consultas</h2><p class="blk-list">Herencia · Consultas derivadas · Consultas JPQL · Tutorial JPQL con @Query · Consultas con @Modifying · Paginación y ordenación</p></div>
+    <section id="herencia">
+      <h2>Herencia</h2>
+      <p class="from">MappedSuperclass · Single Table · Joined · Table Per Class</p>
+      <div class="key"><b>Idea clave</b><p>Las bases de datos relacionales no tienen herencia. Hay cuatro formas de guardarla: MappedSuperclass, Single Table, Joined y Table Per Class.</p></div>
+
+      <ul>
+        <li>La herencia es un mecanismo de la orientación a objetos (relación <i>es-un</i>): una clase extendida recibe atributos y métodos de una base.</li>
+        <li>Las bases de datos relacionales <b>no soportan herencia</b>, así que hay que trasladarla a estructuras relacionales.</li>
+      </ul>
+      <div class="tbl"><table>
+        <thead><tr><th>Estrategia</th><th>Cómo se guarda</th></tr></thead>
+        <tbody>
+          <tr><td>MappedSuperclass</td><td>La clase base no es entidad. Hay herencia en Java, pero no se refleja en la base de datos.</td></tr>
+          <tr><td>Single Table</td><td>Clase y subclases en una sola tabla. Es la opción por defecto.</td></tr>
+          <tr><td>Joined</td><td>Una tabla por clase. Las hijas llevan sus atributos y la FK a la base.</td></tr>
+          <tr><td>Table Per Class</td><td>Una tabla por subclase, con los atributos base más los propios. Sin FK.</td></tr>
+        </tbody>
+      </table></div>
+
+      <span class="part">MappedSuperclass</span>
+      <p>La «entidad» base reúne lo común sin ser entidad: id, <code>hashCode</code>, auditoría (creador, fecha…).</p>
+
+      <span class="part">Single Table</span>
+      <ul>
+        <li>Cada subclase declara sus propias propiedades persistentes.</li>
+        <li>En la clase base: <code>@Inheritance(strategy = InheritanceType.SINGLE_TABLE)</code>, <code>@DiscriminatorColumn</code> y <code>@DiscriminatorValue</code>.</li>
+        <li>Repositorio polimórfico: <code>UsuarioRepository.save(administrador)</code>.</li>
+      </ul>
+      <p>Ejemplo del curso: Administrador extiende a Usuario, con un único atributo.</p>
+
+      <span class="part">Joined</span>
+      <ul>
+        <li>Tabla base con los atributos de la clase. Tablas hijas con los atributos de las subclases más la FK a la base.</li>
+        <li>Se anota en la clase base con <code>@Inheritance(strategy = InheritanceType.JOINED)</code>.</li>
+        <li>Guardar un empleado: 1 <code>INSERT</code>. Guardar un gerente: 2 <code>INSERT</code>.</li>
+      </ul>
+      <div class="code"><span class="cap">SQL · EMPLEADO(id, nombre, email, teléfono, departamento) y GERENTE(id, tieneMBA)</span><pre>INSERT INTO EMPLEADO VALUES (1, 'Pepe', …);
+INSERT INTO GERENTE VALUES (1, true);
+
+SELECT *
+FROM empleado JOIN gerente …</pre></div>
+
+      <h3>Consultas polimórficas</h3>
+      <p>No hace falta un repositorio por clase: se puede trabajar con el de la clase base.</p>
+      <div class="code"><span class="cap">JPQL</span><pre>-- Versión 1
+select g from Gerente g
+
+-- Versión 2: TYPE(entity)
+select e from Empleado e where TYPE(e) = Gerente</pre></div>
+
+      <span class="part">Table Per Class</span>
+      <ul>
+        <li>Inversa a Joined: las subclases incluyen los atributos de la base más los propios. No hay FK.</li>
+        <li>Guardar una vivienda (alquiler o venta): 1 insert. Las consultas polimórficas usan <code>UNION ALL</code>.</li>
+      </ul>
+      <div class="code"><span class="cap">Ejemplo del curso</span><pre>VIVIENDA_EN_ALQUILER(id, numHabitaciones, direccion,
+  poblacion, provincia, precioMensual, importeFianza,
+  duracionMinima)
+VIVIENDA_EN_VENTA(id, numHabitaciones, direccion, poblacion,
+  provincia, precio, obraNueva, hipotecada)</pre></div>
+      <div class="vs">
+        <div class="tile"><h4>¿Por qué no MappedSuperclass?</h4><p>Consultas polimórficas: Table Per Class sí, MappedSuperclass no.</p></div>
+        <div class="tile"><h4>¿Cuándo usar Table Per Class?</h4><ul><li>Necesitas alguna consulta polimórfica (no muchas).</li><li>Las subclases tienen asociaciones por separado.</li></ul></div>
+      </div>
+    
+      <p class="up"><a href="#indice">Volver al índice</a></p>
+    </section>
+
+    <!-- DERIVADAS -->
+    <section id="derivadas">
+      <h2>Consultas derivadas</h2>
+      <p class="from">Fundamentos de Spring Data JPA · consultas derivadas</p>
+      <div class="key"><b>Idea clave</b><p>Spring crea la consulta a partir del nombre del método, por ejemplo <code>findByNombre</code>. Si el nombre se hace muy largo, es mejor usar JPQL.</p></div>
+
+      <ul>
+        <li>Las bases de datos relacionales usan SQL. JPA ofrece distintas estrategias, y Spring Data JPA añade las consultas derivadas.</li>
+        <li>Se derivan <b>del nombre del método</b>: escribes el nombre siguiendo unas reglas y Spring Data JPA lo traduce a SQL.</li>
+        <li>Los métodos se añaden en el repositorio correspondiente. Dan gran flexibilidad, con reglas estrictas.</li>
+      </ul>
+      <div class="code"><span class="cap">Ejemplo</span><pre>List&lt;Producto&gt; findByNombre(...);
+// select * from Producto where nombre = …;</pre></div>
+
+      <h3>Sujeto y predicado</h3>
+      <div class="code"><span class="cap">List&lt;Person&gt; findByLastnameIgnoreCase(...)</span><pre>List&lt;Person&gt;       findBy       LastnameIgnoreCase(...)
+tipo de retorno   sujeto       predicado</pre></div>
+      <p><b>Tipos de retorno</b>: <code>T</code> (la entidad), <code>Optional&lt;T&gt;</code>, <code>List&lt;T&gt;</code>, <code>Collection&lt;T&gt;</code>, <code>Iterator&lt;T&gt;</code>, <code>Slice&lt;T&gt;</code>, <code>Page&lt;T&gt;</code>, <code>void</code>, primitivos, wrappers…</p>
+
+      <h3>Sujetos</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>Keyword</th><th>Descripción</th></tr></thead>
+        <tbody>
+          <tr><td>find…By, read…By, get…By, query…By, search…By, stream…By</td><td>Método general de consulta. Devuelve el tipo del repositorio, una colección, un Stream o un Page.</td></tr>
+          <tr><td>exists…By</td><td>Comprobación de existencia. Suele devolver un <code>boolean</code>.</td></tr>
+          <tr><td>…Distinct…</td><td>Devuelve resultados únicos.</td></tr>
+          <tr><td>count…By</td><td>Conteo. Devuelve un número (habitualmente <code>Long</code>).</td></tr>
+          <tr><td>delete…By, remove…By</td><td>Eliminación. No devuelve nada o devuelve el recuento de eliminaciones.</td></tr>
+          <tr><td>…First&lt;n&gt;…, …Top&lt;n&gt;…</td><td>Limita el resultado a los N primeros.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Predicados</h3>
+      <p>Son las condiciones que deben cumplir las entidades. Van a continuación de <code>…By</code> y se encadenan con <code>And</code> y <code>Or</code>.</p>
+      <ul>
+        <li><code>And</code>, <code>Or</code></li>
+        <li><code>After</code>, <code>Before</code></li>
+        <li><code>Containing</code>, <code>EndingWith</code>, <code>StartingWith</code></li>
+        <li><code>GreaterThan</code>, <code>GreaterThanEqual</code>, <code>LessThan</code>, <code>LessThanEqual</code></li>
+      </ul>
+      <p><b>Modificadores</b> (ajustan un predicado): <code>IgnoreCase</code>, <code>OrderBy…[Asc|Desc]</code>.</p>
+
+      <h3>Ejemplos del curso</h3>
+      <div class="code"><span class="cap">Java</span><pre>List&lt;Producto&gt; findTop10ByOrderByPrecioVentaDesc();
+// Devuelve una colección de la entidad del repositorio.
+// Top10: las 10 primeras instancias. Sin condiciones.
+// Ordena por precioVenta descendente.
+
+long countByCategoriaNombre(String nombre);
+// Devuelve un número entero (largo).
+// Cuenta las instancias que cumplen la condición:
+// el atributo nombre de Categoria, que es
+// un atributo de Producto (@ManyToOne).</pre></div>
+      <p>Ejercicios propuestos: el producto más barato de Papelería y Oficina (filtrar por nombre de categoría, ordenar por <code>precioVenta</code> ascendente y tomar el primero), productos cuyo nombre contiene «Inalámbrico» sin distinguir mayúsculas, productos con <code>precioVenta</code> entre 20 y 50 € (extremos incluidos) y la combinación de las dos últimas condiciones.</p>
+      <div class="note"><b>¿Qué tan largo debe ser un método?</b>Si te cuesta leerlo o no cabe en pantalla, no es adecuado. En esos casos es mejor escoger JPQL.</div>
+    
+      <p class="up"><a href="#indice">Volver al índice</a></p>
+    </section>
+
+    <!-- JPQL -->
+    <section id="jpql">
+      <h2>Consultas JPQL</h2>
+      <p class="from">Fundamentos de Spring Data JPA · JPQL</p>
+      <div class="key"><b>Idea clave</b><p>JPQL se parece a SQL, pero habla de entidades y atributos, no de tablas y columnas. Se escribe con <code>@Query</code> sobre un método del repositorio.</p></div>
+
+      <ul>
+        <li><b>Jakarta (antes Java) Persistence Query Language</b>: lenguaje de consulta orientado a objetos, basado en SQL y muy parecido a él.</li>
+        <li>Trabaja con objetos, no con tablas ni columnas. Abstrae la base de datos y soporta operaciones CRUD.</li>
+        <li>Con JPA/Hibernate: objetos <code>Query</code> / <code>TypedQuery</code>, y consultas estáticas con <code>@NamedQuery</code>.</li>
+        <li>Con Spring Data JPA: anotación <code>@Query</code> en un método del repositorio. Y ya está.</li>
+        <li>Tipos de consulta: <code>select</code>, <code>update</code>, <code>delete</code>, <code>insert … values</code> e <code>insert … select</code>.</li>
+      </ul>
+
+      <h3>Literales</h3>
+      <ul>
+        <li>Booleanos: <code>true</code>, <code>false</code>. Cadenas entre comillas simples. Numéricos.</li>
+        <li>Fecha y hora con sintaxis de escape JDBC: <code>{d 'yyyy-mm-dd'}</code> y <code>{ts 'yyyy-mm-ddThh:mm:ss'}</code>.</li>
+        <li>Enumeración: no hace falta el tipo como prefijo, se infiere de la consulta.</li>
+      </ul>
+      <div class="code"><span class="cap">JPQL</span><pre>WHERE o.status = SHIPPED</pre></div>
+      <p><b>Funciones</b>: conversiones de tipos, valores nulos, fechas y horas, cadenas y numéricas.</p>
+
+      <h3>Consultas nativas</h3>
+      <p>Se puede usar SQL nativo, útil en situaciones concretas. No abusar.</p>
+      <div class="code"><span class="cap">Java</span><pre>@Query("...", nativeQuery = true)</pre></div>
+
+      <h3>SELECT básico</h3>
+      <div class="code"><span class="cap">JPQL</span><pre>SELECT …
+FROM …
+[WHERE …]</pre></div>
+      <ul>
+        <li><code>DISTINCT</code> deja un valor de los iguales. Tiene sentido al hacer JOIN y en consultas escalares.</li>
+        <li><b>Agregación</b>: <code>COUNT(..)</code>, <code>MAX(...)</code>, <code>MIN(...)</code>, <code>AVG(...)</code> y <code>SUM(...)</code>. Devuelven un valor escalar.</li>
+        <li><b>Proyecciones con constructor</b>: se obtiene un DTO con datos parciales de una entidad. Hace falta un constructor con los argumentos necesarios.</li>
+      </ul>
+
+      <h3>Cláusula FROM</h3>
+      <p>Determina la entidad a consultar.</p>
+      <dl>
+        <dt>JOIN [FETCH]</dt><dd>reunión con una asociación. Con <code>FETCH</code> se incluyen también los datos de la asociación</dd>
+        <dt>LEFT JOIN [FETCH]</dt><dd>por defecto <code>JOIN</code> es <code>INNER JOIN</code>: una entidad sin correspondencia no sale. <code>LEFT</code> da el <code>OUTER JOIN</code></dd>
+      </dl>
+
+      <h3>Cláusula WHERE</h3>
+      <ul>
+        <li>Añade condiciones con valores literales o con parámetros de la función de consulta.</li>
+        <li>Operadores habituales: <code>=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>, <code>!=</code> o <code>&lt;&gt;</code>, <code>LIKE</code>, <code>BETWEEN</code>, <code>IS NULL</code>, <code>IN</code>. Otros: <code>IS TRUE/FALSE</code>, <code>MEMBER OF</code>…</li>
+      </ul>
+      <p><b>Parámetros</b>, dos estilos: posicional (<code>?1</code>, <code>?2</code>) o por nombre (<code>:nombre</code>, <code>:precio</code>). Con nombre, <code>@Param</code> si la variable y la expresión no coinciden.</p>
+      <p>Ejercicios propuestos: el precio más caro de la categoría Electrónica, productos que incluyen algunos tags de una lista, y los productos con «Inalámbrico» y precio entre 20 y 50 €.</p>
+    
+      <p class="up"><a href="#indice">Volver al índice</a></p>
+    </section>
+
+    <!-- TUTORIAL JPQL -->
+    <section id="tutorial">
+      <h2>Tutorial JPQL con @Query</h2>
+      <p class="from">Tutorial-Consultas_JPQL_Spring.md</p>
+      <div class="key"><b>Idea clave</b><p>Con <code>@Query</code> escribes la consulta JPQL encima del método del repositorio. Aquí hay 10 consultas de ejemplo con un comercio electrónico: filtros, joins, paginación y DTO.</p></div>
+
+      <p>JPQL trabaja sobre el modelo de objetos (entidades y atributos Java), no sobre tablas y columnas. En Spring Boot, <code>@Query</code> sobre la interfaz del repositorio es la forma preferida por su legibilidad, flexibilidad y mantenimiento.</p>
+
+      <span class="part">Dominio de ejemplo</span>
+      <p>Todos los ejemplos usan un comercio electrónico:</p>
+      <dl>
+        <dt>Categoria</dt><dd>id, nombre</dd>
+        <dt>Producto</dt><dd>id, nombre, precio, categoria (<code>@ManyToOne</code>)</dd>
+        <dt>Cliente</dt><dd>id, nombre, email, activo</dd>
+        <dt>Pedido</dt><dd>id, fecha, total, estado, cliente (<code>@ManyToOne</code>)</dd>
+      </dl>
+
+      <span class="part">Parámetros y filtrado</span>
+      <p>Una consulta simple se puede derivar del nombre del método (<code>findByEmail</code>). Cuando necesitas precisión o claridad, escribes el JPQL con <code>@Query</code>. Hay dos formas de pasar parámetros:</p>
+      <ul>
+        <li><b>Posicionales</b> (<code>?1</code>, <code>?2</code>): coinciden con el orden de los argumentos del método.</li>
+        <li><b>Con nombre</b> (<code>:parametro</code>): se enlazan con <code>@Param("parametro")</code>. Son más legibles y resisten los cambios de orden.</li>
+      </ul>
+      <div class="code"><span class="cap">Java · derivada frente a JPQL</span><pre>public interface ClienteRepository extends JpaRepository&lt;Cliente, Long&gt; {
+
+    // 1. Derivada: Spring deduce la consulta por el nombre
+    Optional&lt;Cliente&gt; findByEmailAndActivoTrue(String email);
+
+    // 2. JPQL con @Query: consulta explícita y equivalente
+    @Query("SELECT c FROM Cliente c WHERE c.email = :email AND c.activo = true")
+    Optional&lt;Cliente&gt; buscarPorEmailActivo(@Param("email") String email);
+
+    // 3. JPQL con parámetro posicional
+    @Query("SELECT c FROM Cliente c WHERE c.nombre LIKE %?1% AND c.activo = true")
+    List&lt;Cliente&gt; buscarActivosPorNombreParcial(String parteNombre);
+}</pre></div>
+      <p>En <code>SELECT c FROM Cliente c</code>, <code>c</code> es un <b>alias</b> de la entidad <code>Cliente</code>. La consulta devuelve instancias completas de <code>Cliente</code>.</p>
+
+      <span class="part">Relaciones y joins</span>
+      <p>JPQL permite navegar por los atributos de relación con el punto (<code>.</code>) o con <code>JOIN</code>. Hay dos tipos fundamentales:</p>
+      <ul>
+        <li><b>JOIN simple</b> (<code>INNER JOIN</code> / <code>LEFT JOIN</code>): filtra la entidad principal según los atributos de la relacionada.</li>
+        <li><b>JOIN FETCH</b>: carga la asociación diferida (lazy) en la misma consulta SQL. Evita el problema de las N+1 consultas y las excepciones <code>LazyInitializationException</code> fuera de la transacción.</li>
+      </ul>
+      <div class="code"><span class="cap">Java · filtrar por relación y JOIN FETCH</span><pre>public interface ProductoRepository extends JpaRepository&lt;Producto, Long&gt; {
+
+    // A) Derivada que navega Producto -&gt; Categoria -&gt; Nombre
+    List&lt;Producto&gt; findByCategoria_Nombre(String nombreCategoria);
+
+    // B) Equivalente en JPQL con JOIN explícito
+    @Query("SELECT p FROM Producto p JOIN p.categoria c WHERE c.nombre = :nombreCategoria")
+    List&lt;Producto&gt; buscarPorNombreCategoria(@Param("nombreCategoria") String nombreCategoria);
+
+    // C) JOIN FETCH: productos y su Categoria en un solo SELECT
+    @Query("SELECT p FROM Producto p JOIN FETCH p.categoria WHERE p.precio &gt;= :precioMinimo")
+    List&lt;Producto&gt; buscarProductosConCategoriaCargada(@Param("precioMinimo") Double precioMinimo);
+}</pre></div>
+      <div class="note"><b>Consejo de rendimiento</b>Si vas a usar <code>producto.getCategoria().getNombre()</code> después de la consulta y la relación es <code>FetchType.LAZY</code>, usa <code>JOIN FETCH</code> para traer todo en una sola llamada a la base de datos.</div>
+
+      <span class="part">Operadores y funciones</span>
+      <ul>
+        <li><code>IN</code>: el atributo coincide con algún elemento de una lista o colección pasada como parámetro.</li>
+        <li><code>MEMBER OF</code>: un elemento pertenece a una colección mapeada en la entidad.</li>
+        <li><b>Funciones de cadena</b>: <code>UPPER()</code>, <code>LOWER()</code>, <code>CONCAT()</code>, <code>SUBSTRING()</code>, <code>TRIM()</code>, <code>LENGTH()</code>.</li>
+        <li><b>Funciones numéricas y de fecha</b>: <code>ABS()</code>, <code>ROUND()</code>, <code>MOD()</code>, <code>CURRENT_DATE</code>, <code>CURRENT_TIME</code>, <code>EXTRACT()</code>.</li>
+        <li><b>Funciones para nulos</b>: <code>COALESCE(x, y)</code> devuelve el primer valor no nulo. También <code>NULLIF(x, y)</code>.</li>
+      </ul>
+      <p>Se pueden usar en <code>WHERE</code>, <code>HAVING</code> y <code>SELECT</code>.</p>
+
+      <span class="part">Las 10 consultas imprescindibles</span>
+
+      <h3>1. Selección por atributos con parámetros con nombre</h3>
+      <p><b>Caso de uso:</b> recuperar una entidad por coincidencia exacta en uno o más atributos.</p>
+      <div class="code"><span class="cap">Java</span><pre>@Query("SELECT c FROM Cliente c WHERE c.email = :email AND c.activo = true")
+Optional&lt;Cliente&gt; buscarClienteActivoPorEmail(@Param("email") String email);</pre></div>
+      <p><b>Lección clave:</b> <code>SELECT c FROM Cliente c</code> selecciona la instancia completa de <code>Cliente</code>, representada por el alias <code>c</code>.</p>
+
+      <h3>2. Búsqueda de texto parcial, sin distinguir mayúsculas</h3>
+      <p><b>Caso de uso:</b> un buscador de productos donde el usuario escribe un término. Se combinan <code>LOWER()</code>, <code>CONCAT()</code> y <code>LIKE</code>.</p>
+      <div class="code"><span class="cap">Java</span><pre>@Query("SELECT p FROM Producto p WHERE LOWER(p.nombre) LIKE LOWER(CONCAT('%', :termino, '%'))")
+List&lt;Producto&gt; buscarPorNombreContiene(@Param("termino") String termino);</pre></div>
+      <p><b>Lección clave:</b> con <code>CONCAT('%', :termino, '%')</code> no hace falta concatenar los signos <code>%</code> a mano en la capa de servicio.</p>
+
+      <h3>3. Navegar una @ManyToOne con JOIN</h3>
+      <p><b>Caso de uso:</b> filtrar <code>Producto</code> por propiedades de su <code>Categoria</code>.</p>
+      <div class="code"><span class="cap">Java</span><pre>@Query("SELECT p FROM Producto p JOIN p.categoria c WHERE c.nombre = :nombreCategoria")
+List&lt;Producto&gt; buscarPorNombreCategoria(@Param("nombreCategoria") String nombreCategoria);</pre></div>
+      <p><b>Lección clave:</b> <code>p.categoria</code> es el atributo de relación. Con <code>JOIN p.categoria c</code> creas el alias <code>c</code> para acceder a los campos de <code>Categoria</code>.</p>
+
+      <h3>4. Cargar asociaciones diferidas con JOIN FETCH</h3>
+      <p><b>Caso de uso:</b> evitar <code>LazyInitializationException</code> y el problema N+1 al recuperar pedidos y sus clientes. Si accedes a <code>pedido.getCliente().getNombre()</code> fuera de la transacción con una relación <code>LAZY</code>, falla.</p>
+      <div class="code"><span class="cap">Java</span><pre>@Query("SELECT p FROM Pedido p JOIN FETCH p.cliente WHERE p.estado = :estado")
+List&lt;Pedido&gt; buscarPedidosConClienteCargado(@Param("estado") String estado);</pre></div>
+      <p><b>Lección clave:</b> <code>FETCH</code> hace que Hibernate cargue en memoria el <code>Cliente</code> dentro de cada <code>Pedido</code>, en una sola consulta SQL.</p>
+
+      <h3>5. Filtrar por una colección de valores (IN)</h3>
+      <p><b>Caso de uso:</b> pedidos cuyo estado sea cualquiera de una lista (por ejemplo <code>"PENDIENTE"</code> o <code>"EN_PROCESO"</code>). JPQL traduce <code>IN</code> y la colección Java a <code>IN (?, ?, ...)</code>.</p>
+      <div class="code"><span class="cap">Java</span><pre>@Query("SELECT p FROM Pedido p WHERE p.estado IN :estados")
+List&lt;Pedido&gt; buscarPorEstados(@Param("estados") Collection&lt;String&gt; estados);</pre></div>
+      <p><b>Lección clave:</b> el parámetro puede ser cualquier <code>Collection&lt;T&gt;</code>: un <code>List</code>, un <code>Set</code>…</p>
+
+      <h3>6. Rangos de fechas y valores (BETWEEN)</h3>
+      <p><b>Caso de uso:</b> un informe de ventas entre dos fechas con un importe mínimo. Se combina <code>BETWEEN</code> con <code>&gt;=</code> y <code>&lt;=</code>.</p>
+      <div class="code"><span class="cap">Java</span><pre>@Query("SELECT p FROM Pedido p WHERE p.fecha BETWEEN :desde AND :hasta AND p.total &gt;= :totalMinimo")
+List&lt;Pedido&gt; buscarPedidosEnRangoYTotal(
+        @Param("desde") LocalDateTime desde,
+        @Param("hasta") LocalDateTime hasta,
+        @Param("totalMinimo") BigDecimal totalMinimo);</pre></div>
+      <p><b>Lección clave:</b> <code>BETWEEN</code> incluye los extremos. JPQL maneja de forma nativa los tipos de <code>java.time</code> (<code>LocalDateTime</code>, <code>LocalDate</code>).</p>
+
+      <h3>7. Valores nulos y valores por defecto (COALESCE)</h3>
+      <p><b>Caso de uso:</b> filtrar productos sin que los precios nulos excluyan registros por error. <code>COALESCE(expresion, valorPorDefecto)</code> devuelve el valor alternativo si la expresión es <code>NULL</code>.</p>
+      <div class="code"><span class="cap">Java</span><pre>@Query("SELECT p FROM Producto p WHERE COALESCE(p.precio, 0) &lt;= :precioMaximo")
+List&lt;Producto&gt; buscarPorPrecioMaximoSeguro(@Param("precioMaximo") BigDecimal precioMaximo);</pre></div>
+      <p><b>Lección clave:</b> evita que los nulos de la base de datos estropeen las comparaciones del <code>WHERE</code>.</p>
+
+      <h3>8. Subconsultas y existencia (EXISTS)</h3>
+      <p><b>Caso de uso:</b> clientes con al menos un pedido cuyo total supere una cantidad. Es útil cuando filtras la entidad principal según si tiene registros asociados que cumplen una condición, sin cargar los hijos en memoria.</p>
+      <div class="code"><span class="cap">Java</span><pre>@Query("SELECT c FROM Cliente c WHERE EXISTS (" +
+       "  SELECT p FROM Pedido p WHERE p.cliente = c AND p.total &gt; :montoMinimo" +
+       ")")
+List&lt;Cliente&gt; buscarClientesConPedidosMayoresA(@Param("montoMinimo") BigDecimal montoMinimo);</pre></div>
+      <p><b>Lección clave:</b> la subconsulta usa la entidad externa <code>c</code>. <code>EXISTS</code> devuelve <code>true</code> en cuanto encuentra una coincidencia, así que es muy eficiente.</p>
+
+      <h3>9. Consultas paginadas con Pageable y Page</h3>
+      <p><b>Caso de uso:</b> listar los productos de una categoría en páginas de 10 elementos. Con un parámetro <code>Pageable</code> en un método con <code>@Query</code>, Spring Data aplica paginación y orden a la consulta.</p>
+      <div class="code"><span class="cap">Java</span><pre>@Query("SELECT p FROM Producto p WHERE p.categoria.id = :categoriaId")
+Page&lt;Producto&gt; buscarPorCategoriaPaginado(
+        @Param("categoriaId") Long categoriaId,
+        Pageable pageable);
+
+// En la capa de servicio
+Pageable paginacion = PageRequest.of(0, 10, Sort.by("nombre").ascending());
+Page&lt;Producto&gt; pagina = productoRepository.buscarPorCategoriaPaginado(2L, paginacion);</pre></div>
+      <p><b>Lección clave:</b> no escribes <code>LIMIT</code> ni <code>OFFSET</code> en JPQL. Spring Data genera el SQL de paginación y ejecuta por detrás la consulta <code>COUNT</code> para construir el <code>Page</code>.</p>
+
+      <h3>10. Proyección a DTO con SELECT new</h3>
+      <p><b>Caso de uso:</b> una tabla resumen de pedidos en una pantalla de administración, sin cargar objetos completos de <code>Cliente</code> ni <code>Pedido</code>. Un <b>DTO</b> (Data Transfer Object) es un objeto ligero que no es entidad. Se crea con <code>SELECT new com.paquete.DTO(...)</code>.</p>
+      <div class="code"><span class="cap">Java · paso A: el DTO</span><pre>public class ResumenPedidoDTO {
+
+    private final Long pedidoId;
+    private final String nombreCliente;
+    private final BigDecimal total;
+    private final LocalDateTime fecha;
+
+    // El constructor debe coincidir en tipo y orden con la consulta
+    public ResumenPedidoDTO(Long pedidoId, String nombreCliente,
+                            BigDecimal total, LocalDateTime fecha) {
+        this.pedidoId = pedidoId;
+        this.nombreCliente = nombreCliente;
+        this.total = total;
+        this.fecha = fecha;
+    }
+
+    // Getters...
+}</pre></div>
+      <div class="code"><span class="cap">Java · paso B: la consulta</span><pre>@Query("SELECT new com.ejemplo.dto.ResumenPedidoDTO(p.id, p.cliente.nombre, p.total, p.fecha) " +
+       "FROM Pedido p " +
+       "WHERE p.estado = :estado")
+List&lt;ResumenPedidoDTO&gt; obtenerResumenesPorEstado(@Param("estado") String estado);</pre></div>
+      <p><b>Lección clave:</b> el orden y el tipo de los argumentos del <code>SELECT new</code> deben coincidir exactamente con los del constructor. Evita cargar entidades gestionadas en el contexto de persistencia, usa menos memoria y selecciona solo las columnas necesarias.</p>
+
+      <span class="part">Los 10 patrones de un vistazo</span>
+      <dl>
+        <dt>WHERE c.email = :email</dt><dd>1. Filtrado exacto con parámetros con nombre.</dd>
+        <dt>LOWER() + LIKE + CONCAT()</dt><dd>2. Búsqueda de texto flexible, sin distinguir mayúsculas.</dd>
+        <dt>JOIN p.categoria c</dt><dd>3. Navegar y filtrar por entidades asociadas.</dd>
+        <dt>JOIN FETCH p.cliente</dt><dd>4. Evitar el problema N+1 y <code>LazyInitializationException</code>.</dd>
+        <dt>WHERE p.estado IN :estados</dt><dd>5. Filtrar por una colección de elementos.</dd>
+        <dt>BETWEEN :desde AND :hasta</dt><dd>6. Rangos de fechas o valores continuos.</dd>
+        <dt>COALESCE(p.precio, 0)</dt><dd>7. Manejar nulos con un valor por defecto.</dd>
+        <dt>WHERE EXISTS (SELECT ...)</dt><dd>8. Filtrado avanzado con subconsultas de existencia.</dd>
+        <dt>@Query + Pageable</dt><dd>9. Paginación y orden integrados con Spring Data.</dd>
+        <dt>SELECT new DTO(...)</dt><dd>10. Proyección directa a objetos ligeros no gestionados.</dd>
+      </dl>
+
+      <span class="part">¿Derivadas o @Query?</span>
+      <dl>
+        <dt>Complejidad</dt><dd><b>Derivadas:</b> ideales para consultas con 1 o 2 condiciones.<br><b>@Query:</b> mejor para consultas complejas, con varios <code>JOIN</code> o funciones.</dd>
+        <dt>Optimización FETCH</dt><dd><b>Derivadas:</b> limitada, puede requerir <code>@EntityGraph</code>.<br><b>@Query:</b> excelente, control directo con <code>JOIN FETCH</code>.</dd>
+        <dt>Proyecciones DTO</dt><dd><b>Derivadas:</b> requieren interfaces o DTO con nombres exactos.<br><b>@Query:</b> directo y flexible con <code>SELECT new</code>.</dd>
+        <dt>Mantenibilidad</dt><dd><b>Derivadas:</b> los nombres muy largos son difíciles de leer.<br><b>@Query:</b> el método Java conserva un nombre corto y descriptivo.</dd>
+      </dl>
+    
+      <p class="up"><a href="#indice">Volver al índice</a></p>
+    </section>
+
+    <!-- MODIFYING -->
+    <section id="modifying">
+      <h2>Consultas con @Modifying</h2>
+      <p class="from">Fundamentos de Spring Data JPA · DML</p>
+      <div class="key"><b>Idea clave</b><p>Para modificar datos con <code>@Query</code> hace falta <code>@Modifying</code>. Estas consultas no respetan el ciclo de vida de la entidad.</p></div>
+
+      <p>Hasta ahora, consultas <b>DQL</b> (Data Query Language). ¿Y las <b>DML</b> (INSERT, UPDATE, DELETE)? Mecanismos: consultas derivadas, <code>@Query</code> y customización del repositorio.</p>
+
+      <div class="vs">
+        <div class="tile"><h4>DML con consultas derivadas</h4><ul><li>Empiezan por <code>deleteBy…</code> y siguen con un predicado.</li><li>Requieren <code>@Transactional</code>.</li><li>Ejemplo: <code>deleteByPrecioVentaGreaterThan(...)</code></li><li>Ventaja: conectan con el ciclo de vida. Al eliminar Producto, elimina ProductoDescripcion.</li><li>Desventaja: solo borran. No insertan ni actualizan.</li></ul></div>
+        <div class="tile"><h4>DML con @Query</h4><ul><li>Sin <code>@Modifying</code> da error: <code>InvalidDataAccessApiUsageException</code>.</li><li>Con <code>@Modifying</code> son operaciones <b>BULK</b>: no se hacen entidad a entidad.</li><li>Dificultad: no respetan el ciclo de vida.</li></ul></div>
+      </div>
+      <p>Ejercicios propuestos: incrementar el precio de todos los productos en un %, y decrementar el de todos los de una categoría en un %.</p>
+      <div class="note"><b>En resumen</b>Las consultas derivadas están conectadas al ciclo de vida. Las <code>@Query</code> con <code>@Modifying</code> son potentes pero no están conectadas al ciclo de vida.</div>
+    
+      <p class="up"><a href="#indice">Volver al índice</a></p>
+    </section>
+
+    <!-- PAGINACION -->
+    <section id="paginacion">
+      <h2>Paginación y ordenación</h2>
+      <p class="from">Fundamentos de Spring Data JPA · paginación, Limit y Sort</p>
+      <div class="key"><b>Idea clave</b><p><code>Pageable</code> pide los datos por páginas y devuelve un <code>Page</code>. <code>Sort</code> ordena y <code>Limit</code> limita el número de resultados.</p></div>
+
+      <span class="part">Paginación</span>
+      <p><code>findAll()</code> puede ser un antipatrón: ¿10 filas?, ¿1000?, ¿1 000 000? Paginar es obtener un conjunto limitado de resultados e incluir la información para llegar a los conjuntos adyacentes. Se usa <code>PagingAndSortingRepository</code>.</p>
+      <div class="code"><span class="cap">Java</span><pre>Page&lt;T&gt; findAll(Pageable p)
+
+// También en cualquier otra consulta
+Page&lt;T&gt; findByCategoria(Categoria c, Pageable p)
+
+@Query("""select p from Producto p
+         where p.precioVenta > :precio""")
+Page&lt;T&gt; porPrecio(double precio, Pageable p)</pre></div>
+      <div class="vs">
+        <div class="tile"><h4>Pageable</h4><p>Elemento de entrada para paginar: número de página, tamaño de página y ordenación.</p></div>
+        <div class="tile"><h4>Page&lt;T&gt;</h4><p>Resultado de una consulta paginada: un subconjunto del resultado completo, con información para navegar a otras páginas.</p></div>
+      </div>
+      <div class="note"><b>Warning de Hibernate</b>«firstResult/maxResults specified with collection fetch; applying in memory!». La consulta incluye una colección y, si pagina, los tags pueden quedar a medias. Soluciones: caché de 1.er nivel y dos consultas, o una consulta compleja.</div>
+
+      <span class="part">Limit</span>
+      <p>Disponible desde Spring Boot 3.2. Limita los resultados devueltos con <code>Limit.of(cantidad)</code> o <code>Limit.unlimited()</code>.</p>
+
+      <span class="part">Ordenación</span>
+      <p>Hasta ahora, <code>order by</code> en consultas derivadas (<code>…OrderBy…</code>) y en JPQL. <code>Sort</code> permite ordenar en cualquier consulta: indicar propiedades y dirección (asc, desc).</p>
+      <ul>
+        <li><code>by(...)</code>: lista de atributos, dirección y atributos, o lista de <code>Sort.Order</code> (dirección + atributo).</li>
+        <li><code>and()</code> combina dos <code>Sort</code>.</li>
+        <li><code>ascending()</code> y <code>descending()</code> convierten un <code>Sort</code> en ascendente o descendente.</li>
+      </ul>
+      <div class="code"><span class="cap">Java · Sort, Limit y Pageable</span><pre>// Sort y Limit se combinan sin problema
+List&lt;T&gt; consulta(Sort s, Limit l)
+
+// ¡Error!
+Page&lt;T&gt; query(Pageable p, Sort s)
+
+// Correcto: Sort como argumento de Pageable
+PageRequest.of(n, s, Sort.by(...))</pre></div>
+    
+      <p class="up"><a href="#indice">Volver al índice</a></p>
+    </section>
+
+    <!-- DOCS OFICIALES -->
+    <div class="blockhead" id="consulta"><p class="blk-kicker">Material de consulta</p><h2>Documentación oficial y siglas</h2><p class="blk-list">Documentación oficial · Siglas y palabras clave</p></div>
+    <section id="docs">
+      <h2>Documentación oficial</h2>
+      <p class="from">Spring Data JPA 4.1.2 · docs.spring.io</p>
+      <div class="key"><b>Idea clave</b><p>Resumen de la documentación oficial. Sirve para consultar palabras clave, tipos de retorno y anotaciones de consulta.</p></div>
+      <p>Resumen de las cuatro páginas de referencia: <a href="https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html" target="_blank" rel="noopener">JPA Query Methods</a>, <a href="https://docs.spring.io/spring-data/jpa/reference/repositories/query-methods-details.html" target="_blank" rel="noopener">Defining Query Methods</a>, <a href="https://docs.spring.io/spring-data/jpa/reference/repositories/query-keywords-reference.html" target="_blank" rel="noopener">Query keywords</a> y <a href="https://docs.spring.io/spring-data/jpa/reference/repositories/query-return-types-reference.html" target="_blank" rel="noopener">Query return types</a>.</p>
+
+      <span class="part">Estrategias de búsqueda</span>
+      <p>El proxy del repositorio puede derivar la consulta del nombre del método o usar una consulta definida a mano. Se elige con <code>queryLookupStrategy</code> de <code>@EnableJpaRepositories</code> (o <code>query-lookup-strategy</code> en XML).</p>
+      <dl>
+        <dt>CREATE</dt><dd>construye la consulta a partir del nombre del método, quitando los prefijos conocidos</dd>
+        <dt>USE_DECLARED_QUERY</dt><dd>usa una consulta declarada (por ejemplo, con una anotación). Si no hay ninguna, el arranque falla</dd>
+        <dt>CREATE_IF_NOT_FOUND</dt><dd>la opción por defecto: busca una consulta declarada y, si no existe, usa CREATE</dd>
+      </dl>
+
+      <span class="part">Creación de consultas por nombre</span>
+      <div class="code"><span class="cap">Java</span><pre>interface PersonRepository extends Repository&lt;Person, Long&gt; {
+
+  List&lt;Person&gt; findByEmailAddressAndLastname(EmailAddress emailAddress, String lastname);
+
+  // distinct
+  List&lt;Person&gt; findDistinctPeopleByLastnameOrFirstname(String lastname, String firstname);
+
+  // ignorar mayúsculas en una propiedad o en todas
+  List&lt;Person&gt; findByLastnameIgnoreCase(String lastname);
+  List&lt;Person&gt; findByLastnameAndFirstnameAllIgnoreCase(String lastname, String firstname);
+
+  // ORDER BY estático
+  List&lt;Person&gt; findByLastnameOrderByFirstnameAsc(String lastname);
+  List&lt;Person&gt; findByLastnameOrderByFirstnameDesc(String lastname);
+}</pre></div>
+      <ul>
+        <li>El nombre se divide en <b>sujeto</b> (<code>find…By</code>, <code>exists…By</code>) y <b>predicado</b> (lo que va tras el primer <code>By</code>).</li>
+        <li>El texto entre <code>find</code> y <code>By</code> es descriptivo, salvo que lleve <code>Distinct</code> o <code>Top</code>/<code>First</code>.</li>
+        <li>Las condiciones se unen con <code>And</code> y <code>Or</code>.</li>
+        <li>El orden estático usa <code>OrderBy</code> con <code>Asc</code> o <code>Desc</code>. Para orden dinámico, usa <code>Sort</code>.</li>
+      </ul>
+
+      <h3>Nombres reservados</h3>
+      <p>Los métodos heredados, como <code>CrudRepository#findById</code>, siempre apuntan a la propiedad <b>identificador</b>, sea cual sea el nombre del atributo. Lo mismo vale para <code>exists</code> y <code>delete</code>. Reservados: <code>deleteAllById</code>, <code>deleteById</code>, <code>existsById</code>, <code>findAllById</code> y <code>findById</code>.</p>
+      <div class="code"><span class="cap">Java</span><pre>class User {
+  @Id Long pk;     // el identificador
+  Long id;         // una propiedad llamada id, pero no es el identificador
+}
+
+interface UserRepository extends Repository&lt;User, Long&gt; {
+  Optional&lt;User&gt; findById(Long id);      // resuelve a pk, es el método reservado
+  Optional&lt;User&gt; findByPk(Long pk);     // consulta derivada sobre pk
+  Optional&lt;User&gt; findUserById(Long id); // el texto entre find y By apunta a id
+}</pre></div>
+
+      <h3>Expresiones de propiedad</h3>
+      <p>Pueden recorrer propiedades anidadas. Con <code>findByAddressZipCode</code> primero busca una propiedad <code>addressZipCode</code>; si no existe, divide el nombre por mayúsculas desde la derecha (<code>AddressZip</code> + <code>Code</code>, luego <code>Address</code> + <code>ZipCode</code>). Si hay ambigüedad, marca el punto de recorrido con un guion bajo:</p>
+      <div class="code"><span class="cap">Java</span><pre>List&lt;Person&gt; findByAddressZipCode(ZipCode zipCode);
+List&lt;Person&gt; findByAddress_ZipCode(ZipCode zipCode);</pre></div>
+      <p>El guion bajo está reservado, así que se recomienda el camelCase estándar de Java.</p>
+
+      <span class="part">Palabras clave en nombres de método</span>
+      <div class="tbl"><table>
+        <thead><tr><th>Keyword</th><th>Ejemplo</th><th>JPQL</th></tr></thead>
+        <tbody>
+          <tr><td>Distinct</td><td><code>findDistinctByLastnameAndFirstname</code></td><td>select distinct … where x.lastname = ?1 and x.firstname = ?2</td></tr>
+          <tr><td>And</td><td><code>findByLastnameAndFirstname</code></td><td>… where x.lastname = ?1 and x.firstname = ?2</td></tr>
+          <tr><td>Or</td><td><code>findByLastnameOrFirstname</code></td><td>… where x.lastname = ?1 or x.firstname = ?2</td></tr>
+          <tr><td>Is, Equals</td><td><code>findByFirstname</code>, <code>findByFirstnameIs</code>, <code>findByFirstnameEquals</code></td><td>… where x.firstname = ?1 (o IS NULL si el argumento es null)</td></tr>
+          <tr><td>Between</td><td><code>findByStartDateBetween</code></td><td>… where x.startDate between ?1 and ?2</td></tr>
+          <tr><td>LessThan</td><td><code>findByAgeLessThan</code></td><td>… where x.age &lt; ?1</td></tr>
+          <tr><td>LessThanEqual</td><td><code>findByAgeLessThanEqual</code></td><td>… where x.age &lt;= ?1</td></tr>
+          <tr><td>GreaterThan</td><td><code>findByAgeGreaterThan</code></td><td>… where x.age &gt; ?1</td></tr>
+          <tr><td>GreaterThanEqual</td><td><code>findByAgeGreaterThanEqual</code></td><td>… where x.age &gt;= ?1</td></tr>
+          <tr><td>After</td><td><code>findByStartDateAfter</code></td><td>… where x.startDate &gt; ?1</td></tr>
+          <tr><td>Before</td><td><code>findByStartDateBefore</code></td><td>… where x.startDate &lt; ?1</td></tr>
+          <tr><td>IsNull, Null</td><td><code>findByAge(Is)Null</code></td><td>… where x.age is null</td></tr>
+          <tr><td>IsNotNull, NotNull</td><td><code>findByAge(Is)NotNull</code></td><td>… where x.age is not null</td></tr>
+          <tr><td>Like</td><td><code>findByFirstnameLike</code></td><td>… where x.firstname like ?1</td></tr>
+          <tr><td>NotLike</td><td><code>findByFirstnameNotLike</code></td><td>… where x.firstname not like ?1</td></tr>
+          <tr><td>StartingWith</td><td><code>findByFirstnameStartingWith</code></td><td>… like ?1 (al parámetro se le añade % al final)</td></tr>
+          <tr><td>EndingWith</td><td><code>findByFirstnameEndingWith</code></td><td>… like ?1 (al parámetro se le añade % al principio)</td></tr>
+          <tr><td>Containing</td><td><code>findByFirstnameContaining</code></td><td>… like ?1 (el parámetro va entre %)</td></tr>
+          <tr><td>OrderBy</td><td><code>findByAgeOrderByLastnameDesc</code></td><td>… where x.age = ?1 order by x.lastname desc</td></tr>
+          <tr><td>Not</td><td><code>findByLastnameNot</code></td><td>… where x.lastname &lt;&gt; ?1 (o IS NOT NULL si es null)</td></tr>
+          <tr><td>In</td><td><code>findByAgeIn(Collection&lt;Age&gt; ages)</code></td><td>… where x.age in ?1</td></tr>
+          <tr><td>NotIn</td><td><code>findByAgeNotIn(Collection&lt;Age&gt; ages)</code></td><td>… where x.age not in ?1</td></tr>
+          <tr><td>True</td><td><code>findByActiveTrue()</code></td><td>… where x.active = true</td></tr>
+          <tr><td>False</td><td><code>findByActiveFalse()</code></td><td>… where x.active = false</td></tr>
+          <tr><td>IgnoreCase</td><td><code>findByFirstnameIgnoreCase</code></td><td>… where UPPER(x.firstname) = UPPER(?1)</td></tr>
+        </tbody>
+      </table></div>
+      <ul>
+        <li><code>In</code> y <code>NotIn</code> aceptan cualquier <code>Collection</code>, arrays o varargs.</li>
+        <li>Con <code>StartingWith</code>, <code>EndingWith</code>, <code>Containing</code> y sus variantes, los comodines <code>%</code> y <code>_</code> del argumento se escapan para que cuenten como texto literal. El carácter de escape se configura con <code>escapeCharacter</code> de <code>@EnableJpaRepositories</code>.</li>
+        <li><code>Distinct</code> es delicado: <code>select distinct u from User u</code> devuelve usuarios enteros, mientras que <code>select distinct u.lastname from User u</code> devuelve apellidos únicos. A menudo hace falta un <code>@Query</code> a mano.</li>
+      </ul>
+
+      <h3>Sujetos y modificadores del catálogo general</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>Keyword</th><th>Descripción</th></tr></thead>
+        <tbody>
+          <tr><td>find…By, read…By, get…By, query…By, search…By, stream…By</td><td>Consulta general. Devuelve el tipo del repositorio, una colección, un <code>Streamable</code> o un envoltorio como <code>Page</code>.</td></tr>
+          <tr><td>exists…By</td><td>Proyección de existencia, normalmente un <code>boolean</code>.</td></tr>
+          <tr><td>count…By</td><td>Proyección de conteo, con resultado numérico.</td></tr>
+          <tr><td>delete…By, remove…By</td><td>Borrado. No devuelve nada (<code>void</code>) o devuelve el número de borrados.</td></tr>
+          <tr><td>…First&lt;n&gt;…, …Top&lt;n&gt;…</td><td>Limita a los primeros N resultados. Puede ir en cualquier punto del sujeto entre <code>find</code> y <code>by</code>.</td></tr>
+          <tr><td>…Distinct…</td><td>Resultados únicos, si el almacén lo admite.</td></tr>
+          <tr><td>IgnoreCase, IgnoringCase</td><td>Comparación sin distinguir mayúsculas.</td></tr>
+          <tr><td>AllIgnoreCase, AllIgnoringCase</td><td>Ignora mayúsculas en todas las propiedades que lo admiten.</td></tr>
+          <tr><td>OrderBy…</td><td>Orden estático con ruta y dirección, por ejemplo <code>OrderByFirstnameAscLastnameDesc</code>.</td></tr>
+        </tbody>
+      </table></div>
+      <p>El catálogo general también lista sinónimos con prefijo <code>Is</code> (<code>IsAfter</code>, <code>IsBetween</code>…), <code>Contains</code>, <code>EndsWith</code>, <code>StartsWith</code>, <code>IsEmpty</code>/<code>Empty</code>, <code>IsNotEmpty</code>/<code>NotEmpty</code>, <code>Exists</code>, <code>Regex</code>, <code>Near</code> y <code>Within</code>. La propia documentación avisa de que no todas las soportan todos los almacenes, así que conviene comprobar cuáles admite JPA antes de usarlas.</p>
+
+      <span class="part">Tipos de retorno</span>
+      <div class="tbl"><table>
+        <thead><tr><th>Tipo</th><th>Qué es</th></tr></thead>
+        <tbody>
+          <tr><td>void, primitivos, wrappers</td><td>Sin valor de retorno, o tipos Java básicos.</td></tr>
+          <tr><td>T</td><td>Una entidad única. Si no hay resultado devuelve <code>null</code>. Si hay más de uno lanza <code>IncorrectResultSizeDataAccessException</code>.</td></tr>
+          <tr><td>Optional&lt;T&gt;</td><td>Como <code>T</code>, pero sin resultado devuelve <code>Optional.empty()</code>. Más de uno lanza la misma excepción.</td></tr>
+          <tr><td>Iterator&lt;T&gt;, Collection&lt;T&gt;, List&lt;T&gt;</td><td>Colecciones habituales.</td></tr>
+          <tr><td>Stream&lt;T&gt;</td><td>Un <code>Stream</code> de Java.</td></tr>
+          <tr><td>Streamable&lt;T&gt;</td><td>Extiende <code>Iterable</code> con métodos para recorrer, mapear, filtrar y concatenar.</td></tr>
+          <tr><td>Future&lt;T&gt;, CompletableFuture&lt;T&gt;</td><td>Asíncronos. El método lleva <code>@Async</code> y hay que habilitar la ejecución asíncrona de Spring.</td></tr>
+          <tr><td>Slice&lt;T&gt;</td><td>Un trozo de datos y si hay más. Requiere un parámetro <code>Pageable</code>.</td></tr>
+          <tr><td>Page&lt;T&gt;</td><td>Un <code>Slice</code> con información extra, como el total de resultados. Requiere <code>Pageable</code>.</td></tr>
+          <tr><td>Window&lt;T&gt;</td><td>Resultado de una consulta de scroll, con la <code>ScrollPosition</code> para pedir la siguiente. Requiere un parámetro <code>ScrollPosition</code>.</td></tr>
+        </tbody>
+      </table></div>
+      <p>La lista general incluye además tipos de Vavr, Scala, Reactor (<code>Mono</code>, <code>Flux</code>), RxJava y geoespaciales (<code>GeoResult</code>, <code>GeoPage</code>…), que dependen del almacén.</p>
+
+      <h3>Streamable y Stream</h3>
+      <div class="code"><span class="cap">Java · concatenar resultados con Streamable</span><pre>interface PersonRepository extends Repository&lt;Person, Long&gt; {
+  Streamable&lt;Person&gt; findByFirstnameContaining(String firstname);
+  Streamable&lt;Person&gt; findByLastnameContaining(String lastname);
+}
+
+Streamable&lt;Person&gt; result = repository.findByFirstnameContaining("av")
+  .and(repository.findByLastnameContaining("ea"));</pre></div>
+      <ul>
+        <li>Un tipo propio puede ser tipo de retorno si implementa <code>Streamable</code> y tiene un constructor o un método estático <code>of(…)</code>/<code>valueOf(…)</code> que reciba un <code>Streamable</code>.</li>
+        <li>Un <code>Stream</code> envuelve recursos del almacén (como un <code>ResultSet</code>), así que necesita una <b>transacción</b> y hay que <b>cerrarlo</b>.</li>
+        <li>Usar <code>Stream</code> no garantiza lectura incremental. Para conjuntos grandes, usa query hints con el tamaño de fetch del proveedor.</li>
+      </ul>
+      <div class="code"><span class="cap">Java</span><pre>@Transactional
+public void processUsers() {
+  try (Stream&lt;User&gt; users = repository.streamByFirstnameAndLastname("John", "Doe")) {
+    // consumir el stream
+  }
+}</pre></div>
+
+      <h3>Elegir el tipo de retorno</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>Tipo</th><th>Datos que trae</th><th>Ojo con</th></tr></thead>
+        <tbody>
+          <tr><td>List&lt;T&gt;</td><td>Todos, en una consulta</td><td>Puede agotar la memoria o ser lento.</td></tr>
+          <tr><td>Streamable&lt;T&gt;</td><td>Todos, en una consulta</td><td>Igual que <code>List</code>.</td></tr>
+          <tr><td>Stream&lt;T&gt;</td><td>Por trozos, según se consuma</td><td>Una sola consulta con cursor. Hay que cerrarlo.</td></tr>
+          <tr><td>Slice&lt;T&gt;</td><td>pageSize + 1 con offset</td><td>Solo avanza. El offset se vuelve ineficiente con valores grandes.</td></tr>
+          <tr><td>Window&lt;T&gt; (offset)</td><td>limit + 1 con offset</td><td>Solo avanza. Mismo problema de offset.</td></tr>
+          <tr><td>Page&lt;T&gt;</td><td>pageSize con offset</td><td>Puede lanzar un <code>COUNT(…)</code> costoso.</td></tr>
+          <tr><td>Window&lt;T&gt; (keyset)</td><td>limit + 1 reescribiendo el <code>WHERE</code></td><td>Necesita un índice adecuado y no va bien con <code>null</code>.</td></tr>
+        </tbody>
+      </table></div>
+
+      <span class="part">Paginar, ordenar y limitar</span>
+      <div class="code"><span class="cap">Java · parámetros especiales</span><pre>Page&lt;User&gt; findByLastname(String lastname, Pageable pageable);
+Slice&lt;User&gt; findByLastname(String lastname, Pageable pageable);
+Window&lt;User&gt; findTop10ByLastname(String lastname, ScrollPosition position, Sort sort);
+List&lt;User&gt; findByLastname(String lastname, Sort sort);
+List&lt;User&gt; findByLastname(String lastname, Sort sort, Limit limit);
+List&lt;User&gt; findByLastname(String lastname, Pageable pageable);</pre></div>
+      <ul>
+        <li><code>Sort</code>, <code>Pageable</code> y <code>Limit</code> no pueden ser null. Para omitirlos: <code>Sort.unsorted()</code>, <code>Pageable.unpaged()</code>, <code>Limit.unlimited()</code>.</li>
+        <li><code>Page</code> conoce el total de elementos y páginas, lo que cuesta una consulta de conteo extra. <code>Slice</code> solo sabe si hay otro trozo y evita ese conteo. <code>List</code> limita al rango pedido sin metadatos.</li>
+        <li>Cada parámetro especial se usa una sola vez por método.</li>
+        <li>Combinaciones no válidas: <code>Pageable</code> con <code>Sort</code> (el <code>Pageable</code> ya define el orden) y <code>Pageable</code> con <code>Limit</code> (ya define el límite).</li>
+        <li><code>Top</code> se puede combinar con <code>Pageable</code>: <code>Top</code> fija el máximo total y <code>Pageable</code> puede reducirlo más.</li>
+      </ul>
+      <div class="code"><span class="cap">Java · construir un Sort</span><pre>Sort sort = Sort.by("firstname").ascending()
+  .and(Sort.by("lastname").descending());
+
+// versión con tipos
+TypedSort&lt;Person&gt; person = Sort.sort(Person.class);
+Sort sort = person.by(Person::getFirstname).ascending()
+  .and(person.by(Person::getLastname).descending());</pre></div>
+      <p><code>TypedSort</code> usa proxies en tiempo de ejecución, que pueden dar problemas con GraalVM native image.</p>
+      <h3>Limitar resultados</h3>
+      <ul>
+        <li>Con un parámetro <code>Limit</code>, o con <code>First</code>/<code>Top</code>. Son intercambiables, pero no se mezclan con un <code>Limit</code>.</li>
+        <li>Sin número, <code>Top</code> y <code>First</code> valen 1.</li>
+        <li>Un resultado único puede ir envuelto en <code>Optional</code>.</li>
+        <li>Limitar y ordenar con <code>Sort</code> sirve para pedir los K menores o mayores.</li>
+      </ul>
+      <div class="code"><span class="cap">Java</span><pre>List&lt;User&gt; findByLastname(String lastname, Limit limit);
+User findFirstByOrderByLastnameAsc();
+User findTopByLastnameOrderByAgeDesc(String lastname);
+Page&lt;User&gt; queryFirst10ByLastname(String lastname, Pageable pageable);
+Slice&lt;User&gt; findTop3By(Pageable pageable);
+List&lt;User&gt; findFirst10ByLastname(String lastname, Sort sort);
+List&lt;User&gt; findTop10ByLastname(String lastname, Pageable pageable);</pre></div>
+
+      <span class="part">Consultas declaradas</span>
+      <h3>Named queries</h3>
+      <p>Se resuelven por convención: <code>&lt;NombreSimpleDeLaEntidad&gt;.&lt;método&gt;</code>, por ejemplo <code>User.findByLastname</code>. Deben ser JPQL. <code>@NamedNativeQuery</code> permite SQL nativo a costa de perder portabilidad.</p>
+      <div class="code"><span class="cap">Java</span><pre>@Entity
+@NamedQuery(name = "User.findByEmailAddress",
+  query = "select u from User u where u.emailAddress = ?1")
+public class User { }</pre></div>
+      <p>La anotación evita editar otro fichero, pero obliga a recompilar la entidad por cada consulta nueva. También se pueden definir en <code>orm.xml</code> (carpeta <code>META-INF</code>) con <code>&lt;named-query /&gt;</code>.</p>
+
+      <h3>@Query</h3>
+      <p>Une la consulta al método y mantiene los detalles de persistencia fuera de la entidad. <b>Tiene prioridad</b> sobre <code>@NamedQuery</code> y <code>orm.xml</code>.</p>
+      <div class="code"><span class="cap">Java</span><pre>@Query("select u from User u where u.emailAddress = ?1")
+User findByEmailAddress(String emailAddress);
+
+// LIKE avanzado: se reconoce el % y se aplica al parámetro
+@Query("select u from User u where u.firstname like %?1")
+List&lt;User&gt; findByFirstnameEndsWith(String firstname);</pre></div>
+
+      <h3>Consultas nativas</h3>
+      <p><code>@NativeQuery</code> es casi una anotación compuesta de <code>@Query(nativeQuery=true)</code> y añade atributos como <code>sqlResultSetMapping</code>. Spring Data reescribe consultas simples para paginar y ordenar. Las complejas necesitan JSqlParser en el classpath o un <code>countQuery</code>.</p>
+      <div class="code"><span class="cap">Java</span><pre>@NativeQuery(value = "SELECT * FROM USERS WHERE LASTNAME = ?1",
+  countQuery = "SELECT count(*) FROM USERS WHERE LASTNAME = ?1")
+Page&lt;User&gt; findByLastname(String lastname, Pageable pageable);
+
+// pares columna/valor en bruto (solo Hibernate)
+@NativeQuery("SELECT * FROM USERS WHERE EMAIL_ADDRESS = ?1")
+Map&lt;String, Object&gt; findRawMapByEmail(String emailAddress);</pre></div>
+
+      <h3>Parámetros con nombre</h3>
+      <p>Por defecto el enlace es posicional. <code>@Param</code> enlaza un parámetro del método con uno con nombre. Con el flag de compilador <code>-parameters</code> se puede omitir <code>@Param</code>.</p>
+      <div class="code"><span class="cap">Java</span><pre>@Query("select u from User u where u.firstname = :firstname or u.lastname = :lastname")
+User findByLastnameOrFirstname(@Param("lastname") String lastname,
+                               @Param("firstname") String firstname);</pre></div>
+
+      <h3>Expresiones SpEL en @Query</h3>
+      <ul>
+        <li><code>#{#entityName}</code> resuelve al nombre de la entidad (o al nombre simple de la clase). Sirve para repositorios genéricos con herencia.</li>
+        <li>Los argumentos se leen por índice: <code>?#{[0]}</code>.</li>
+        <li>El comodín <code>%</code> se puede poner delante o detrás de un parámetro o expresión: <code>like %:#{[0]}%</code>.</li>
+        <li>Para entrada no fiable en un <code>like</code>, usa <code>escape([0])</code> junto con la cláusula <code>escape</code> y <code>escapeCharacter()</code>.</li>
+        <li>Se pueden leer propiedades de configuración: <code>?${spring.application.name:unknown}</code>.</li>
+      </ul>
+      <div class="code"><span class="cap">Java</span><pre>@Query("select u from #{#entityName} u where u.lastname = ?1")
+List&lt;User&gt; findByLastname(String lastname);
+
+@Query("select u from User u where u.firstname like %?#{escape([0])}% escape ?#{escapeCharacter()}")
+List&lt;User&gt; findContainingEscaped(String namePart);</pre></div>
+
+      <h3>Ordenar con Sort en @Query</h3>
+      <p>Las propiedades del <code>Sort</code> deben resolver a una propiedad o a un alias de la consulta. Una llamada a función se rechaza, salvo que uses <code>JpaSort.unsafe</code>.</p>
+      <div class="code"><span class="cap">Java</span><pre>repo.findByAndSort("lannister", Sort.by("firstname"));                // válido
+repo.findByAndSort("stark", Sort.by("LENGTH(firstname)"));            // inválido: lanza excepción
+repo.findByAndSort("targaryen", JpaSort.unsafe("LENGTH(firstname)")); // válido, explícitamente unsafe
+repo.findByAsArrayAndSort("bolton", Sort.by("fn_len"));               // válido: alias de una función</pre></div>
+      <p><code>JpaSort.unsafe</code> admite funciones, <code>CASE WHEN</code>, aritmética y rutas de propiedad. No admite subconsultas, <code>TREAT</code> ni <code>CAST</code>.</p>
+
+      <span class="part">Modificar datos</span>
+      <div class="code"><span class="cap">Java</span><pre>@Modifying
+@Query("update User u set u.firstname = ?1 where u.lastname = ?2")
+int setFixedFirstnameFor(String firstname, String lastname);</pre></div>
+      <ul>
+        <li><code>@Modifying</code> convierte la consulta en un update en lugar de un select. Solo se usa con <code>@Query</code>.</li>
+        <li>No limpia el <code>EntityManager</code> automáticamente, porque perdería cambios pendientes. Con <code>clearAutomatically = true</code> sí lo limpia.</li>
+      </ul>
+      <div class="vs">
+        <div class="code"><span class="cap">deleteByRoleId · derivado</span><pre>void deleteByRoleId(long roleId);</pre></div>
+        <div class="code"><span class="cap">deleteInBulkByRoleId · bulk</span><pre>@Modifying
+@Query("delete from User u where u.role.id = ?1")
+void deleteInBulkByRoleId(long roleId);</pre></div>
+      </div>
+      <p>El derivado ejecuta una consulta y borra cada instancia con <code>CrudRepository.delete(Iterable)</code>, así que se ejecutan los callbacks <code>@PreRemove</code>. El bulk lanza una sola sentencia JPQL y las instancias cargadas no reciben callbacks. Borrar muchos objetos los carga todos en memoria hasta el flush o el final de la transacción.</p>
+
+      <span class="part">Otros mecanismos</span>
+      <h3>Query hints y comentarios</h3>
+      <ul>
+        <li><code>@QueryHints</code> recibe un array de <code>@QueryHint</code> y un flag <code>forCounting</code> que decide si los hints se aplican también a la consulta de conteo de la paginación.</li>
+        <li><code>@Meta(comment = …)</code> inserta comentarios en las consultas para depurar. En Hibernate hay que activar <code>spring.jpa.properties.hibernate.use_sql_comments=true</code>. En EclipseLink, <code>spring.jpa.properties.eclipselink.logging.level.sql=FINE</code>.</li>
+      </ul>
+      <h3>@EntityGraph</h3>
+      <p>Configura el plan de fetch. Su atributo <code>type</code> elige <code>FETCH</code> o <code>LOAD</code>. Se puede referenciar un <code>@NamedEntityGraph</code> o construir el grafo al vuelo con <code>attributePaths</code>.</p>
+      <div class="code"><span class="cap">Java</span><pre>@Entity
+@NamedEntityGraph(name = "GroupInfo.detail",
+  attributeNodes = @NamedAttributeNode("members"))
+public class GroupInfo {
+  @ManyToMany // por defecto, lazy
+  List&lt;GroupMember&gt; members = new ArrayList&lt;GroupMember&gt;();
+}
+
+public interface GroupRepository extends CrudRepository&lt;GroupInfo, String&gt; {
+
+  @EntityGraph(value = "GroupInfo.detail", type = EntityGraphType.LOAD)
+  GroupInfo getByGroupName(String name);
+
+  // grafo ad hoc
+  @EntityGraph(attributePaths = { "members" })
+  GroupInfo getByGroupName(String name);
+}</pre></div>
+
+      <h3>Scroll de resultados grandes</h3>
+      <p>Hay tres opciones: paginar, hacer <b>scroll por offset</b> (más ligero, no necesita conteo total) o <b>scroll por keyset</b> (usa índices de la base de datos). No funciona con consultas basadas en String ni con métodos <code>@Procedure</code>. Devuelve un <code>Window&lt;T&gt;</code>.</p>
+      <div class="code"><span class="cap">Java</span><pre>Window&lt;User&gt; users = repository.findFirst10ByLastnameOrderByFirstname("Doe", ScrollPosition.offset());
+do {
+  for (User u : users) {
+    // consumir el usuario
+  }
+  if (users.isLast() || users.isEmpty()) {
+    break;
+  }
+  users = repository.findFirst10ByLastnameOrderByFirstname("Doe", users.positionAt(users.size() - 1));
+} while (!users.isEmpty());
+
+// o con WindowIterator
+WindowIterator&lt;User&gt; users = WindowIterator.of(position -&gt; repository.findFirst10ByLastnameOrderByFirstname("Doe", position))
+  .startingAt(ScrollPosition.offset());</pre></div>
+      <ul>
+        <li><code>ScrollPosition</code> marca la posición exacta de un elemento y se trata como <b>exclusiva</b>: los resultados empiezan después de ella.</li>
+        <li>Con keyset, las propiedades de ordenación deben ser <b>no nulas</b> y aparecer en el resultado. La clave primaria se añade sola para que el orden sea único.</li>
+      </ul>
+
+      <h3>QueryRewriter</h3>
+      <p>Permite modificar la consulta justo antes de llegar al <code>EntityManager</code>, incluida la de conteo. Se implementa <code>QueryRewriter</code>, se registra como bean y se enlaza con el atributo <code>queryRewriter</code> de <code>@Query</code> o <code>@NativeQuery</code>.</p>
+
+      <h3>Otras vías para consultas complejas</h3>
+      <ul>
+        <li>Un <code>@Query</code> a mano.</li>
+        <li>Una implementación de repositorio personalizada con <code>EntityManager</code>, la API Criteria o <code>JdbcTemplate</code>.</li>
+        <li>Una consulta guardada en la base de datos como procedimiento (<code>@StoredProcedure</code>) o función invocada con <code>@Query</code> y <code>CALL</code>.</li>
+      </ul>
+      <div class="note"><b>Proyecciones y bloqueos</b>Estas cuatro páginas solo enlazan a las proyecciones y al locking. Tienen su propia página en la documentación.</div>
+    
+      <p class="up"><a href="#indice">Volver al índice</a></p>
+    </section>
+
+        <section id="siglas">
+      <h2>Siglas y palabras clave</h2>
+      <p class="from">Para consultar cuando una sigla te bloquee</p>
+      <div class="key"><b>Idea clave</b><p>Si una sigla o una palabra te frena, búscala aquí.</p></div>
+      <dl>
+        <dt>ORM</dt><dd>Object-Relational Mapping. Capa que traduce entre objetos y tablas.</dd>
+        <dt>JDBC</dt><dd>Java Database Connectivity. La conexión de bajo nivel con la base de datos.</dd>
+        <dt>JPA</dt><dd>Java Persistence API. Estándar de persistencia en Java, sin implementación propia.</dd>
+        <dt>Hibernate</dt><dd>Implementación de JPA. Es quien realmente trabaja.</dd>
+        <dt>SGBDR</dt><dd>Sistema Gestor de Bases de Datos Relacional. Por ejemplo, PostgreSQL.</dd>
+        <dt>JPQL</dt><dd>Jakarta Persistence Query Language. Se parece a SQL, pero consulta entidades.</dd>
+        <dt>DDL</dt><dd>Sentencias que crean la estructura, como las tablas. (Definición añadida: no sale en los PDFs.)</dd>
+        <dt>DML</dt><dd>Data Modification Language. INSERT, UPDATE y DELETE.</dd>
+        <dt>DQL</dt><dd>Data Query Language. Consultas para leer datos.</dd>
+        <dt>DTO</dt><dd>Objeto con datos parciales de una entidad. Se obtiene con una proyección con constructor.</dd>
+        <dt>PK</dt><dd>Clave primaria. Identifica cada fila de una tabla.</dd>
+        <dt>FK</dt><dd>Clave externa. Apunta a otra tabla. <code>@ManyToOne</code> equivale a una FK.</dd>
+        <dt>CRUD</dt><dd>Crear, leer, actualizar y borrar.</dd>
+        <dt>LTS</dt><dd>Versión del JDK con soporte de largo plazo.</dd>
+        <dt>EAGER</dt><dd>«Ansioso»: trae los datos siempre.</dd>
+        <dt>LAZY</dt><dd>«Perezoso»: trae los datos cuando los usas.</dd>
+        <dt>lado mapeado</dt><dd>En una asociación bidireccional, el lado con <code>mappedBy</code>. Ese atributo lleva el nombre del atributo del lado propietario.</dd>
+      </dl>
+      <p class="up"><a href="#indice">Volver al índice</a></p>
+    </section>
+
+    <footer>Apuntes hechos a partir de los PDFs y del texto del curso de OpenWebinars, y de la documentación de Spring Data JPA</footer>
+  </main>
+</div>
+
+
+<div class="veil" id="veil-top"></div>
+<div class="veil" id="veil-bot"></div>
+<script>
+(function () {
+  var root = document.documentElement;
+  var KEY = "cuaderno-jpa-legible";
+  var sizes = [16, 18, 20, 22, 24];
+  var spacings = {
+    normal: { lh: 1.7, ls: ".01em", ws: ".05em" },
+    amplio: { lh: 1.85, ls: ".03em", ws: ".12em" },
+    maximo: { lh: 2.05, ls: ".06em", ws: ".2em" }
+  };
+  var fonts = { atkinson: 1, lexend: 1, sistema: 1 };
+  var tints = { "": 1, verde: 1, crema: 1, oscuro: 1 };
+  var DEFAULTS = { size: 1, space: "amplio", font: "atkinson", tint: "", ruler: false };
+  var st = {};
+  Object.keys(DEFAULTS).forEach(function (k) { st[k] = DEFAULTS[k]; });
+  try {
+    var saved = JSON.parse(localStorage.getItem(KEY) || "null");
+    if (saved) {
+      if (typeof saved.size === "number" && sizes[saved.size]) st.size = saved.size;
+      if (spacings[saved.space]) st.space = saved.space;
+      if (fonts[saved.font]) st.font = saved.font;
+      if (tints[saved.tint] === 1) st.tint = saved.tint;
+      st.ruler = saved.ruler === true;
+    }
+  } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+
+  var panel = document.getElementById("panel");
+  var btnSettings = document.getElementById("btn-settings");
+  var vt = document.getElementById("veil-top");
+  var vb = document.getElementById("veil-bot");
+  var ry = window.innerHeight * 0.45;
+
+  function drawRuler() {
+    var on = st.ruler;
+    vt.classList.toggle("on", on);
+    vb.classList.toggle("on", on);
+    if (!on) return;
+    var band = 3 * sizes[st.size] * spacings[st.space].lh;
+    vt.style.top = "0px";
+    vt.style.height = Math.max(0, ry - band / 2) + "px";
+    vb.style.top = (ry + band / 2) + "px";
+    vb.style.bottom = "0px";
+  }
+
+  function apply() {
+    var sp = spacings[st.space];
+    root.style.setProperty("--fs", sizes[st.size] + "px");
+    root.style.setProperty("--lh", sp.lh);
+    root.style.setProperty("--ls", sp.ls);
+    root.style.setProperty("--ws", sp.ws);
+    root.setAttribute("data-font", st.font);
+    if (st.tint) root.setAttribute("data-tint", st.tint); else root.removeAttribute("data-tint");
+    document.getElementById("size-val").textContent = sizes[st.size];
+    var pressed = { space: st.space, font: st.font, tint: st.tint };
+    Array.prototype.forEach.call(panel.querySelectorAll("button[data-act]"), function (b) {
+      var act = b.getAttribute("data-act");
+      if (pressed.hasOwnProperty(act)) {
+        b.setAttribute("aria-pressed", String(b.getAttribute("data-val") === pressed[act]));
+      }
+    });
+    var br = document.getElementById("btn-ruler");
+    br.setAttribute("aria-pressed", String(st.ruler));
+    br.textContent = st.ruler ? "Activada" : "Desactivada";
+    drawRuler();
+  }
+
+  btnSettings.addEventListener("click", function () {
+    var open = panel.hidden;
+    panel.hidden = !open;
+    btnSettings.setAttribute("aria-expanded", String(open));
+  });
+
+  panel.addEventListener("click", function (ev) {
+    var b = ev.target.closest("button[data-act]");
+    if (!b) return;
+    var act = b.getAttribute("data-act"), val = b.getAttribute("data-val");
+    if (act === "size") st.size = Math.min(sizes.length - 1, Math.max(0, st.size + parseInt(val, 10)));
+    else if (act === "space") st.space = val;
+    else if (act === "font") st.font = val;
+    else if (act === "tint") st.tint = val;
+    else if (act === "ruler") st.ruler = !st.ruler;
+    else if (act === "reset") { Object.keys(DEFAULTS).forEach(function (k) { st[k] = DEFAULTS[k]; }); }
+    save();
+    apply();
+  });
+
+  window.addEventListener("pointermove", function (e) { ry = e.clientY; drawRuler(); }, { passive: true });
+  window.addEventListener("touchmove", function (e) { if (e.touches[0]) { ry = e.touches[0].clientY; drawRuler(); } }, { passive: true });
+  window.addEventListener("touchstart", function (e) { if (e.touches[0]) { ry = e.touches[0].clientY; drawRuler(); } }, { passive: true });
+  window.addEventListener("resize", drawRuler);
+
+  // Etiquetas de las tablas para el modo estrecho
+  Array.prototype.forEach.call(document.querySelectorAll(".tbl table"), function (t) {
+    var heads = Array.prototype.map.call(t.querySelectorAll("thead th"), function (h) { return h.textContent; });
+    Array.prototype.forEach.call(t.querySelectorAll("tbody tr"), function (tr) {
+      Array.prototype.forEach.call(tr.children, function (td, i) { if (heads[i]) td.setAttribute("data-label", heads[i]); });
+    });
+  });
+
+  apply();
+})();
+</script>
+
+</body></html>
